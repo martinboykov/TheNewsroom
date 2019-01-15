@@ -2,7 +2,6 @@
 const http = require('http');
 const app = require('./backend/app');
 const debug = require('debug')('node-angular');
-// const port = process.env.PORT || 3000;
 
 const normalizePort = (val) => { // checks if env ports are valid numbers
   const port = parseInt(val, 10);
