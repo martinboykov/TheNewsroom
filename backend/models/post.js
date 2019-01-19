@@ -39,11 +39,11 @@ const postSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Tag',
   }],
-  // not required data
-  subcategory: {
+  subcategoryId: {
     type: mongoose.Schema.Types.ObjectId, // One-to-Many: may need frequent change
     ref: 'Subcategory',
   },
+  // not required data
   popularity: {
     type: Number,
     default: 0,
