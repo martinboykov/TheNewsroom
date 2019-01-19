@@ -20,24 +20,23 @@ const addCategory = async (req, res, next) => {
   });
 };
 
-// T0D0: TO SEE WHAT IF RECIEVE FROM FRONTEND: newSubcategory?/ newCategoryObj? / newName?
-const updateCategory = async (req, res, next) => {
-  const categoryId = req.params._id;
-  const category = await Category.findById(categoryId);
-
-  // ......
-  // what to modify/update
-  // ......
-
-  const updatedCategory = await category.save();
-  res.status(201).json({
-    message: 'Post updated successfully', // not neccessary
-    updatedCategory: updatedCategory,
+const putRenameCategory = async (req, res, next) => {
+  await Category.updateOne(
+    // { _id: req.params._id, creator: req.user._id },
+    { _id: req.params._id },
+    {
+      $set: {
+        name: req.body.newName,
+      },
+    });
+  res.status(200).json({
+    message: 'Category updated successfully',
+    newName: req.body.newName,
   });
 };
 
 module.exports = {
   getCategories,
   addCategory,
-  updateCategory,
+  putRenameCategory,
 };

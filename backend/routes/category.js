@@ -9,6 +9,7 @@ router.get('/', categoryController.getCategories);
 
 router.post('/', categoryController.addCategory);
 
-router.put('/:id', categoryController.updateCategory);
+router.put('/:_id', categoryController.putRenameCategory);
+
 
 module.exports = router;

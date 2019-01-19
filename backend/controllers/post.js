@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const Post = require('../models/post');
 
 const Category = require('../models/category');
