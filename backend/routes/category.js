@@ -7,6 +7,10 @@ const categoryController = require('../controllers/category');
 
 router.get('/', categoryController.getCategories);
 
+router.get('/subcategories/:_id', categoryController.getCategorySubcategories);
+
+router.get('/posts/:_id', categoryController.getCategoryPosts);
+
 router.post('/', categoryController.addCategory);
 
 router.put('/:_id', categoryController.renameCategory);

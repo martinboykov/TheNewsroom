@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const Category = require('../models/category');
 
 const Subcategory = require('../models/subcategory');
@@ -12,6 +10,17 @@ const getSubcategories = async (req, res, next) => {
   res.status(200).json({
     message: 'Subcategories fetched successfully',
     subcategories: subcategories,
+  });
+};
+
+const getSubcategoryPosts = async (req, res, next) => {
+  const posts = await Subcategory
+    .findOne({ _id: req.params._id })
+    .select('posts')
+    .populate('posts');
+  res.status(200).json({
+    message: `Posts of Subcategory with _id: ${req.params._id} fetched successfully`, // eslint-disable-line max-len
+    subcategory: posts,
   });
 };
 
@@ -79,6 +88,7 @@ const renameSubcategory = async (req, res, next) => {
 
 module.exports = {
   getSubcategories,
+  getSubcategoryPosts,
   addSubcategory,
   renameSubcategory,
 };

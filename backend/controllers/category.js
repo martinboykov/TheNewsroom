@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const Category = require('../models/category');
 
 const Fawn = require('Fawn');
@@ -10,6 +8,28 @@ const getCategories = async (req, res, next) => {
   res.status(200).json({
     message: 'Categories fetched successfully',
     categories: categories,
+  });
+};
+
+const getCategorySubcategories = async (req, res, next) => {
+  const subcategories = await Category
+    .findOne({ _id: req.params._id })
+    .select('subcategories')
+    .populate('subcategories', 'name');
+  res.status(200).json({
+    message: `Subcategories of Category with _id: ${req.params._id} fetched successfully`, // eslint-disable-line max-len
+    category: subcategories,
+  });
+};
+
+const getCategoryPosts = async (req, res, next) => {
+  const posts = await Category
+    .findOne({ _id: req.params._id })
+    .select('posts')
+    .populate('posts');
+  res.status(200).json({
+    message: `Posts of Category with _id: ${req.params._id} fetched successfully`, // eslint-disable-line max-len
+    category: posts,
   });
 };
 
@@ -66,6 +86,8 @@ const renameCategory = async (req, res, next) => {
 
 module.exports = {
   getCategories,
+  getCategorySubcategories,
+  getCategoryPosts,
   addCategory,
   renameCategory,
 };

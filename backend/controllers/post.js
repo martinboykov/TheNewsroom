@@ -17,6 +17,14 @@ const getPosts = async (req, res, next) => {
   });
 };
 
+const getPost = async (req, res, next) => {
+  const post = await Post.findOne({ _id: req.params._id });
+  res.status(200).json({
+    message: `Post with _id: ${post._id} fetched successfully`,
+    post: post,
+  });
+};
+
 // POST
 const addPost = async (req, res, next) => {
   // const user = req.user; // T0D0: TO BE SWITCHED LATER (AFTER Authentication/Authorization is complete)
@@ -155,7 +163,7 @@ const updatePost = async (req, res, next) => {
   // 1. if no newSubcategory in updatedPost
   if (!newSubcategory) {
     // 1.1. if no oldSubcategory in oldPost exists as well
-    // -> noting changes (no need to modify anything)
+    // => do nothing
 
     // 1.2. if oldSubcategory in oldPost exists
     if (oldSubcategory) {
@@ -177,10 +185,6 @@ const updatePost = async (req, res, next) => {
       if (oldSubcategory.name === newSubcategory.name) {
         // 2.2. oldSubcategory in oldPost exists
         // 2.2.1. oldSubcategory === newSubcategory
-        // updatedPost.subcategory = {
-        //   name: newSubcategory.name, // or oldSubcategory
-        //   _id: newSubcategory._id, // or oldSubcategory
-        // };
         // => do nothing
       } else { // 2.2.2. oldSubcategory !== newSubcategory
         // removes post_id from old subcategory
@@ -208,22 +212,11 @@ const updatePost = async (req, res, next) => {
 
   const newtags = new Set(req.body.tags);
   const oldTags = new Set(oldPost.tags.map((t) => t.name));
-  console.log('oldTags', oldTags);
-  console.log('newtags', newtags);
-
-  // const sameTags = newtags.filter((item) => { // same obg => same tags
-  //   return oldTags.has(item);
-  // });
-  // for (const tagName of sameTags) {
-  //   const sameTag = oldPost.tags.filter((tag) => tag.name === tagName)[0];
-  //   updatedPost.tags.push(sameTag);
-  // }
 
   // 1. dIfferent tags in the newTags from oldTags
   const differentTags = [...newtags].filter((item) => {
     return !oldTags.has(item);
   });
-  console.log('differentTags', differentTags);
   if (differentTags) {
     for (const tagName of differentTags) {
       const differentTagExists = await Tag.findOne({ name: tagName });
@@ -249,17 +242,13 @@ const updatePost = async (req, res, next) => {
   const removedTags = [...oldTags].filter((item) => {
     return !newtags.has(item);
   });
-  console.log('removedTags', removedTags);
   if (removedTags) {
     for (const tagName of removedTags) {
       let index;
-      // console.log(tagName);
       const tagToRemove = updatedPost.tags.filter((tag, i) => {
         if (tag.name === tagName) index = i;
-        console.log(tag.name);
         return tag.name === tagName;
       })[0];
-      console.log('tagToRemove', tagToRemove);
       updatedPost.tags.splice(index, 1);
       task.update('tags', {
         _id: tagToRemove._id,
@@ -294,6 +283,7 @@ const updatePost = async (req, res, next) => {
 
 module.exports = {
   getPosts,
+  getPost,
   addPost,
   updatePost,
 };
