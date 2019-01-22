@@ -7,8 +7,8 @@ const subcategoryController = require('../controllers/subcategory');
 
 router.get('/', subcategoryController.getSubcategories);
 
-router.post('/', subcategoryController.postAddSubcategory);
+router.post('/', subcategoryController.addSubcategory);
 
-router.put('/:_id', subcategoryController.putRenameSubcategory);
+router.put('/:_id', subcategoryController.renameSubcategory);
 
 module.exports = router;

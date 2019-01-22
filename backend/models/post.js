@@ -30,20 +30,38 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  categoryId: {
-    type: mongoose.Schema.Types.ObjectId, // One-to-Many: may need frequent change
-    ref: 'Category',
-    required: true,
+  category: { // One-to-Many with Denornmalization: faster queries (population)
+    name: {
+      type: String,
+      required: true,
+    },
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true,
+    },
   },
-  tags: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Tag',
+  tags: [{ // One-to-Many with Denornmalization: faster queries (population)
+    name: {
+      type: String,
+      required: true,
+    },
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Tag',
+      required: true,
+    },
   }],
-  subcategoryId: {
-    type: mongoose.Schema.Types.ObjectId, // One-to-Many: may need frequent change
-    ref: 'Subcategory',
-  },
   // not required data
+  subcategory: { // One-to-Many with Denornmalization: faster queries (population)
+    name: {
+      type: String,
+    },
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Subcategory',
+    },
+  },
   popularity: {
     type: Number,
     default: 0,
