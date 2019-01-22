@@ -14,6 +14,8 @@ const subcategoryController = require('./routes/subcategory');
 
 const categoryController = require('./routes/category');
 
+const tagController = require('./routes/tag');
+
 const Fawn = require('Fawn');
 
 /* eslint-disable no-max-len*/
@@ -43,5 +45,7 @@ app.use('/api/posts', postRoutes);
 app.use('/api/subcategories', subcategoryController);
 
 app.use('/api/categories', categoryController);
+
+app.use('/api/tags', tagController);
 
 module.exports = app;
