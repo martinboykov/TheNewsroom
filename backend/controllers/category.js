@@ -58,7 +58,7 @@ const renameCategory = async (req, res, next) => {
   }
   const ifExists = await Category.findOne({ name: req.body.newName });
   if (ifExists) {
-    return res.status(400).json({ message: 'Duplicate name.' });
+    return res.status(400).json({ message: 'Duplicate category name.' });
   }
   const task = new Fawn.Task(); // eslint-disable-line new-cap
 

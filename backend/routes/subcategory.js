@@ -13,4 +13,6 @@ router.post('/', subcategoryController.addSubcategory);
 
 router.put('/:_id', subcategoryController.renameSubcategory);
 
+router.delete('/:_id', subcategoryController.deleteSubcategory);
+
 module.exports = router;

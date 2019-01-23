@@ -6,6 +6,7 @@ const subcategorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
   },
   // not required data
   categoryId: {

@@ -27,6 +27,13 @@ const getSubcategoryPosts = async (req, res, next) => {
 // POST
 const addSubcategory = async (req, res, next) => {
   const category = await Category.findOne({ name: req.body.categoryName });
+  if (!category) {
+    return res.status(400).json({ message: 'No such category.' });
+  }
+  const ifExists = await Subcategory.findOne({ name: req.body.name });
+  if (ifExists) {
+    return res.status(400).json({ message: 'Duplicate subcategory name.' });
+  }
   const newSubcategory = new Subcategory({ // mongo driver adds _id behind the scene,  before it is saved to MongoDB
     name: req.body.name,
     categoryId: category._id,
@@ -40,13 +47,13 @@ const addSubcategory = async (req, res, next) => {
   }, {
       $push: { subcategories: newSubcategory._id },
     });
-  task.run({ useMongoose: true })
+  return task.run({ useMongoose: true })
     .then((result) => {
       res.status(200).json({
         message:
           'Subcategory added successfully and Category updated succesfully',
-        subcategory: newSubcategory,
-        // category: category,
+        subcategory: result[0],
+        category: category,
       });
     })
     .catch((err) => {
@@ -59,7 +66,21 @@ const addSubcategory = async (req, res, next) => {
 const renameSubcategory = async (req, res, next) => {
   // const subcategoryId = mongoose.Types.ObjectId(`${req.params._id}`); // eslint-disable-line new-cap
   const subcategory = await Subcategory.findOne({ _id: req.params._id });
+  if (!subcategory) {
+    return res.status(400).json({ message: 'No such subcategory.' });
+  }
+  if (subcategory.name === req.body.newName) {
+    return res.status(400).json({
+      message: 'Same subcategory name. No need of update',
+    });
+  }
+  const ifExists = await Subcategory.findOne({ name: req.body.newName });
+  if (ifExists) {
+    return res.status(400).json({ message: 'Duplicate subcategory name.' });
+  }
+
   const task = new Fawn.Task(); // eslint-disable-line new-cap
+  subcategory.name = req.body.newName;
   task.update('subcategories', {
     _id: subcategory._id,
   }, {
@@ -70,20 +91,47 @@ const renameSubcategory = async (req, res, next) => {
   }, {
       $set: { 'subcategory.name': req.body.newName },
     }).options({ multi: true });
-  task.run({ useMongoose: true })
-    .then(() => {
+  return task.run({ useMongoose: true })
+    .then((result) => {
       res.status(200).json({
         message: 'Subcategory (and Post(s)) updated successfully',
-        newName: req.body.newName,
+        subcategory: subcategory,
       });
     })
     .catch((err) => {
       res.status(500).json({ message: 'Something failed.' });
       console.log(err);
     });
-
-  // DELETE
-  // ...
+};
+// DELETE
+const deleteSubcategory = async (req, res, next) => {
+  const subcategory = await Subcategory.findOne({ _id: req.params._id });
+  if (!subcategory) {
+    return res.status(400).json({ message: 'No such subcategory.' });
+  }
+  if (subcategory.posts.length !== 0) {
+    return res.status(404).json({
+      message: 'Subcategory cannot be deleted',
+    });
+  }
+  const task = new Fawn.Task(); // eslint-disable-line new-cap
+  task.update('categories', {
+    _id: subcategory.categoryId,
+  }, {
+      $pull: { subcategories: subcategory._id },
+    });
+  task.remove(subcategory);
+  return task.run({ useMongoose: true })
+    .then((result) => {
+      return res.status(201).json({
+        message: 'Subcategory deleted successfully',
+        subcategory: subcategory,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({ message: 'Something failed.' });
+      console.log(err);
+    });
 };
 
 module.exports = {
@@ -91,4 +139,5 @@ module.exports = {
   getSubcategoryPosts,
   addSubcategory,
   renameSubcategory,
+  deleteSubcategory,
 };
