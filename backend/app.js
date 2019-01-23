@@ -19,10 +19,9 @@ const tagController = require('./routes/tag');
 const Fawn = require('Fawn');
 
 /* eslint-disable no-max-len*/
-mongoose.connect(`mongodb+srv://${process.env.MONGO_ATLAS_USER_NAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-ekat5.mongodb.net/test?retryWrites=true`, { useNewUrlParser: true })
+mongoose.connect(`mongodb+srv://${process.env.MONGO_ATLAS_USER_NAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-ekat5.mongodb.net/test?retryWrites=true`, { useCreateIndex: true, useNewUrlParser: true })
   .then(() => console.log('Connected to MongoDB database...'))
   .catch((err) => console.log('Connection to MongoDB failed!', err));
-
 Fawn.init(mongoose, 'fawn_transaction');
 
 app.use(bodyParser.json());
