@@ -49,47 +49,60 @@ const addPost = async (req, res, next) => {
   const task = new Fawn.Task(); // eslint-disable-line new-cap
 
   // category update/ add to post
-  const category = await Category
-    .findOne({ name: req.body.categoryName });
-
-  task.update('categories', {
-    _id: category._id,
-  }, { $push: { posts: post._id } });
-
-  post.category = { name: category.name, _id: category._id };
-
-  // subcategory update/ add to post
-  if (req.body.subcategoryName) {
-    const subcategory = await Subcategory
-      .findOne({ name: req.body.subcategoryName });
-    task.update('subcategories', {
-      _id: subcategory._id,
+  const categoryPromise = Category.findOne({
+    name: req.body.categoryName,
+  });
+  categoryPromise.then((category) => {
+    task.update('categories', {
+      _id: category._id,
     }, { $push: { posts: post._id } });
 
-    post.subcategory = { name: subcategory.name, _id: subcategory._id };
+    post.category = { name: category.name, _id: category._id };
+  });
+
+
+  // subcategory update/ add to post
+  let subcategoryPromise;
+  if (req.body.subcategoryName) {
+    subcategoryPromise = Subcategory.findOne({
+      name: req.body.subcategoryName,
+    });
+    subcategoryPromise.then((subcategory) => {
+      task.update('subcategories', {
+        _id: subcategory._id,
+      }, { $push: { posts: post._id } });
+
+      post.subcategory = { name: subcategory.name, _id: subcategory._id };
+    });
   }
 
   // tag update/ add to post
   const tags = [...new Set(req.body.tags)];
+  const tagsPromises = [];
   for (const tagName of tags) {
-    const tagExisted = await Tag.findOne({ name: tagName });
-    if (tagExisted) {
-      post.tags.push({ name: tagExisted.name, _id: tagExisted._id });
-      task.update('tags', {
-        _id: tagExisted._id,
-      }, {
-          $addToSet: { posts: post._id },
+    const tagExistedPromise = Tag.findOne({ name: tagName });
+    tagExistedPromise.then((tagExisted) => {
+      if (tagExisted) {
+        post.tags.push({ name: tagExisted.name, _id: tagExisted._id });
+        task.update('tags', {
+          _id: tagExisted._id,
+        }, {
+            $addToSet: { posts: post._id },
+          });
+      } else {
+        const tag = new Tag({
+          name: tagName,
+          posts: [post._id],
         });
-    } else {
-      const tag = new Tag({
-        name: tagName,
-        posts: [post._id],
-      });
-      task.save('tags', tag);
-      post.tags.push({ name: tag.name, _id: tag._id });
-    }
+        task.save('tags', tag);
+        post.tags.push({ name: tag.name, _id: tag._id });
+      }
+    });
+    tagsPromises.push(tagExistedPromise);
   }
 
+  const promises = [categoryPromise, subcategoryPromise, ...tagsPromises];
+  await Promise.all(promises);
   // saving new post to db
   task.save('posts', post);
   return task.run({ useMongoose: true })
