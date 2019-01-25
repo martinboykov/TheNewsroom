@@ -1,10 +1,10 @@
-const Post = require('../../models/post');
+const { Post } = require('../../models/post');
 
-const Category = require('../../models/category');
+const { Category } = require('../../models/category');
 
-const Subcategory = require('../../models/subcategory');
+const { Subcategory } = require('../../models/subcategory');
 
-const Tag = require('../../models/tag');
+const { Tag } = require('../../models/tag');
 
 const Fawn = require('Fawn');
 
@@ -67,7 +67,7 @@ const deletePost = async (req, res, next) => {
       res.status(200).json({
         message:
           'Post (and Tag/s) deleted successfully. Category and Subcategory updated succesfully', // eslint-disable-line max-len
-        post: post,
+        data: post,
       });
     })
     .catch((err) => {

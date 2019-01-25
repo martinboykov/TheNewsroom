@@ -1,10 +1,10 @@
-const Post = require('../../models/post');
+const { Post, validatePost } = require('../../models/post');
 
-const Category = require('../../models/category');
+const { Category } = require('../../models/category');
 
-const Subcategory = require('../../models/subcategory');
+const { Subcategory } = require('../../models/subcategory');
 
-const Tag = require('../../models/tag');
+const { Tag } = require('../../models/tag');
 
 const Fawn = require('Fawn');
 
@@ -14,93 +14,101 @@ const updatePost = async (req, res, next) => {
 
   // check if the author is the current user
 
-  const oldPost = await Post.findOne({ _id: req.params._id });
+  const data = req.body;
+  const { error } = validatePost(data);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+    // return res.status(400).json({ message: 'Invalid request data' });
+  }
+
+  const postOld = await Post.findOne({ _id: req.params._id });
   // if such doesnt exists => error
 
-  const updatedPost = oldPost.toObject();
-  updatePost.title = req.body.title;
-  updatePost.content = req.body.content;
+  const postUpdated = postOld.toObject();
+  postUpdated.title = data.title;
+  postUpdated.content = data.content;
 
   // Start the transaction
   const task = new Fawn.Task(); // eslint-disable-line new-cap
 
   // IF IMAGEPATH IS CHANGED
   // task.update(..)
+  postUpdated.imagePath = data.imagePath;
 
   // IF CATEGORY CHANGED/UNCHANGED
   let categoryPromise;
-  if (oldPost.category.name === req.body.categoryName) {
-    updatedPost.category = {
-      name: oldPost.category.name,
-      _id: oldPost.category._id,
+  if (postOld.category.name === data.categoryName) {
+    postUpdated.category = {
+      name: postOld.category.name,
+      _id: postOld.category._id,
     };
   } else {
     categoryPromise = Category
-      .findOne({ name: req.body.categoryName })
+      .findOne({ name: data.categoryName })
       .then((category) => {
         // removes post_id from old category
         task.update('categories', {
-          _id: oldPost.category._id,
-        }, { $pull: { posts: oldPost._id } });
+          _id: postOld.category._id,
+        }, { $pull: { posts: postOld._id } });
 
         // adds post_id to new category
         task.update('categories', {
           _id: category._id,
-        }, { $push: { posts: oldPost._id } });
+        }, { $push: { posts: postOld._id } });
 
-        updatedPost.category = { name: category.name, _id: category._id };
+        postUpdated.category = { name: category.name, _id: category._id };
       });
   }
 
   // IF SUBCATEGORY CHANGED/UNCHANGED
   let oldSubcategory;
-  if (oldPost.subcategory) {
+  if (postOld.subcategory) {
     oldSubcategory = {
-      name: oldPost.subcategory.name,
-      _id: oldPost.subcategory._id,
+      name: postOld.subcategory.name,
+      _id: postOld.subcategory._id,
     };
   }
   const subcategoryPromise = Subcategory
-    .findOne({ name: req.body.subcategoryName || '' })
+    .findOne({ name: data.subcategoryName || '' })
     .then((newSubcategory) => {
-      // 1. if no newSubcategory in updatedPost
+      // 1. if no newSubcategory in postUpdated
       if (!newSubcategory) {
-        // 1.1. if no oldSubcategory in oldPost exists as well
+        // 1.1. if no oldSubcategory in postOld exists as well
         // => do nothing
 
-        // 1.2. if oldSubcategory in oldPost exists
+        // 1.2. if oldSubcategory in postOld exists
         if (oldSubcategory) {
           task.update('subcategories', {
             _id: oldSubcategory._id,
-          }, { $pull: { posts: oldPost._id } });
+          }, { $pull: { posts: postOld._id } });
           task.update('posts', {
-            _id: updatedPost._id,
+            _id: postUpdated._id,
           }, { $unset: { subcategory: '' } });
-          updatedPost.subcategory = '';
+          postUpdated.subcategory = '';
         }
-      } else { // 2. if newSubcategory in updatedPost exists
-        // 2.1. no oldSubcategory in oldPost exists => must update newSubcategory by adding oldPost._id
+      } else { // 2. if newSubcategory in postUpdated exists
+        // 2.1. no oldSubcategory in postOld exists => must update newSubcategory by adding postOld._id
         if (!oldSubcategory) {
           task.update('subcategories', {
             _id: newSubcategory._id,
-          }, { $push: { posts: updatedPost._id } });
+          }, { $push: { posts: postUpdated._id } });
         } else { // if(oldSubcategory)
           if (oldSubcategory.name === newSubcategory.name) {
-            // 2.2. oldSubcategory in oldPost exists
+            // 2.2. oldSubcategory in postOld exists
             // 2.2.1. oldSubcategory === newSubcategory
             // => do nothing
           } else { // 2.2.2. oldSubcategory !== newSubcategory
             // removes post_id from old subcategory
             task.update('subcategories', {
               _id: oldSubcategory._id,
-            }, { $pull: { posts: oldPost._id } });
+            }, { $pull: { posts: postOld._id } });
 
             // adds post_id to new subcategory
             task.update('subcategories', {
               _id: newSubcategory._id,
-            }, { $push: { posts: updatedPost._id } });
+            }, { $push: { posts: postUpdated._id } });
 
-            updatedPost.subcategory = {
+            postUpdated.subcategory = {
               name: newSubcategory.name,
               _id: newSubcategory._id,
             };
@@ -109,12 +117,12 @@ const updatePost = async (req, res, next) => {
       }
     });
   // TAG UPDATE
-  if (req.body.tags.length === 0) {
+  if (data.tags.length === 0) {
     return res.status(404).json({ message: 'No tags found' });
   }
 
-  const newtags = new Set(req.body.tags);
-  const oldTags = new Set(oldPost.tags.map((t) => t.name));
+  const newtags = new Set(data.tags);
+  const oldTags = new Set(postOld.tags.map((t) => t.name));
 
   // 1. dIfferent tags in the newTags from oldTags
   const differentTags = [...newtags].filter((item) => {
@@ -129,17 +137,17 @@ const updatePost = async (req, res, next) => {
           if (!differentTagExists) {
             const differentTag = new Tag({
               name: tagName,
-              posts: [updatedPost._id],
+              posts: [postUpdated._id],
             });
             task.save(differentTag);
-            updatedPost.tags.push(differentTag);
+            postUpdated.tags.push(differentTag);
           } else {
             task.update('tags', {
               _id: differentTagExists._id,
             }, {
-                $push: { posts: updatedPost._id },
+                $push: { posts: postUpdated._id },
               });
-            updatedPost.tags.push(differentTagExists);
+            postUpdated.tags.push(differentTagExists);
           }
         });
       promisesDifferentTags.push(differentTagExistsPromise);
@@ -156,14 +164,14 @@ const updatePost = async (req, res, next) => {
       const tagToRemovePromise = Tag
         .findOne({ name: tagName })
         .then((tagToRemove) => {
-          const index = updatedPost.tags.findIndex((tag) => {
+          const index = postUpdated.tags.findIndex((tag) => {
             return tag.name === tagName;
           });
-          updatedPost.tags.splice(index, 1);
+          postUpdated.tags.splice(index, 1);
           task.update('tags', {
             _id: tagToRemove._id,
           }, {
-              $pull: { posts: updatedPost._id },
+              $pull: { posts: postUpdated._id },
             });
           if (tagToRemove.posts.length === 1) {
             task.remove(tagToRemove);
@@ -178,20 +186,27 @@ const updatePost = async (req, res, next) => {
     ...promisesDifferentTags,
     ...promisesRemovedTags,
   ];
-  await Promise.all(allPromises);
-  task.update(oldPost, updatedPost)
-    .options({ viaSave: true });
-  return task.run({ useMongoose: true })
-    .then((result) => {
-      res.status(200).json({
-        message:
-          'Post and (Tag(s)) added successfully. Category, Subcategory and Tags updated succesfully', // eslint-disable-line max-len
-        post: result[result.length - 1],
-      });
+
+  return Promise.all(allPromises)
+    .then(() => {
+      task.update(postOld, postUpdated)
+        .options({ viaSave: true });
+      return task.run({ useMongoose: true })
+        .then((result) => {
+          res.status(200).json({
+            message:
+              'Post and (Tag(s)) added successfully. Category, Subcategory and Tags updated succesfully', // eslint-disable-line max-len
+            data: result[result.length - 1],
+          });
+        })
+        .catch((err) => {
+          res.status(500).json({ message: 'Something failed.' });
+        });
     })
     .catch((err) => {
-      res.status(500).json({ message: 'Something failed.' });
-      console.log(err);
+      return res.status(400).json({
+        message: 'Invalid request data. Please review request and try again.',
+      });
     });
 };
 

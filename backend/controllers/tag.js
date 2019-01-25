@@ -1,4 +1,4 @@
-const Tag = require('../models/tag');
+const { Tag } = require('../models/tag');
 
 // GET
 const getTags = async (req, res, next) => {

@@ -1,12 +1,16 @@
 /* eslint-disable no-undefined*/
 const mongoose = require('mongoose');
 
+const Joi = require('joi');
+
 const tagSchema = new mongoose.Schema({
   // required data
   name: {
     type: String,
     required: true,
     unique: true,
+    minlength: 1,
+    maxlength: 50,
   },
   posts: {
     type: [{
@@ -18,4 +22,21 @@ const tagSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Tag', tagSchema);
+function validateTag(tag) {
+  const schema = Joi.object({
+    name: Joi
+      .string()
+      .lowercase()
+      .min(1)
+      .max(200)
+      .required(),
+  });
+  return Joi.validate(tag, schema);
+}
+
+const Tag = mongoose.model('Tag', tagSchema);
+
+module.exports = {
+  Tag,
+  validateTag,
+};

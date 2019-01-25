@@ -1,4 +1,4 @@
-const Category = require('../models/category');
+const { Category, validateCategory } = require('../models/category');
 
 const Fawn = require('Fawn');
 
@@ -7,7 +7,7 @@ const getCategories = async (req, res, next) => {
   const categories = await Category.find();
   res.status(200).json({
     message: 'Categories fetched successfully',
-    categories: categories,
+    data: categories,
   });
 };
 
@@ -18,7 +18,7 @@ const getCategorySubcategories = async (req, res, next) => {
     .populate('subcategories', 'name');
   res.status(200).json({
     message: `Subcategories of Category with _id: ${req.params._id} fetched successfully`, // eslint-disable-line max-len
-    category: subcategories,
+    data: subcategories,
   });
 };
 
@@ -29,7 +29,7 @@ const getCategoryPosts = async (req, res, next) => {
     .populate('posts');
   res.status(200).json({
     message: `Posts of Category with _id: ${req.params._id} fetched successfully`, // eslint-disable-line max-len
-    category: posts,
+    data: posts,
   });
 };
 
@@ -39,14 +39,20 @@ const addCategory = async (req, res, next) => {
   if (ifExists) {
     return res.status(400).json({ message: 'Category already exists.' });
   }
-  const category = new Category({ // mongo driver adds _id behind the scene,  before it is saved to MongoDB
+
+  const { error } = validateCategory(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
+  const category = new Category({
     name: req.body.name,
-    // subcategories: req.body.subcategories,
   });
+
   await category.save();
   return res.status(201).json({
-    message: 'Category added successfully', // not neccessary
-    category: category,
+    message: 'Category added successfully',
+    data: category,
   });
 };
 
@@ -56,10 +62,21 @@ const renameCategory = async (req, res, next) => {
   if (!category) {
     return res.status(400).json({ message: 'No such category.' });
   }
+  if (category.name === req.body.newName) {
+    return res.status(400).json({
+      message: 'Same category name. Must provide different name.',
+    });
+  }
   const ifExists = await Category.findOne({ name: req.body.newName });
   if (ifExists) {
     return res.status(400).json({ message: 'Duplicate category name.' });
   }
+
+  const { error } = validateCategory({ name: req.body.newName });
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
   const task = new Fawn.Task(); // eslint-disable-line new-cap
 
   task.update('categories', {
@@ -68,7 +85,7 @@ const renameCategory = async (req, res, next) => {
       $set: { name: req.body.newName },
     });
 
-  category.name = req.body.name;
+  category.name = req.body.newName;
 
   task.update('posts', {
     'category._id': category._id,
@@ -80,7 +97,7 @@ const renameCategory = async (req, res, next) => {
     .then(() => {
       res.status(200).json({
         message: 'Category (and Post(s)) updated successfully',
-        category: category,
+        data: category,
       });
     })
     .catch((err) => {
@@ -101,7 +118,7 @@ const deleteCategory = async (req, res, next) => {
   const categoryRemoved = await category.remove();
   return res.status(201).json({
     message: 'Category deleted successfully',
-    category: categoryRemoved,
+    data: categoryRemoved,
   });
 };
 

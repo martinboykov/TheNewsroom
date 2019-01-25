@@ -1,4 +1,6 @@
 /* eslint-disable no-process-env*/
+require('express-async-errors');
+const error = require('./middleware/error');
 
 const express = require('express');
 
@@ -47,5 +49,7 @@ app.use('/api/subcategories', subcategoryController);
 app.use('/api/categories', categoryController);
 
 app.use('/api/tags', tagController);
+
+app.use(error);
 
 module.exports = app;

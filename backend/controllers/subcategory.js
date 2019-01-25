@@ -1,6 +1,6 @@
-const Category = require('../models/category');
+const { Category } = require('../models/category');
 
-const Subcategory = require('../models/subcategory');
+const { Subcategory, validateSubcategory } = require('../models/subcategory');
 
 const Fawn = require('Fawn');
 
@@ -9,7 +9,7 @@ const getSubcategories = async (req, res, next) => {
   const subcategories = await Subcategory.find();
   res.status(200).json({
     message: 'Subcategories fetched successfully',
-    subcategories: subcategories,
+    data: subcategories,
   });
 };
 
@@ -20,7 +20,7 @@ const getSubcategoryPosts = async (req, res, next) => {
     .populate('posts');
   res.status(200).json({
     message: `Posts of Subcategory with _id: ${req.params._id} fetched successfully`, // eslint-disable-line max-len
-    subcategory: posts,
+    data: posts,
   });
 };
 
@@ -30,10 +30,17 @@ const addSubcategory = async (req, res, next) => {
   if (!category) {
     return res.status(400).json({ message: 'No such category.' });
   }
+
+  const { error } = validateSubcategory({ name: req.body.name });
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
   const ifExists = await Subcategory.findOne({ name: req.body.name });
   if (ifExists) {
-    return res.status(400).json({ message: 'Duplicate subcategory name.' });
+    return res.status(400).json({ message: 'Subcategory already exists.' });
   }
+
   const newSubcategory = new Subcategory({ // mongo driver adds _id behind the scene,  before it is saved to MongoDB
     name: req.body.name,
     categoryId: category._id,
@@ -52,8 +59,10 @@ const addSubcategory = async (req, res, next) => {
       res.status(200).json({
         message:
           'Subcategory added successfully and Category updated succesfully',
-        subcategory: result[0],
-        category: category,
+        data: {
+          subcategory: result[0],
+          category: category,
+        },
       });
     })
     .catch((err) => {
@@ -69,9 +78,15 @@ const renameSubcategory = async (req, res, next) => {
   if (!subcategory) {
     return res.status(400).json({ message: 'No such subcategory.' });
   }
+
+  const { error } = validateSubcategory({ name: req.body.newName });
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
   if (subcategory.name === req.body.newName) {
     return res.status(400).json({
-      message: 'Same subcategory name. No need of update',
+      message: 'Same subcategory name. Must provide different name.',
     });
   }
   const ifExists = await Subcategory.findOne({ name: req.body.newName });
@@ -95,7 +110,7 @@ const renameSubcategory = async (req, res, next) => {
     .then((result) => {
       res.status(200).json({
         message: 'Subcategory (and Post(s)) updated successfully',
-        subcategory: subcategory,
+        data: subcategory,
       });
     })
     .catch((err) => {
