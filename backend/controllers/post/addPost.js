@@ -84,22 +84,28 @@ const addPost = async (req, res, next) => {
     tagsPromises.push(tagExistedPromise);
   }
 
-  const promises = [categoryPromise, subcategoryPromise, ...tagsPromises];
-  await Promise.all(promises);
+  const allPromises = [categoryPromise, subcategoryPromise, ...tagsPromises];
 
-  // saving new post to db
-  task.save('posts', post);
-  return task.run({ useMongoose: true })
-    .then((result) => {
-      res.status(200).json({
-        message:
-          'Post and Tag(s) added successfully. Category and Subcategory updated succesfully', // eslint-disable-line max-len
-        data: result[result.length - 1],
-      });
+  return Promise.all(allPromises)
+    .then(() => {
+      // saving new post to db
+      task.save('posts', post);
+      return task.run({ useMongoose: true })
+        .then((result) => {
+          res.status(200).json({
+            message:
+              'Post and Tag(s) added successfully. Category and Subcategory updated succesfully', // eslint-disable-line max-len
+            data: result[result.length - 1],
+          });
+        })
+        .catch((err) => {
+          throw new Error(err);
+        });
     })
     .catch((err) => {
-      res.status(500).json({ message: 'Something failed.' });
-      console.log(err);
+      return res.status(400).json({
+        message: 'Invalid request data.',
+      });
     });
 };
 

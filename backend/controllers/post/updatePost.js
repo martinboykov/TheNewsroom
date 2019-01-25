@@ -200,12 +200,12 @@ const updatePost = async (req, res, next) => {
           });
         })
         .catch((err) => {
-          res.status(500).json({ message: 'Something failed.' });
+          throw new Error(err);
         });
     })
     .catch((err) => {
       return res.status(400).json({
-        message: 'Invalid request data. Please review request and try again.',
+        message: 'Invalid request data.',
       });
     });
 };

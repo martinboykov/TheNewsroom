@@ -58,21 +58,27 @@ const deletePost = async (req, res, next) => {
       });
     tagsPromises.push(tagToRemovePromise);
   }
-  const promises = [categoryPromise, subcategoryPromise, ...tagsPromises];
-  await Promise.all(promises);
-  // saving new post to db
-  task.remove(post);
-  return task.run({ useMongoose: true })
-    .then((result) => {
-      res.status(200).json({
-        message:
-          'Post (and Tag/s) deleted successfully. Category and Subcategory updated succesfully', // eslint-disable-line max-len
-        data: post,
-      });
+  const allPromises = [categoryPromise, subcategoryPromise, ...tagsPromises];
+  return Promise.all(allPromises)
+    .then(() => {
+      // saving new post to db
+      task.remove(post);
+      return task.run({ useMongoose: true })
+        .then((result) => {
+          res.status(200).json({
+            message:
+              'Post (and Tag/s) deleted successfully. Category and Subcategory updated succesfully', // eslint-disable-line max-len
+            data: post,
+          });
+        })
+        .catch((err) => {
+          throw new Error(err);
+        });
     })
     .catch((err) => {
-      res.status(500).json({ message: 'Something failed.' });
-      console.log(err);
+      return res.status(400).json({
+        message: 'Invalid request data.',
+      });
     });
 };
 

@@ -1,5 +1,12 @@
 /* eslint-disable no-process-env*/
 require('express-async-errors');
+
+const debug = require('debug')('debug');
+
+const morgan = require('morgan');
+
+const winston = require('winston');
+
 const error = require('./middleware/error');
 
 const express = require('express');
@@ -22,10 +29,41 @@ const Fawn = require('Fawn');
 
 Fawn.init(mongoose, 'fawn_transaction');
 
-/* eslint-disable no-max-len*/
-mongoose.connect(`mongodb+srv://${process.env.MONGO_ATLAS_USER_NAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-ekat5.mongodb.net/test?retryWrites=true`, { useCreateIndex: true, useNewUrlParser: true })
-  .then(() => console.log('Connected to MongoDB database...'))
-  .catch((err) => console.log('Connection to MongoDB failed!', err));
+if (app.get('env') === 'production') {
+  mongoose.connect(`mongodb+srv://${process.env.MONGO_ATLAS_USER_NAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-ekat5.mongodb.net/test?retryWrites=true`, { useCreateIndex: true, useNewUrlParser: true }) // eslint-disable-line max-len
+    .then(() => winston.info('Connected to MongoDB database...'));
+  winston.add(winston.transports.File, { filename: './backend/logfile.log' });
+  const exeptionsLogger = new winston.Logger({
+    transports: [
+      new winston.transports.Console({
+        handleExceptions: true,
+        json: true,
+      }),
+      new winston.transports.File({
+        filename: './backend/uncaughtException.log',
+        handleExceptions: true,
+        json: true,
+      }),
+    ],
+    exitOnError: false,
+  });
+  exeptionsLogger.error('Exceptionlogger initiated');
+  process.on('unhandledRejection', (ex) => { // for async code outside express
+    throw ex;
+  });
+}
+
+if (app.get('env') === 'development') {
+  mongoose.connect(`mongodb+srv://${process.env.MONGO_ATLAS_USER_NAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-ekat5.mongodb.net/test?retryWrites=true`, { useCreateIndex: true, useNewUrlParser: true }) // eslint-disable-line max-len
+    .then(() => debug('Connected to MongoDB database...'));
+  app.use(morgan('tiny'));
+  process.on('uncaughtException', (ex) => { // for sync code outside express
+    debug(ex);
+  });
+  process.on('unhandledRejection', (ex) => { // for async code outside express
+    debug(ex);
+  });
+}
 
 app.use(bodyParser.json());
 

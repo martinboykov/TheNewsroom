@@ -66,8 +66,7 @@ const addSubcategory = async (req, res, next) => {
       });
     })
     .catch((err) => {
-      res.status(500).json({ message: 'Something failed.' });
-      console.log(err);
+      throw new Error(err);
     });
 };
 
@@ -114,8 +113,7 @@ const renameSubcategory = async (req, res, next) => {
       });
     })
     .catch((err) => {
-      res.status(500).json({ message: 'Something failed.' });
-      console.log(err);
+      throw new Error(err);
     });
 };
 // DELETE
