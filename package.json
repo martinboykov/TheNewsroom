@@ -8,7 +8,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start:server": "SET DEBUG=debug&& nodemon --no-deprecation server.js"
+    "start:dev": "set NODE_ENV=development&&SET DEBUG=debug&& nodemon --no-deprecation server.js",
+    "start:prod": "set NODE_ENV=production&& nodemon server.js",
+    "start:lint": "eslint --fix backend/**"
   },
   "private": true,
   "dependencies": {
@@ -21,11 +23,13 @@
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
     "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
     "core-js": "^2.5.4",
     "debug": "^4.1.1",
     "express": "^4.16.4",
     "express-async-errors": "^3.1.1",
     "fawn": "^2.1.5",
+    "helmet": "^3.15.0",
     "joi": "^14.3.1",
     "mongoose": "^5.4.4",
     "morgan": "^1.9.1",
