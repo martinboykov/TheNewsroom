@@ -1,9 +1,8 @@
-/* eslint-disable no-process-env*/
-require('express-async-errors');
-
 const express = require('express');
 
 const app = express();
+
+require('express-async-errors');
 
 require('./starter/third-party')(app);
 

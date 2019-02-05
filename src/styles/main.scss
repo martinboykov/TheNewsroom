@@ -1,0 +1,10 @@
+// Mixins and Settings Sass Files
+@import "partials/variables";
+@import "partials/mixins";
+// Vendor Sass Files
+@import "vendor/ie/ie";
+// Core Setup Sass Files
+@import "./core/reset";
+@import "core/normalize";
+@import "core/global";
+@import "core/typography";

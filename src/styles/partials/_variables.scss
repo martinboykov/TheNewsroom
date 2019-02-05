@@ -1,0 +1,57 @@
+/* Fonts */
+
+// added resolve-url-loader
+// League Gothic - Regular
+@font-face {
+  font-family: "League Gothic";
+  src: url("../assets/fonts/league_gothic/leaguegothic-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+// MyriadPro - Regular
+@font-face {
+  font-family: "Myriad Pro";
+  src: url("../assets/fonts/MyriadPro/MyriadPro-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+// Droid Sans - Regular
+@import url("https://fonts.googleapis.com/css?family=Droid+Sans:400,700");
+// Yanone Kaffeesatz
+@import url("https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700");
+$font-default: "Droid Sans", sans-serif;
+$font-lg: "League Gothic", sans-serif;
+$font-mp: "Myriad Pro", sans-serif;
+$font-yk: "Yanone Kaffeesatz", sans-serif;
+
+// Colors
+$background: #323232;
+// $background-main-gradient: linear-gradient(
+//   to right,
+//   #1d1c1d 0%,
+//   #1e1e1e 3%,
+//   #2b2b2a 13%,
+//   #323232 21%,
+//   #323232 79%,
+//   #2b2b2a 87%,
+//   #1e1e1e 97%,
+//   #1d1c1d 100%
+// );
+// home
+$red: #9a1d0d;
+$gold: #dcc08e;
+// content article
+$grey: #7a7575;
+$light-grey: #a1a1a1;
+$dark-grey: #686868;
+$black: #2c2c2c;
+$light-black: #2b2b2b;
+// // Grid settings
+$full-width: 1680px;
+$home-grid-width: 1510px;
+// $grid-width: 1200px;
+// $grid-columns: 12;
+// $grid-gutter: 20px;
+$desktop: 980px;

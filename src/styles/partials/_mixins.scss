@@ -1,0 +1,18 @@
+// Font mixins
+@mixin font-default($weight: 400, $style: normal) {
+  font-family: $font-default;
+  font-weight: $weight;
+  font-style: $style;
+}
+
+// Gradients
+// ..
+
+
+// Media queries
+@mixin media-query-desktop() {
+  @media (min-width: $desktop) {
+      // align-self: auto;
+      width: auto;
+  }
+}

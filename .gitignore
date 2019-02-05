@@ -49,3 +49,6 @@ Thumbs.db
 # logging
 /backend/logfile.log
 /backend/uncaughtException.log
+
+# development files
+/development files
