@@ -1,18 +1,28 @@
-// Font mixins
+// Fonts mixins
 @mixin font-default($weight: 400, $style: normal) {
   font-family: $font-default;
   font-weight: $weight;
   font-style: $style;
 }
 
-// Gradients
+// Gradients mixins
 // ..
+@mixin gradient-main() {
+  // if no support for linear-gradient
+  background: #1d1c1d;
 
+  background: linear-gradient(
+    to right,
+    #1d1c1d 0%,
+    #1e1e1e 3%,
+    #2b2b2a 13%,
+    #323232 21%,
+    #323232 79%,
+    #2b2b2a 87%,
+    #1e1e1e 97%,
+    #1d1c1d 100%
+  );
 
-// Media queries
-@mixin media-query-desktop() {
-  @media (min-width: $desktop) {
-      // align-self: auto;
-      width: auto;
-  }
+  /* IE6-9 */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1d1c1d', endColorstr='#1d1c1d', GradientType=1);
 }

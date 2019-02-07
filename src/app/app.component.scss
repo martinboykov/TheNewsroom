@@ -1,8 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./partials/variables";
-.to-gold {
-  color: $gold;
-}
-div {
-  font-family: $font-default;
+@import "./partials/mixins";
+
+.wrapper {
+  @include gradient-main;
+  min-width: $app-min-width;
+  max-width: $app-full-width;
+  margin: 0 auto;
+  .container {
+    margin: 0 auto;
+    height: 100%;
+    max-width: $main-full-width;
+    display: grid;
+    grid-template-rows: minmax(100px, 240px) 1fr 80px;
+
+    app-header {
+      grid-row: 1/2;
+    }
+    main {
+      // min-height: 1550px;
+      grid-row: 2/3;
+      // display: grid;
+      // grid-template-columns: 1fr 300px;
+      // app-aside-right-tripple {
+      //   grid-column: 2/3;
+      //   height: 600px;
+      //   position: sticky;
+      //   top: 0;
+      // }
+    }
+
+    app-footer {
+      grid-row: 3/4;
+    }
+  }
 }

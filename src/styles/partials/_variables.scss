@@ -28,30 +28,24 @@ $font-yk: "Yanone Kaffeesatz", sans-serif;
 
 // Colors
 $background: #323232;
-// $background-main-gradient: linear-gradient(
-//   to right,
-//   #1d1c1d 0%,
-//   #1e1e1e 3%,
-//   #2b2b2a 13%,
-//   #323232 21%,
-//   #323232 79%,
-//   #2b2b2a 87%,
-//   #1e1e1e 97%,
-//   #1d1c1d 100%
-// );
+
 // home
 $red: #9a1d0d;
 $gold: #dcc08e;
+
 // content article
 $grey: #7a7575;
 $light-grey: #a1a1a1;
 $dark-grey: #686868;
 $black: #2c2c2c;
 $light-black: #2b2b2b;
-// // Grid settings
-$full-width: 1680px;
-$home-grid-width: 1510px;
-// $grid-width: 1200px;
-// $grid-columns: 12;
-// $grid-gutter: 20px;
-$desktop: 980px;
+
+// Loayut
+$app-full-width: 1680px;
+$app-min-width: 320px;
+
+$main-full-width: 1550px;
+
+
+// media queries breakpoints
+$desktop-breakpoint: 980px;

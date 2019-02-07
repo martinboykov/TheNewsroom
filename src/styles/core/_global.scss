@@ -9,6 +9,7 @@
 html {
   font-size: 62.5%; //
   box-sizing: border-box;
+  height: 100%;
 }
 
 *,
@@ -21,8 +22,8 @@ body {
   @include font-default();
   font-size: 13px; // font-size: 1.3rem;
   color: $grey;
-  background: #1d1c1d;
-  // background: yellow;
+  height: 100%;
+  background: #1d1c1c;
 }
 
 img {
@@ -77,4 +78,10 @@ img {
 
 .light-black {
   color: $light-black;
+}
+
+// Layouts
+.posts-layout-grid{
+  display: grid;
+  grid-template-columns: 1fr 300px;
 }
