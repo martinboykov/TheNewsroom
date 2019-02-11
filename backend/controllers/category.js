@@ -4,7 +4,9 @@ const Fawn = require('Fawn');
 
 // GET
 const getCategories = async (req, res, next) => {
-  const categories = await Category.find();
+  const categories = await Category.find()
+    .select('name subcategories')
+    .populate('subcategories', 'name');
   res.status(200).json({
     message: 'Categories fetched successfully',
     data: categories,

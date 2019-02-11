@@ -7,12 +7,45 @@
 </div>
 <nav class="main-nav">
   <ul class="main-nav__items">
-    <li class="main-nav__item">
+    <li class="dropdown main-nav__item">
       <a class="main-nav__item--link">Home</a>
     </li>
-    <li class="main-nav__item"
+    <li class="dropdown main-nav__item"
         *ngFor="let category of categories">
-      <a class="main-nav__item--link">{{category.name}}</a>
+      <a class=" main-nav__item--link">{{category.name}}</a>
+      <div class="dropdown-content">
+        <ul class="main-nav__items main-nav__subitems">
+          <li class="main-nav__item main-nav__subitem"
+              *ngFor="let subcategory of category.subcategories">
+            <a href="" class="main-nav__subitem--grid">
+              <div class="main-nav__subitem--grid-arrows">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     xmlns:xlink="http://www.w3.org/1999/xlink"
+                     version="1.1"
+                     id="Capa_1"
+                     x="0px"
+                     y="0px"
+                     width="11px"
+                     height="11px"
+                     viewBox="0 0 220.682 220.682"
+                     style="enable-background:new 0 0 220.682 220.682;"
+                     xml:space="preserve">
+                  <g>
+                    <polygon points="92.695,38.924 164.113,110.341 92.695,181.758 120.979,210.043 220.682,110.341 120.979,10.639  "
+                             fill="#585858" />
+                    <polygon points="28.284,210.043 127.986,110.341 28.284,10.639 0,38.924 71.417,110.341 0,181.758  "
+                             fill="#585858" />
+                  </g>
+                </svg>
+              </div>
+              <span class="main-nav__item--link main-nav__subitem--grid-link">
+                {{subcategory.name}}
+              </span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
     </li>
   </ul>
 </nav>
