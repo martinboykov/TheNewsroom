@@ -33,6 +33,22 @@ img {
   margin: 0 auto;
 }
 
+a {
+  text-decoration: none;
+  transition: width 0.4s;
+  &:hover, &:active {
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+
 // HELPER CLASSES (diff design specific)
 // font
 .uppercase {
@@ -81,7 +97,7 @@ img {
 }
 
 // Layouts
-.posts-layout-grid{
+.post-list__grid{
   display: grid;
   grid-template-columns: 1fr 300px;
 }

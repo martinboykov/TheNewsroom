@@ -12,22 +12,15 @@
     height: 100%;
     max-width: $main-full-width;
     display: grid;
-    grid-template-rows: minmax(100px, 240px) 1fr 80px;
+    grid-template-rows: 140px 1fr 60px;
 
     app-header {
       grid-row: 1/2;
     }
     main {
-      // min-height: 1550px;
       grid-row: 2/3;
-      // display: grid;
-      // grid-template-columns: 1fr 300px;
-      // app-aside-right-tripple {
-      //   grid-column: 2/3;
-      //   height: 600px;
-      //   position: sticky;
-      //   top: 0;
-      // }
+      background: white;
+      border: 1px solid gray;
     }
 
     app-footer {

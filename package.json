@@ -8,9 +8,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start:dev": "set NODE_ENV=development&&SET DEBUG=debug&& nodemon --no-deprecation server.js",
-    "start:prod": "set NODE_ENV=production&& nodemon server.js",
-    "start:lint": "eslint --fix backend/**"
+    "server:dev": "set NODE_ENV=development&&SET DEBUG=debug&& nodemon --no-deprecation server.js",
+    "server:prod": "set NODE_ENV=production&& nodemon server.js",
+    "server:lint": "eslint --fix backend/**"
   },
   "private": true,
   "dependencies": {

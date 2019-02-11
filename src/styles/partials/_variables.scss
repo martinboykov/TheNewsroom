@@ -4,7 +4,7 @@
 // League Gothic - Regular
 @font-face {
   font-family: "League Gothic";
-  src: url("../assets/fonts/league_gothic/leaguegothic-regular-webfont.woff") format("woff");
+  src: url("/assets/fonts/league_gothic/leaguegothic-regular-webfont.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
@@ -12,15 +12,23 @@
 // MyriadPro - Regular
 @font-face {
   font-family: "Myriad Pro";
-  src: url("../assets/fonts/MyriadPro/MyriadPro-Regular.woff") format("woff");
+  src: url("/assets/fonts/MyriadPro/MyriadPro-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
 
+// Yanone Kaffeesatz
+@font-face {
+  font-family: "Yanone Kaffeesatz";
+  src: url("/assets/fonts/Yanone_Kaffeesatz/Yanone_Kaffeesatz_Regular_V2.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+// @import url('https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz');
+
 // Droid Sans - Regular
 @import url("https://fonts.googleapis.com/css?family=Droid+Sans:400,700");
-// Yanone Kaffeesatz
-@import url("https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700");
+
 $font-default: "Droid Sans", sans-serif;
 $font-lg: "League Gothic", sans-serif;
 $font-mp: "Myriad Pro", sans-serif;
@@ -48,4 +56,4 @@ $main-full-width: 1550px;
 
 
 // media queries breakpoints
-$desktop-breakpoint: 980px;
+$desktop: 980px;

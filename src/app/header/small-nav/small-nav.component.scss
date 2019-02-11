@@ -1,0 +1,13 @@
+.small-nav {
+  height: inherit;
+  align-self: center;
+  &__items {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: inherit;
+  }
+  &__item {
+    align-self: center;
+  }
+}

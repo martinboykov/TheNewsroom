@@ -1,0 +1,18 @@
+<div class="toggle">
+  <button class="toggle-button">
+    <span class="toggle-button__bar"></span>
+    <span class="toggle-button__bar"></span>
+    <span class="toggle-button__bar"></span>
+  </button>
+</div>
+<nav class="main-nav">
+  <ul class="main-nav__items">
+    <li class="main-nav__item">
+      <a class="main-nav__item--link">Home</a>
+    </li>
+    <li class="main-nav__item"
+        *ngFor="let category of categories">
+      <a class="main-nav__item--link">{{category.name}}</a>
+    </li>
+  </ul>
+</nav>

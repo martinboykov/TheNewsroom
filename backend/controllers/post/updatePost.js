@@ -25,6 +25,10 @@ const updatePost = async (req, res, next) => {
   // if such doesnt exists => error
 
   const postUpdated = postOld.toObject();
+  // toObject() method comes from mongoose
+  // doc = model.toObject();
+  // model = model.constructor;
+
   postUpdated.title = data.title;
   postUpdated.content = data.content;
 
