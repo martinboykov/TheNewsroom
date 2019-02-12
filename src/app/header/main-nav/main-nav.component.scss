@@ -27,11 +27,33 @@
 }
 .main-nav {
   height: inherit;
-  &__items {
+  .main-nav__items {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     height: inherit;
+    .main-nav__item {
+      align-self: center;
+      &:nth-child(1) {
+        margin-left: -5px;
+      }
+      &--link {
+        padding: 0 5px 7px 5px;
+        text-shadow: (1px 1px rgba(0, 0, 0, 1));
+        font-family: $font-lg;
+        text-decoration: none;
+        font-size: 24px;
+        text-transform: uppercase;
+        color: white;
+        &:hover,
+        &.active {
+          color: $gold;
+        }
+      }
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
     .dropdown {
       position: relative;
       display: inline-block;
@@ -49,6 +71,9 @@
           grid-auto-rows: 1fr;
           padding: 10px 0;
           .main-nav__subitem {
+            &:nth-child(1) {
+              margin-left: 0px; // as there is -5 margin left comming from main-nav__item HOME
+            }
             &--grid {
               display: grid;
               grid-template-columns: 30px max-content;
@@ -84,28 +109,6 @@
             }
           }
         }
-      }
-    }
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-  }
-  &__item {
-    align-self: center;
-    // &:nth-child(1) {
-    //   // padding-left: 0px;
-    // }
-    &--link {
-      padding: 0 5px 7px 5px;
-      text-shadow: (1px 1px rgba(0, 0, 0, 1));
-      font-family: $font-lg;
-      text-decoration: none;
-      font-size: 24px;
-      text-transform: uppercase;
-      color: white;
-      &:hover,
-      &.active {
-        color: $gold;
       }
     }
   }

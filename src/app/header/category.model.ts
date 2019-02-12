@@ -1,6 +1,6 @@
 export interface Category {
-  _id: string;
-  name: string;
-  subcategories: String[];
-  posts: String[];
+  _id: String;
+  name: String;
+  subcategories: String[]; // to be specified
+  posts: String[]; // to be specified
 }

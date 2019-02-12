@@ -5,14 +5,16 @@ const Fawn = require('Fawn');
 // GET
 const getCategories = async (req, res, next) => {
   const categories = await Category.find()
-    .select('name subcategories')
-    .populate('subcategories', 'name');
+    // .select('name subcategories posts')
+    .populate('subcategories', 'name')
+    .populate('posts', 'title');
   res.status(200).json({
     message: 'Categories fetched successfully',
     data: categories,
   });
 };
 
+// not required, as getCategories populates all subcategories names
 const getCategorySubcategories = async (req, res, next) => {
   const subcategories = await Category
     .findOne({ _id: req.params._id })

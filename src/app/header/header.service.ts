@@ -11,8 +11,8 @@ const BACKEND_URL = environment.apiUrl + '/';
   providedIn: 'root'
 })
 export class HeaderService {
-  private categories: Category[] = [];
-  private categoriesUpdated = new Subject<Category[]>();
+  private categories: any[] = [];
+  private categoriesUpdated = new Subject<any[]>();
   constructor(
     private http: HttpClient,
     private router: Router, ) { }

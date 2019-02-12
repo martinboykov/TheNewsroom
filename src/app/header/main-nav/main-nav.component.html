@@ -14,10 +14,10 @@
         *ngFor="let category of categories">
       <a class=" main-nav__item--link">{{category.name}}</a>
       <div class="dropdown-content">
-        <ul class="main-nav__items main-nav__subitems">
-          <li class="main-nav__item main-nav__subitem"
+        <ul class=" main-nav__subitems main-nav__items">
+          <li class=" main-nav__subitem main-nav__item"
               *ngFor="let subcategory of category.subcategories">
-            <a href="" class="main-nav__subitem--grid">
+            <a class="main-nav__subitem--grid">
               <div class="main-nav__subitem--grid-arrows">
                 <svg xmlns="http://www.w3.org/2000/svg"
                      xmlns:xlink="http://www.w3.org/1999/xlink"

@@ -16,15 +16,18 @@
 
     app-header {
       grid-row: 1/2;
+      padding: 0 5px;
     }
     main {
       grid-row: 2/3;
-      background: white;
       border: 1px solid gray;
+      padding: 0 5px;
     }
 
     app-footer {
       grid-row: 3/4;
+      border: 1px solid gray;
+      padding: 0 5px;
     }
   }
 }

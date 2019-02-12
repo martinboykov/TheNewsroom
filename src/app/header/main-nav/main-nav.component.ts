@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./main-nav.component.scss']
 })
 export class MainNavComponent implements OnInit {
-  categories: Category[] = [];
+  categories: any[] = []; // the data is not strict category !?!?, but with populate subcategories name
   private categoriesSubscription: Subscription;
   constructor(private headerService: HeaderService) { }
 
@@ -17,7 +17,7 @@ export class MainNavComponent implements OnInit {
   ngOnInit(): void {
     this.headerService.getCategories();
     this.categoriesSubscription = this.headerService.getCategoriesUpdateListener()
-      .subscribe((categories: Category[]) => {
+      .subscribe((categories: any[]) => {
         this.categories = categories;
       })
   }
