@@ -2,6 +2,7 @@
 .main-header {
   display: grid;
   grid-template-columns: max-content 1fr;
+  // grid-template-rows: 80px minmax(30px auto) 30px;
   grid-template-rows: 80px 30px 30px;
   align-items: center;
   .logo {

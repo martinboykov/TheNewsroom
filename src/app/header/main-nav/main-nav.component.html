@@ -1,11 +1,12 @@
-<div class="toggle">
-  <button class="toggle-button">
-    <span class="toggle-button__bar"></span>
-    <span class="toggle-button__bar"></span>
-    <span class="toggle-button__bar"></span>
-  </button>
-</div>
 <nav class="main-nav">
+  <div class="toggle"
+       appDropdown>
+    <button class="toggle-button">
+      <span class="toggle-button__bar"></span>
+      <span class="toggle-button__bar"></span>
+      <span class="toggle-button__bar"></span>
+    </button>
+  </div>
   <ul class="main-nav__items">
     <li class="dropdown main-nav__item">
       <a class="main-nav__item--link">Home</a>
@@ -14,7 +15,7 @@
         *ngFor="let category of categories">
       <a class=" main-nav__item--link">{{category.name}}</a>
       <div class="dropdown-content">
-        <ul class=" main-nav__subitems main-nav__items">
+        <ul class="main-nav__subitems main-nav__items">
           <li class=" main-nav__subitem main-nav__item"
               *ngFor="let subcategory of category.subcategories">
             <a class="main-nav__subitem--grid">
@@ -43,7 +44,6 @@
               </span>
             </a>
           </li>
-
         </ul>
       </div>
     </li>
