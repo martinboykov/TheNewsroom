@@ -111,11 +111,11 @@ function validatePost(post) {
       .min(1)
       .max(200)
       .required(),
-    subcategoryName: Joi
-      .string()
-      .min(1)
-      .max(200)
-      .required(),
+    // subcategoryName: Joi
+    //   .string()
+    //   .min(1)
+    //   .max(200)
+    //   .required(),
     tags: [Joi.array()
       .items(Joi
         .string()
@@ -124,7 +124,6 @@ function validatePost(post) {
         .max(200)
         .required())
       .required(),
-
     ],
   });
 

@@ -1,3 +1,5 @@
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { HeaderService } from './../../header/header.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PostDetailsComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private headerService: HeaderService, public route: ActivatedRoute) {
   }
 
+  ngOnInit() {
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      this.headerService.setRouterParameters(paramMap);
+    });
+  }
 }

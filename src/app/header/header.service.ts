@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ParamMap } from '@angular/router';
 import { Subject } from 'rxjs';
 
-import { Category } from './category.model';
 import { environment } from '../../environments/environment'
 const BACKEND_URL = environment.apiUrl + '/';
 
@@ -11,6 +10,8 @@ const BACKEND_URL = environment.apiUrl + '/';
   providedIn: 'root'
 })
 export class HeaderService {
+  private routerParameters: ParamMap;
+  private routerParametersUpdated = new Subject<ParamMap>();
   private categories: any[] = [];
   private categoriesUpdated = new Subject<any[]>();
   constructor(
@@ -27,6 +28,16 @@ export class HeaderService {
   }
   getCategoriesUpdateListener() { // as we set postUpdate as private
     return this.categoriesUpdated.asObservable(); // returns object to which we can listen, but we cant emit
+  }
+
+
+  setRouterParameters(paramMap: ParamMap) {
+    this.routerParameters = paramMap;
+    this.routerParametersUpdated.next(this.routerParameters);
+  }
+
+  getRouterParametersUpdateListener() { // as we set postUpdate as private
+    return this.routerParametersUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }
 
 }
