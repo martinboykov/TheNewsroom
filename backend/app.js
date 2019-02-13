@@ -12,7 +12,7 @@ require('./starter/db')();
 
 require('./starter/logging')(app);
 
-app.use('/', express.static(path.join(__dirname, '/angular')));
+// app.use('/', express.static(path.join(__dirname, '/angular')));
 
 // REMOVE CORSE HEADERS IF NOT REQUIRED IN CASE OF ONE ORIGIN (ONE_APP) DEPLOYMENT
 app.use((req, res, next) => {

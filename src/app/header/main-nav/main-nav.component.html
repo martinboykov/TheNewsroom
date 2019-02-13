@@ -8,17 +8,27 @@
     </button>
   </div>
   <ul class="main-nav__items">
-    <li class="dropdown main-nav__item">
-      <a class="main-nav__item--link">Home</a>
+    <li class="dropdown main-nav__item"
+        routerLinkActive="router-link-active-item"
+        [routerLinkActiveOptions]="{exact:
+          true}">
+      <a routerLink="/"
+         class="main-nav__item--link">Home</a>
     </li>
     <li class="dropdown main-nav__item"
-        *ngFor="let category of categories">
-      <a class=" main-nav__item--link">{{category.name}}</a>
+        *ngFor="let category of categories"
+        routerLinkActive="router-link-active-item">
+      <a routerLink="/{{category.name}}"
+         class="main-nav__item--link">{{category.name}}</a>
       <div class="dropdown-content">
-        <ul class="main-nav__subitems main-nav__items">
-          <li class=" main-nav__subitem main-nav__item"
+        <ul class="main-nav__subitems">
+          <li class=" main-nav__subitem"
               *ngFor="let subcategory of category.subcategories">
-            <a class="main-nav__subitem--grid">
+            <a routerLink="/{{category.name}}/{{subcategory.name}}"
+               routerLinkActive="router-link-active-subitem"
+               [routerLinkActiveOptions]="{exact:
+                true}"
+               class="main-nav__subitem--grid">
               <div class="main-nav__subitem--grid-arrows">
                 <svg xmlns="http://www.w3.org/2000/svg"
                      xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -39,7 +49,7 @@
                   </g>
                 </svg>
               </div>
-              <span class="main-nav__item--link main-nav__subitem--grid-link">
+              <span class="main-nav__subitem--grid-link">
                 {{subcategory.name}}
               </span>
             </a>

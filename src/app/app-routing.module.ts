@@ -7,7 +7,9 @@ import { PostListComponent } from './posts/post-list/post-list.component';
 
 const routes: Routes = [
   { path: '', component: PostListComponent },
-  { path: 'post/:_id', component: PostDetailsComponent},
+  { path: ':category', component: PostListComponent },
+  { path: ':category/:subcategory', component: PostListComponent },
+  { path: 'posts/:name', component: PostDetailsComponent},
 ];
 
 @NgModule({
@@ -15,6 +17,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forRoot(routes),
-  ]
+  ],
+  exports: [RouterModule],
 })
 export class AppRoutingModule { }
