@@ -1,3 +1,4 @@
+import { Post } from './../post.model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { HeaderService } from './../../header/header.service';
 import { Component, OnInit } from '@angular/core';
@@ -10,7 +11,7 @@ import { PostService } from '../post.service';
   styleUrls: ['./post-list.component.scss']
 })
 export class PostListComponent implements OnInit {
-  posts: any[] = []; // the data is not strict category !?!?, but with populate subcategories name
+  posts: Post[] = []; // the data is not strict category !?!?, but with populate subcategories name
   private postsSubscription: Subscription;
   constructor(private headerService: HeaderService,
     private postService: PostService,
@@ -26,13 +27,13 @@ export class PostListComponent implements OnInit {
 
     this.postService.getPosts();
     this.postsSubscription = this.postService.getPostUpdateListener()
-      .subscribe((posts: any[]) => {
+      .subscribe((posts: Post[]) => {
         this.posts = posts;
         console.log(this.posts);
 
       })
   }
   ngOnDestroy() {
-    this.postsSubscription.unsubscribe(); // prevent memory leaks
+    this.postsSubscription.unsubscribe();
   }
 }

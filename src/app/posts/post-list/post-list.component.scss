@@ -1,4 +1,32 @@
+@import "./partials/variables";
+
 .wrapper {
   display: grid;
   grid-template-columns: 1fr 300px;
+  grid-template-rows: minmax(1120px, 1fr) 80px;
+  grid-column-gap: 20px;
+  .posts {
+    grid-column: 1/2;
+    grid-row: 1/2;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(360px, 1fr));
+    grid-gap: 20px;
+    app-post-item {
+      min-width: 230px;
+      max-height: 360px;
+    }
+  }
+  app-aside-right-tripple {
+    grid-column: 2/3;
+    grid-row: 1/2;
+    background: $dark-grey;
+    color: $gold;
+  }
+  .pagination {
+    grid-column: 1/2;
+    grid-row: 2/3;
+    color: $gold;
+    background: gray;
+  }
 }

@@ -14,6 +14,7 @@ import { MainNavComponent } from './header/main-nav/main-nav.component';
 import { SearchComponent } from './header/search/search.component';
 import { SmallNavComponent } from './header/small-nav/small-nav.component';
 import { DropdownDirective } from './header/dropdown.directive';
+import { PostItemComponent } from './posts/post-item/post-item.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { DropdownDirective } from './header/dropdown.directive';
     MainNavComponent,
     SearchComponent,
     SmallNavComponent,
-    DropdownDirective
+    DropdownDirective,
+    PostItemComponent
   ],
   imports: [
     BrowserModule,
