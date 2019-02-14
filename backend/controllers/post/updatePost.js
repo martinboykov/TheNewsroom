@@ -66,7 +66,7 @@ const updatePost = async (req, res, next) => {
 
   // IF SUBCATEGORY CHANGED/UNCHANGED
   let oldSubcategory;
-  if (postOld.subcategory) {
+  if (postOld.subcategory.name) {
     oldSubcategory = {
       name: postOld.subcategory.name,
       _id: postOld.subcategory._id,
@@ -96,6 +96,11 @@ const updatePost = async (req, res, next) => {
           task.update('subcategories', {
             _id: newSubcategory._id,
           }, { $push: { posts: postUpdated._id } });
+
+          postUpdated.subcategory = {
+            name: newSubcategory.name,
+            _id: newSubcategory._id,
+          };
         } else { // if(oldSubcategory)
           if (oldSubcategory.name === newSubcategory.name) {
             // 2.2. oldSubcategory in postOld exists

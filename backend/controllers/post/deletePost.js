@@ -28,7 +28,7 @@ const deletePost = async (req, res, next) => {
 
   // subcategory update/ remove post
   let subcategoryPromise;
-  if (post.subcategory) {
+  if (post.subcategory.name) {
     subcategoryPromise = Subcategory
       .findOne({
         name: post.subcategory.name,

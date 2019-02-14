@@ -85,7 +85,6 @@ const postSchema = new mongoose.Schema({
     type: [String],
     default: undefined,
   },
-
 });
 
 function validatePost(post) {
@@ -111,11 +110,10 @@ function validatePost(post) {
       .min(1)
       .max(200)
       .required(),
-    // subcategoryName: Joi
-    //   .string()
-    //   .min(1)
-    //   .max(200)
-    //   .required(),
+    subcategoryName: Joi
+      .string()
+      .min(0)
+      .max(200),
     tags: [Joi.array()
       .items(Joi
         .string()
