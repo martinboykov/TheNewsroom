@@ -1,4 +1,10 @@
-<div class="wrapper post-list__grid">
+<div class="wrapper">
   <h1>Post list</h1>
+  <ul>
+    <li *ngFor="let post of posts">
+      {{post | json}}
+      <hr>
+    </li>
+  </ul>
   <app-aside-right-tripple></app-aside-right-tripple>
 </div>

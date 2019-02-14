@@ -95,9 +95,3 @@ ul {
 .light-black {
   color: $light-black;
 }
-
-// Layouts
-.post-list__grid{
-  display: grid;
-  grid-template-columns: 1fr 300px;
-}

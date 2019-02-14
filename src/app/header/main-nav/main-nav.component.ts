@@ -1,6 +1,5 @@
 import { HeaderService } from '../header.service';
 import { Component, OnInit } from '@angular/core';
-import { Category } from '../category.model';
 import { Subscription } from 'rxjs';
 
 @Component({
