@@ -160,9 +160,9 @@
       }
     }
     .main-nav__items {
-      display: flex;
-      flex-direction: column;
-      flex-wrap: nowrap;
+      display: grid;
+      grid-template-columns: minmax(150px, max-content) minmax(0, max-content);
+      grid-auto-rows: 1fr;
 
       height: auto;
       border-radius: 0 5px 5px 0;
@@ -170,15 +170,14 @@
       opacity: 0;
       visibility: hidden;
       .main-nav__item {
-        display: inline-block;
-        align-self: flex-start;
+        grid-column: 1;
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-template-rows: subgrid;
         &--link {
-          display: inline-block;
-          width: 150px;
+          grid-column: 1/2;
+          grid-row: 1/2;
           padding: 0px 10px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
         }
         &:nth-child(1) {
           margin-left: 0px;
@@ -193,24 +192,25 @@
         }
       }
       .dropdown {
-        position: relative;
-        width: 100%;
-        overflow: hidden;
         .dropdown-content {
-          display: block;
+          grid-column: 2/3;
+          grid-row: 1/2;
+          border-radius: 0 5px 5px 0;
           .main-nav__subitems {
             opacity: 0.99;
             visibility: visible;
+            padding: 1px 0;
             .main-nav__subitem {
               &--grid {
                 display: grid;
                 grid-template-columns: 15px max-content;
-                width: 150px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                span {
-                  width: 135px;
+                &-arrows {
+                  grid-column: 1/2;
+                }
+                &-link {
+                  grid-column: 2/3;
+                  min-width: 135px;
+                  display: inline-block;
                   padding: 0px 10px 0px 5px;
                 }
               }
@@ -221,20 +221,6 @@
         &:active {
           overflow: visible;
           border-radius: 0;
-          .dropdown-content {
-            position: absolute;
-            top: -10px;
-            left: 150px;
-            .main-nav__subitems {
-              .main-nav__subitem {
-                &--grid {
-                  &-link {
-                    padding: 0px 25px 0px 5px;
-                  }
-                }
-              }
-            }
-          }
         }
       }
     }

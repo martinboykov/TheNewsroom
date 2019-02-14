@@ -2,6 +2,7 @@
   <ul class="small-nav__items">
     <li class="small-nav__item">
       <a class="small-nav__item--link first"
+         [ngClass]="{'last': !routes[0]}"
          routerLink="/"
          routerLinkActive="router-link-active">
         Home
