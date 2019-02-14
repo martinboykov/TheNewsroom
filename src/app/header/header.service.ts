@@ -4,7 +4,7 @@ import { Router, ParamMap } from '@angular/router';
 import { Subject } from 'rxjs';
 
 import { environment } from '../../environments/environment'
-const BACKEND_URL = environment.apiUrl + '/';
+const BACKEND_URL = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +16,12 @@ export class HeaderService {
   private categoriesUpdated = new Subject<any[]>();
   constructor(
     private http: HttpClient,
-    private router: Router, ) { }
+    private router: Router) { }
 
   getCategories() {
     this.http
-      .get<{ message: string, data: any }>(BACKEND_URL + 'categories')
-      .subscribe((response)=>{
+      .get<{ message: string, data: any }>(BACKEND_URL + '/categories')
+      .subscribe((response) => {
         this.categories = response.data;
         this.categoriesUpdated.next([...this.categories]);
       })
