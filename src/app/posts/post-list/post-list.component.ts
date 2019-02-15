@@ -11,7 +11,14 @@ import { PostService } from '../post.service';
   styleUrls: ['./post-list.component.scss']
 })
 export class PostListComponent implements OnInit {
-  posts: Post[] = []; // the data is not strict category !?!?, but with populate subcategories name
+  routerParameters: ParamMap;
+  routerParametersSubscription: Subscription;
+  category;
+  subcategory;
+  name;
+  url;
+
+  posts: Post[] = []; // strict Post model !?!
   private postsSubscription: Subscription;
   constructor(private headerService: HeaderService,
     private postService: PostService,
@@ -19,17 +26,27 @@ export class PostListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      this.headerService.setRouterParameters(paramMap);
-      console.log(paramMap);
-
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.headerService.setRouterParameters(params);
+       console.log(params);
+      this.routerParameters = params;
+      this.url = '/posts';
+      if (this.routerParameters.has('category')) {
+        this.category = this.routerParameters.get('category');
+        this.url = `/categories/posts/${this.category}`;
+        if (this.routerParameters.has('subcategory')) {
+          this.subcategory = this.routerParameters.get('subcategory');
+          this.url = `/subcategories/posts/${this.subcategory}`;
+        }
+      }
+      this.postService.getPosts(this.url);
     });
 
-    this.postService.getPosts();
+
     this.postsSubscription = this.postService.getPostUpdateListener()
       .subscribe((posts: Post[]) => {
         this.posts = posts;
-        console.log(this.posts);
+        // console.log(this.posts);
 
       })
   }

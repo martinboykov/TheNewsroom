@@ -9,7 +9,7 @@ router.get('/', categoryController.getCategories);
 
 router.get('/subcategories/:_id', categoryController.getCategorySubcategories);
 
-router.get('/posts/:_id', categoryController.getCategoryPosts);
+router.get('/posts/:name', categoryController.getCategoryPosts);
 
 router.post('/', categoryController.addCategory);
 

@@ -14,12 +14,18 @@ const getSubcategories = async (req, res, next) => {
 };
 
 const getSubcategoryPosts = async (req, res, next) => {
+  console.log(req.params);
   const posts = await Subcategory
-    .findOne({ _id: req.params._id })
-    .select('posts')
-    .populate('posts');
+    .findOne({ name: req.params.name })
+    .select('posts -_id')
+    .populate({
+      path: 'posts',
+      select: '_id title content category dateCreated author imageMainPath',
+      options: { sort: { 'dateCreated': -1 } },
+    });
+    console.log(posts);
   res.status(200).json({
-    message: `Posts of Subcategory with _id: ${req.params._id} fetched successfully`, // eslint-disable-line max-len
+    message: `Posts of Subcategory with name: ${req.params.name} fetched successfully`, // eslint-disable-line max-len
     data: posts,
   });
 };

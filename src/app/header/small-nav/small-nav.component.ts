@@ -10,7 +10,7 @@ import { Location } from '@angular/common';
   styleUrls: ['./small-nav.component.scss']
 })
 export class SmallNavComponent implements OnInit {
-  routerParameters;
+  routerParameters: ParamMap;
   routerParametersSubscription: Subscription;
   category;
   subcategory;
@@ -22,7 +22,7 @@ export class SmallNavComponent implements OnInit {
 
   ngOnInit() {
     this.routerParametersSubscription = this.headerService.getRouterParametersUpdateListener()
-      .subscribe((params) => {
+      .subscribe((params: ParamMap) => {
         this.routes = [];
         // this.routes.push({ name: 'Home', link: '' });
         this.routerParameters = params;

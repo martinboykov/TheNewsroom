@@ -10,18 +10,22 @@ const BACKEND_URL = environment.apiUrl;
   providedIn: 'root'
 })
 export class PostService {
-  private posts: Post[] = [];
-  private postUpdated = new Subject<Post[]>();
+  private posts: any[] = []; // only part of the data for each Post
+  private postUpdated = new Subject<any[]>();
   constructor(private http: HttpClient) { }
 
-  getPosts() {
-    this.http
-      .get<{ message: string, data: Post[] }>(BACKEND_URL + '/posts')
+  getPosts(url: String) {
+    // const queryParams = `?pageSize=${postsPerPage}&page=${currentPage}`;
+    console.log(url);
+
+    return this.http
+      .get<{ message: string, data: any}>(BACKEND_URL + url)
       .subscribe((postData) => {
-        this.posts = postData.data;
+        console.log(postData);
+        this.posts = postData.data.posts;
         this.postUpdated.next([...this.posts]);
       })
-    return [...this.posts];
+    // return [...this.posts];
   }
   getPostUpdateListener() { // as we set postUpdate as private
     return this.postUpdated.asObservable(); // returns object to which we can listen, but we cant emit

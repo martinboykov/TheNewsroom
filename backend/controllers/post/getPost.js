@@ -2,12 +2,17 @@ const { Post } = require('../../models/post');
 
 // GET
 const getPosts = async (req, res, next) => {
-  const posts = await Post.find();
+  const params = req.params;
+  console.log(params);
+  const posts = await Post.find()
+    .select('_id title content category dateCreated author imageMainPath')
+    .sort('datacreated -1');
   res.status(200).json({
     message: 'Posts fetched successfully',
-    data: posts,
+    data: { posts },
   });
 };
+
 
 const getPost = async (req, res, next) => {
   const post = await Post.findOne({ _id: req.params._id });
