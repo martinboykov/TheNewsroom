@@ -3,6 +3,7 @@
 .toggle {
   grid-column: 1/2;
   grid-row: 2/3;
+
   .toggle-button {
     display: none;
     width: 30px;
@@ -10,7 +11,6 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    vertical-align: middle;
     &:focus,
     :active {
       outline: none;
@@ -24,10 +24,10 @@
       border-radius: 15px;
 
       &:nth-child(1) {
-        margin-top: 0;
+        margin-top: 0px;
       }
       &:last-child {
-        margin-top: 0;
+        margin-bottom: 0px;
       }
     }
   }
@@ -155,6 +155,9 @@
   .main-nav {
     width: 30px;
     .toggle {
+      display: flex;
+      align-items: center;
+      height: 100%;
       .toggle-button {
         display: block;
       }
@@ -163,7 +166,6 @@
       display: grid;
       grid-template-columns: minmax(150px, max-content) minmax(0, max-content);
       grid-auto-rows: 1fr;
-
       height: auto;
       border-radius: 0 5px 5px 0;
       background: #222222;

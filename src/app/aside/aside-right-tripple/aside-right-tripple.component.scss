@@ -1,0 +1,10 @@
+@import "./partials/variables";
+
+.wrapper {
+  width: 300px;
+  height: 600px;
+  background: $dark-grey;
+  color: $gold;
+  position: sticky;
+  top: 0;
+}

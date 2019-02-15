@@ -52,27 +52,43 @@ a {
         flex-flow: column nowrap;
         align-items: flex-start;
         justify-content: center;
-        margin: 0 15px;
         border-bottom: 1px dotted rgba(0, 0, 0, 0.35);
         overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
+        &--title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: block;
+          width: calc(100% - 30px);
+          align-self: center;
+        }
         &--author {
-          color: $black;
           font-family: $font-yk;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: block;
+          width: calc(100% - 30px);
+          align-self: center;
         }
       }
       &__lower {
-        margin: 15px;
+        margin: 15px 0px;
         grid-column: 1/2;
         grid-row: 2/3;
         display: flex;
         flex-flow: column nowrap;
         align-items: flex-start;
         justify-content: flex-start;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        // overflow: hidden;
+        // text-overflow: ellipsis;
         color: $grey;
+        &--text {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: calc(100% - 30px);
+          align-self: center;
+        }
       }
     }
   }
