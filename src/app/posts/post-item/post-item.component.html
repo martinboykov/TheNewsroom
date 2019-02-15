@@ -1,6 +1,7 @@
 <a routerLink="/">
   <article class="item">
-    <div class="item-top">
+    <div class="item-top"
+         [ngStyle]="{'background-image': 'url(' + post.imageMainPath + ')'}">
       <div class="item-top--category text-center">
         <h2 class="white">{{post.category.name}}</h2>
       </div>
@@ -13,12 +14,12 @@
     </div>
     <div class="item-bottom">
       <div class="item-bottom__upper">
-            <h1 class="item-bottom__upper--title red">{{post.title}}</h1>
-            <h3 class="item-bottom__upper--author black">posted by {{post.author.name}}</h3>
+        <h1 class="item-bottom__upper--title red">{{post.title}}</h1>
+        <h3 class="item-bottom__upper--author black">posted by {{post.author.name}}</h3>
       </div>
       <div class="item-bottom__lower">
         <span class="item-bottom__lower--text">
-            {{post.content}}
+          {{post.content}}
         </span>
 
       </div>
