@@ -1,40 +1,40 @@
 export interface Post {
-  _id: String,
+  _id: String;
 
-  title: String,
+  title: String;
 
-  content: String,
+  content: String;
 
   author: {
     name: String,
-    _id: String
-  },
+    _id: String,
+  };
 
-  dateCreated: Date, // !? or string
+  dateCreated: Date; // !? or string
 
-  imageMainPath: String,
+  imageMainPath: String;
 
   category: {
     name: String,
-    _id: String
-  },
+    _id: String,
+  };
 
   subcategory?: {
     name: String,
     _id: String
-  },
+  };
 
   tags: [
     {
       _id: String,
-      name: String
+      name: String,
     }
-  ],
-  popularity: number,
+  ];
+  popularity: number;
 
-  comments: [String],
+  comments: [String];
 
-  __v?: String
+  __v?: String;
 }
 
 

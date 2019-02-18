@@ -1,5 +1,5 @@
 import { HeaderService } from '../header.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './main-nav.component.html',
   styleUrls: ['./main-nav.component.scss']
 })
-export class MainNavComponent implements OnInit {
+export class MainNavComponent implements OnInit, OnDestroy {
   categories: any[] = []; // the data is not strict category !?!?, but with populate subcategories name
   private categoriesSubscription: Subscription;
   constructor(private headerService: HeaderService) { }
@@ -18,7 +18,7 @@ export class MainNavComponent implements OnInit {
     this.categoriesSubscription = this.headerService.getCategoriesUpdateListener()
       .subscribe((categories: any[]) => {
         this.categories = categories;
-      })
+      });
   }
   ngOnDestroy() {
     this.categoriesSubscription.unsubscribe(); // prevent memory leaks

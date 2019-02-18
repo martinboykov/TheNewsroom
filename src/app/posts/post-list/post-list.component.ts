@@ -1,7 +1,7 @@
 import { Post } from './../post.model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { HeaderService } from './../../header/header.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PostService } from '../post.service';
 
@@ -10,7 +10,7 @@ import { PostService } from '../post.service';
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.scss']
 })
-export class PostListComponent implements OnInit {
+export class PostListComponent implements OnInit, OnDestroy {
   routerParameters: ParamMap;
   routerParametersSubscription: Subscription;
   category;
@@ -20,6 +20,7 @@ export class PostListComponent implements OnInit {
 
   posts: Post[] = []; // strict Post model !?!
   private postsSubscription: Subscription;
+
   constructor(private headerService: HeaderService,
     private postService: PostService,
     public route: ActivatedRoute) {
@@ -48,7 +49,7 @@ export class PostListComponent implements OnInit {
         this.posts = posts;
         // console.log(this.posts);
 
-      })
+      });
   }
   ngOnDestroy() {
     this.postsSubscription.unsubscribe();

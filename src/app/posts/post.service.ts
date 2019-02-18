@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { environment } from '../../environments/environment'
+import { environment } from '../../environments/environment';
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({
@@ -24,7 +24,7 @@ export class PostService {
         console.log(postData);
         this.posts = postData.data.posts;
         this.postUpdated.next([...this.posts]);
-      })
+      });
     // return [...this.posts];
   }
   getPostUpdateListener() { // as we set postUpdate as private
