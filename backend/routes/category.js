@@ -13,7 +13,7 @@ router.get('/posts/:name', categoryController.getCategoryPosts);
 
 router.get(
   '/posts/:name/totalCount',
-  categoryController.getSubcategoryPostsTotalCount,
+  categoryController.getCategoryPostsTotalCount,
 );
 
 router.post('/', categoryController.addCategory);

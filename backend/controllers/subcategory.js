@@ -1,5 +1,7 @@
 const { Category } = require('../models/category');
 
+const { Post } = require('../models/post');
+
 const { Subcategory, validateSubcategory } = require('../models/subcategory');
 
 const Fawn = require('Fawn');
@@ -14,14 +16,38 @@ const getSubcategories = async (req, res, next) => {
 };
 
 const getSubcategoryPosts = async (req, res, next) => {
-  const posts = await Subcategory
-    .findOne({ name: req.params.name })
-    .select('posts -_id')
-    .populate({
-      path: 'posts',
-      select: '_id title content category dateCreated author imageMainPath',
-      options: { sort: { 'dateCreated': -1 } },
-    });
+  const subcategoryName = req.params.name;
+  const pageSize = parseInt(req.query.pageSize, 10);
+  const currentPage = parseInt(req.query.page, 10);
+  let posts = await Subcategory.aggregate([
+    { $match: { name: subcategoryName } },
+
+    { $unwind: '$posts' },
+    {
+      $sort: {
+        'posts': -1,
+      },
+    },
+    { $skip: pageSize * (currentPage - 1) },
+    { $limit: pageSize },
+    { $group: { _id: 1, posts: { $push: { post: '$posts' } } } },
+    {
+      $project: { posts: '$posts', '_id': 0 },
+    },
+  ]);
+  posts = await Post.populate(posts, {
+    path: 'posts.post',
+    select: '_id title content category dateCreated author imageMainPath',
+    options: { sort: { 'dateCreated': -1 } },
+  });
+  if (!posts[0]) {
+    posts = [];
+  } else {
+    posts = posts[0].posts.reduce((total, current) => {
+      total.push(current.post);
+      return total;
+    }, []);
+  }
   res.status(200).json({
     message: `Posts of Subcategory with name: ${req.params.name} fetched successfully`, // eslint-disable-line max-len
     data: posts,
@@ -30,9 +56,8 @@ const getSubcategoryPosts = async (req, res, next) => {
 
 const getSubcategoryPostsTotalCount = async (req, res, next) => {
   const subcategoryPosts = await Subcategory
-    .findOne({ name: req.params.name })
-    .select('posts -_id');
-    const totalCount = subcategoryPosts.posts.length;
+    .findOne({ name: req.params.name });
+  const totalCount = subcategoryPosts.posts.length;
   res.status(200).json({
     message: 'Total posts count fetched successfully',
     data: totalCount,

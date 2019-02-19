@@ -1,4 +1,5 @@
 const { Category, validateCategory } = require('../models/category');
+const { Post } = require('../models/post');
 
 const Fawn = require('Fawn');
 
@@ -27,27 +28,49 @@ const getCategorySubcategories = async (req, res, next) => {
 };
 
 const getCategoryPosts = async (req, res, next) => {
-  // console.log(req.params);
-  const posts = await Category
-    .findOne({ name: req.params.name })
-    .select('posts -_id')
-    .populate({
-      path: 'posts',
-      select: '_id title content category dateCreated author imageMainPath',
-      options: { sort: { 'dateCreated': -1 } },
-    });
-  // console.log(posts);
+  const categoryName = req.params.name;
+  const pageSize = parseInt(req.query.pageSize, 10);
+  const currentPage = parseInt(req.query.page, 10);
+  let posts = await Category.aggregate([
+    { $match: { name: categoryName } },
+
+    { $unwind: '$posts' },
+    {
+      $sort: {
+        'posts': -1,
+      },
+    },
+    { $skip: pageSize * (currentPage - 1) },
+    { $limit: pageSize },
+    { $group: { _id: 1, posts: { $push: { post: '$posts' } } } },
+    {
+      $project: { posts: '$posts', '_id': 0 },
+    },
+  ]);
+  posts = await Post.populate(posts, {
+    path: 'posts.post',
+    select: '_id title content category dateCreated author imageMainPath',
+    options: { sort: { 'dateCreated': -1 } },
+  });
+  if (!posts[0]) {
+    posts = [];
+  } else {
+    posts = posts[0].posts.reduce((total, current) => {
+      total.push(current.post);
+      return total;
+    }, []);
+  }
+
   res.status(200).json({
     message: `Posts of Category with name: ${req.params.name} fetched successfully`, // eslint-disable-line max-len
     data: posts,
   });
 };
 
-const getSubcategoryPostsTotalCount = async (req, res, next) => {
-  const categoryposts = await Category
-    .findOne({ name: req.params.name })
-    .select('posts -_id');
-    const totalCount = categoryposts.posts.length;
+const getCategoryPostsTotalCount = async (req, res, next) => {
+  const categoryPosts = await Category
+    .findOne({ name: req.params.name });
+  const totalCount = categoryPosts.posts.length;
   res.status(200).json({
     message: 'Total posts count fetched successfully',
     data: totalCount,
@@ -146,7 +169,7 @@ module.exports = {
   getCategories,
   getCategorySubcategories,
   getCategoryPosts,
-  getSubcategoryPostsTotalCount,
+  getCategoryPostsTotalCount,
   addCategory,
   renameCategory,
   deleteCategory,

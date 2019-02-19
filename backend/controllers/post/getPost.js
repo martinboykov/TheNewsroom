@@ -11,14 +11,11 @@ const getPosts = async (req, res, next) => {
       .limit(pageSize);
   }
   const posts = await postQuery
-  // const params = req.params;
-  // console.log(params);
-  // const posts = await Post.find()
     .select('_id title content category dateCreated author imageMainPath')
     .sort({ 'dateCreated': -1 });
   res.status(200).json({
     message: 'Posts fetched successfully',
-    data: { posts },
+    data: posts,
   });
 };
 

@@ -18,12 +18,12 @@ export class PostService {
 
   getPosts(url: String, postsPerPage: number, currentPage: number) {
     const queryParams = `?pageSize=${postsPerPage}&page=${currentPage}`;
-    console.log(url);
+    console.log(BACKEND_URL + url + queryParams);
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams)
       .subscribe((postData) => {
         console.log(postData);
-        this.posts = postData.data.posts;
+        this.posts = postData.data;
         this.postsUpdated.next([...this.posts]);
       });
     // return [...this.posts];
