@@ -10,6 +10,7 @@ const error = require('../middleware/error');
 
 module.exports = ((app) => {
   app.use('/api/posts', postRoutes);
+
   app.use('/api/subcategories', subcategoryController);
 
   app.use('/api/categories', categoryController);

@@ -14,7 +14,6 @@ const getSubcategories = async (req, res, next) => {
 };
 
 const getSubcategoryPosts = async (req, res, next) => {
-  console.log(req.params);
   const posts = await Subcategory
     .findOne({ name: req.params.name })
     .select('posts -_id')
@@ -23,10 +22,20 @@ const getSubcategoryPosts = async (req, res, next) => {
       select: '_id title content category dateCreated author imageMainPath',
       options: { sort: { 'dateCreated': -1 } },
     });
-    console.log(posts);
   res.status(200).json({
     message: `Posts of Subcategory with name: ${req.params.name} fetched successfully`, // eslint-disable-line max-len
     data: posts,
+  });
+};
+
+const getSubcategoryPostsTotalCount = async (req, res, next) => {
+  const subcategoryPosts = await Subcategory
+    .findOne({ name: req.params.name })
+    .select('posts -_id');
+    const totalCount = subcategoryPosts.posts.length;
+  res.status(200).json({
+    message: 'Total posts count fetched successfully',
+    data: totalCount,
   });
 };
 
@@ -156,6 +165,7 @@ const deleteSubcategory = async (req, res, next) => {
 module.exports = {
   getSubcategories,
   getSubcategoryPosts,
+  getSubcategoryPostsTotalCount,
   addSubcategory,
   renameSubcategory,
   deleteSubcategory,

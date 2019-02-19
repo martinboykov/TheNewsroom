@@ -11,6 +11,11 @@ router.get('/subcategories/:_id', categoryController.getCategorySubcategories);
 
 router.get('/posts/:name', categoryController.getCategoryPosts);
 
+router.get(
+  '/posts/:name/totalCount',
+  categoryController.getSubcategoryPostsTotalCount,
+);
+
 router.post('/', categoryController.addCategory);
 
 router.put('/:_id', categoryController.renameCategory);

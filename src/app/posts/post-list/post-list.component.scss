@@ -3,14 +3,15 @@
 .wrapper {
   display: grid;
   grid-template-columns: 1fr 300px;
-  grid-template-rows: minmax(1120px, 1fr) 80px;
+  // grid-template-rows: minmax(1120px, 1fr) 80px;
+  grid-template-rows: minmax(740px, 1fr) 100px;
   grid-column-gap: 20px;
   .posts {
     grid-column: 1/2;
     grid-row: 1/2;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    grid-template-rows: repeat(auto-fill, minmax(360px, 1fr));
+    grid-template-rows: 360px;
     grid-gap: 20px;
     app-post-item {
       min-width: 230px;
@@ -25,7 +26,131 @@
   .pagination {
     grid-column: 1/2;
     grid-row: 2/3;
-    color: $gold;
+    color: white;
     background: gray;
+    display: grid;
+    grid-template-columns: minmax(15px, 85px) 1fr minmax(15px, 85px);
+    align-items: center;
+    font-size: 36px;
+    text-shadow: (1px 1px rgba(0, 0, 0, 1));
+    font-family: $font-lg;
+    text-decoration: none;
+    text-transform: uppercase;
+    background: transparent;
+
+    &-previous,
+    &-next {
+      font-size: 60px;
+      &--link,
+      &--span {
+        display: inline-block;
+        padding-bottom: 10px;
+      }
+    }
+    &-previous {
+      grid-column: 1/2;
+      grid-row: 1/2;
+      justify-self: end;
+      &--span {
+        color: $light-grey;
+      }
+    }
+    &-current {
+      grid-column: 2/3;
+      grid-row: 1/2;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      color: white;
+      height: 100%;
+      div {
+        min-width: 30px;
+        height: 100%;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-content: center;
+        .pagination-current--link,
+        .pagination-current--span {
+          display: block;
+          justify-self: center;
+          align-self: center;
+        }
+        .pagination-current--span {
+          color: $gold;
+        }
+      }
+    }
+    &-next {
+      grid-column: 3/4;
+      grid-row: 1/2;
+      justify-self: start;
+      &--span {
+        color: $light-grey;
+      }
+    }
+    &-previous,
+    &-next {
+      &--link,
+      &--span {
+        user-select: none;
+      }
+      &--link {
+        &:hover {
+          color: $gold;
+        }
+        &:active {
+          color: white;
+        }
+      }
+    }
+    &-current {
+      &--link {
+        &:hover,
+        &:active {
+          font-size: 48px;
+        }
+      }
+      &--span {
+        &:hover {
+          font-size: 48px;
+        }
+      }
+    }
+    .mobile {
+      display: none;
+    }
+  }
+}
+@media (max-width: $mobile) {
+  .wrapper {
+    // grid-template-rows: minmax(1120px, 1fr) 80px;
+    grid-template-rows: minmax(740px, 1fr) 60px;
+    .pagination {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-content: center;
+      .desktop {
+        display: none;
+      }
+      .mobile {
+        display: block;
+        font-size: 24px;
+        .pagination-next--link,
+        .pagination-next--span {
+          color: white;
+          padding: 0 10px;
+        }
+        .pagination-next--link:hover {
+          color: $gold;
+          border-radius: 5px;
+        }
+        .pagination-next--link:active {
+          color: white;
+          border-radius: 5px;
+        }
+      }
+    }
   }
 }
