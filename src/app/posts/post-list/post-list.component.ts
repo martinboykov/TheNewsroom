@@ -21,15 +21,15 @@ export class PostListComponent implements OnInit, OnDestroy {
   private postsSubscription: Subscription;
   private totalPostsSubscription: Subscription;
 
-  itemsPerPage = 5;
+  itemsPerPage = 15;
   currentPage = 1;
-  totalPostsCount;
-  isRequired;
+  // totalPostsCount;
+  isPaginationRequired;
   config: PaginationInstance = {
     id: 'paginator',
     itemsPerPage: this.itemsPerPage,
     currentPage: this.currentPage,
-    totalItems: this.totalPostsCount,
+    totalItems: 0,
   };
   labels: any = {
     previousLabel: '',
@@ -63,10 +63,10 @@ export class PostListComponent implements OnInit, OnDestroy {
       });
     this.totalPostsSubscription = this.postService.getTotalPostsUpdateListener()
       .subscribe((totalCount: number) => {
-        this.totalPostsCount = totalCount;
-        this.config.totalItems = this.totalPostsCount;
-        this.isRequired = this.calculateIsRequired(this.itemsPerPage, this.totalPostsCount);
-        console.log(this.totalPostsCount);
+        // this.totalPostsCount = totalCount;
+        this.config.totalItems = totalCount;
+        this.isPaginationRequired = this.showIfPaginationRequired(this.itemsPerPage, totalCount);
+        console.log(this.config.totalItems);
       });
   }
   ngOnDestroy() {
@@ -91,7 +91,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     }
     return url;
   }
-  calculateIsRequired(postsPerPage, totalPostsCount) {
+  showIfPaginationRequired(postsPerPage, totalPostsCount) {
     if (postsPerPage >= totalPostsCount) {
       return false;
     }
