@@ -21,19 +21,12 @@ const getSubcategoryPosts = async (req, res, next) => {
   const currentPage = parseInt(req.query.page, 10);
   let posts = await Subcategory.aggregate([
     { $match: { name: subcategoryName } },
-
     { $unwind: '$posts' },
-    {
-      $sort: {
-        'posts': -1,
-      },
-    },
+    { $sort: { 'posts': -1 } },
     { $skip: pageSize * (currentPage - 1) },
     { $limit: pageSize },
     { $group: { _id: 1, posts: { $push: { post: '$posts' } } } },
-    {
-      $project: { posts: '$posts', '_id': 0 },
-    },
+    { $project: { posts: '$posts', '_id': 0 } },
   ]);
   posts = await Post.populate(posts, {
     path: 'posts.post',

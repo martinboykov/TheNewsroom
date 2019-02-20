@@ -37,7 +37,7 @@ const updatePost = async (req, res, next) => {
 
   // IF IMAGEPATH IS CHANGED
   // task.update(..)
-  postUpdated.imagePath = data.imagePath;
+  postUpdated.imageMainPath = data.imageMainPath;
 
   // IF CATEGORY CHANGED/UNCHANGED
   let categoryPromise;
