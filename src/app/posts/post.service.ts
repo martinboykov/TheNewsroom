@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from '../../environments/environment';
+import { map } from 'rxjs/operators';
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({
@@ -21,8 +22,22 @@ export class PostService {
     console.log(BACKEND_URL + url + queryParams);
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams)
+      // .pipe(
+      //   map((postData) => {
+      //     return postData.data.map((post) => {
+      //       let content = post.content;
+      //       // const el = document.createElement('html');
+      //       // el.innerHTML = content;
+      //       // el.querySelector('.first-paragraph'); // Live NodeList of your anchor elements
+      //       content = content.substring(0, 20);
+      //       post.content = content;
+      //       // console.log(post);
+      //       return post;
+      //     });
+      //   })
+      // )
       .subscribe((postData) => {
-        console.log(postData);
+        // console.log(posts);
         this.posts = postData.data;
         this.postsUpdated.next([...this.posts]);
       });
