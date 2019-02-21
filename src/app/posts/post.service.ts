@@ -22,6 +22,7 @@ export class PostService {
     console.log(BACKEND_URL + url + queryParams);
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams)
+      // content substringing is done in the backend for now
       // .pipe(
       //   map((postData) => {
       //     return postData.data.map((post) => {
@@ -37,11 +38,9 @@ export class PostService {
       //   })
       // )
       .subscribe((postData) => {
-        // console.log(posts);
         this.posts = postData.data;
         this.postsUpdated.next([...this.posts]);
       });
-    // return [...this.posts];
   }
 
   getPostsUpdateListener() { // as we set postUpdate as private

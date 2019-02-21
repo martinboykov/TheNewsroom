@@ -50,7 +50,7 @@ const getSubcategoryPosts = async (req, res, next) => {
     // el.innerHTML = content;
     // el.querySelector('.first-paragraph'); // Live NodeList of your anchor elements
 
-    content = content.substring(0, 200); // for now...
+    content = content.substring(0, 300); // for now...
     post.content = content;
     // console.log(post);
     return post;

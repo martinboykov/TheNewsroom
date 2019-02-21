@@ -9,7 +9,8 @@
   margin: 0 auto;
   .container {
     margin: 0 auto;
-    height: 100%;
+    // height: 100%;
+    min-height: 100vh;
     max-width: $main-full-width;
     display: grid;
     // grid-template-rows: minmax(140px auto) 1fr 60px;
@@ -28,6 +29,24 @@
       grid-row: 3/4;
       border: 1px solid gray;
       padding: 0 5px;
+    }
+  }
+}
+@media (max-width: $mobile) {
+  .wrapper {
+    .container {
+      grid-template-rows: 140px 1fr;
+      app-header {
+        grid-row: 1/2;
+        padding: 0 5px;
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        @include gradient-main;
+      }
+      app-footer {
+        display: none;
+      }
     }
   }
 }

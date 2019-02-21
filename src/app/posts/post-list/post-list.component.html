@@ -1,15 +1,29 @@
 <div class="wrapper">
-  <div class="posts">
+  <app-aside-right-tripple></app-aside-right-tripple>
+
+  <virtual-scroller *ngIf="isMobileResolution"
+                    #scroll
+                    (vsUpdate)="viewPortItems = $event"
+                    (vsEnd)="fetchMoreEnd($event)"
+                    [items]="buffer"
+                    class="virtual-scroller">
+    <app-post-item *ngFor="let post of scroll.viewPortItems"
+                   [post]="post"
+                   class="app-post-item"></app-post-item>
+  </virtual-scroller>
+
+  <div *ngIf="!isMobileResolution"
+       class="posts desktop">
     <app-post-item *ngFor="let post of posts | paginate: config"
                    [post]="post"></app-post-item>
   </div>
-  <app-aside-right-tripple></app-aside-right-tripple>
-  <pagination-template class="pagination"
+  <pagination-template *ngIf="!isMobileResolution"
+                       class="pagination"
                        #p="paginationApi"
                        [id]="config.id"
                        (pageChange)="onChangedPage($event)">
-    <div class="pagination-previous desktop"
-         *ngIf="isPaginationRequired">
+    <div *ngIf="isPaginationRequired"
+         class="pagination-previous desktop">
       <a class="pagination-previous--link"
          *ngIf="!p.isFirstPage()"
          (click)="p.previous()">
@@ -20,8 +34,8 @@
         &laquo;
       </span>
     </div>
-    <div class="pagination-current desktop"
-         *ngIf="isPaginationRequired">
+    <div *ngIf="isPaginationRequired"
+         class="pagination-current desktop">
       <div *ngFor="let page of p.pages">
         <a class="pagination-current--link"
            *ngIf="p.getCurrent() !== page.value"
@@ -34,8 +48,8 @@
         </span>
       </div>
     </div>
-    <div class="pagination-next desktop"
-         *ngIf="isPaginationRequired">
+    <div *ngIf="isPaginationRequired"
+         class="pagination-next desktop">
       <a class="pagination-next--link"
          *ngIf="!p.isLastPage()"
          (click)="p.next()">
@@ -46,7 +60,7 @@
         &raquo;
       </span>
     </div>
-    <div class="pagination-next mobile"
+    <!-- <div class="pagination-next mobile"
          *ngIf="isPaginationRequired">
       <a class="pagination-next--link"
          *ngIf="!p.isLastPage()"
@@ -55,8 +69,7 @@
       </a>
       <span class="pagination-next--span"
             *ngIf="p.isLastPage()">
-        <!-- No more posts -->
       </span>
-    </div>
+    </div> -->
   </pagination-template>
 </div>

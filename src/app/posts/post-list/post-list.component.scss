@@ -1,10 +1,11 @@
 @import "./partials/variables";
 
 .wrapper {
+  min-height: 100%;
   display: grid;
   grid-template-columns: 1fr 300px;
-  // grid-template-rows: minmax(1120px, 1fr) 80px;
-  grid-template-rows: minmax(740px, 1fr) 100px;
+  grid-template-rows: minmax(1120px, 1fr) 100px;
+  // grid-template-rows: minmax(740px, 1fr) 100px;
   grid-column-gap: 20px;
   .posts {
     grid-column: 1/2;
@@ -37,7 +38,6 @@
     text-decoration: none;
     text-transform: uppercase;
     background: transparent;
-
     &-previous,
     &-next {
       font-size: 60px;
@@ -124,33 +124,49 @@
 }
 @media (max-width: $mobile) {
   .wrapper {
-    // grid-template-rows: minmax(1120px, 1fr) 80px;
-    grid-template-rows: minmax(740px, 1fr) 60px;
-    .pagination {
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: center;
-      align-content: center;
-      .desktop {
-        display: none;
-      }
-      .mobile {
-        display: block;
-        font-size: 24px;
-        .pagination-next--link,
-        .pagination-next--span {
-          color: white;
-          padding: 0 10px;
-        }
-        .pagination-next--link:hover {
-          color: $gold;
-          border-radius: 5px;
-        }
-        .pagination-next--link:active {
-          color: white;
-          border-radius: 5px;
-        }
-      }
+    height: 100%;
+    grid-template-columns: 1fr;
+    // grid-template-rows: minmax(1120px, 1fr) 100px;
+    grid-template-rows: 100vh;
+
+    virtual-scroller {
+      max-height: 100vh;
+      grid-column: 1/2;
+      grid-row: 1/2;
     }
+    app-aside-right-tripple {
+      display: none;
+      // grid-column: 1/2;
+      // grid-row: 1/2;
+    }
+
+    // .posts {
+    // .pagination {
+    //   display: flex;
+    //   flex-flow: row nowrap;
+    //   justify-content: center;
+    //   align-content: center;
+    //   .desktop {
+    //     display: none;
+    //   }
+    //   .mobile {
+    //     display: block;
+    //     font-size: 24px;
+    //     .pagination-next--link,
+    //     .pagination-next--span {
+    //       color: white;
+    //       padding: 0 10px;
+    //     }
+    //     .pagination-next--link:hover {
+    //       color: $gold;
+    //       border-radius: 5px;
+    //     }
+    //     .pagination-next--link:active {
+    //       color: white;
+    //       border-radius: 5px;
+    //     }
+    //   }
+    // }
+    // }
   }
 }
