@@ -6,8 +6,7 @@ import { Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PostService } from '../post.service';
 import { PaginationInstance } from 'ngx-pagination';
-import { ChangeEvent } from 'ngx-virtual-scroller';
-
+import { throttleTime, tap } from 'rxjs/operators';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
@@ -17,14 +16,15 @@ export class PostListComponent implements OnInit, OnDestroy {
   // Routing
   routerParameters: ParamMap;
   routerParametersSubscription: Subscription;
-
+  isAsideRequired = true;
   // Posts
   url: String;
-  posts: Post[] = []; // strict Post model !?!
+  posts: Post[]; // strict Post model !?!
   private postsSubscription: Subscription;
   private totalPostsSubscription: Subscription;
 
   // Pagination
+  postsPagination: Post[];
   isPaginationRequired: boolean;
   config: PaginationInstance = {
     id: 'paginator',
@@ -41,7 +41,12 @@ export class PostListComponent implements OnInit, OnDestroy {
   };
 
   // Scroller
-  buffer: Post[] = [];
+  postsScroller: Post[];
+  currentPageScroller = 1;
+  itemsPerScroll = 30;
+  throttle = 750;
+  scrollDistance = 2;
+  // scrollUpDistance = 2;
 
   // windowReference;
   isMobileResolution: boolean;
@@ -58,70 +63,85 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe((params: ParamMap) => {
       // reset on route change
       this.config.currentPage = 1;
+      this.currentPageScroller = 1;
       this.config.totalItems = 0;
       this.posts = [];
-      this.buffer = [];
+      this.postsPagination = [];
+      this.postsScroller = [];
       this.headerService.setRouterParameters(params);
       this.url = this.getUrl(params);
       this.postService.getTotalPostsCount(this.url);
-      this.postService.getPosts(this.url, this.config.itemsPerPage, this.config.currentPage);
+      this.postService.getPosts(this.url, this.itemsPerScroll, this.currentPageScroller);
     });
 
     this.postsSubscription = this.postService.getPostsUpdateListener()
       .subscribe((posts: Post[]) => {
         this.posts = posts;
-        if (this.buffer.length < this.config.totalItems) {
-          this.buffer = [...this.buffer, ...this.posts];
+        if (this.postsPagination.length === 0 || !this.isMobileResolution) {
+          this.postsPagination = posts.slice(0, this.config.itemsPerPage);
+        }
+        if (this.postsScroller.length === 0 || this.isMobileResolution) {
+          this.postsScroller = [...this.postsScroller, ...posts];
+          console.log(`postsScroller.length = ` + this.postsScroller.length);
         }
       });
 
     this.totalPostsSubscription = this.postService.getTotalPostsUpdateListener()
       .subscribe((totalCount: number) => {
-        console.log(totalCount);
         this.config.totalItems = totalCount;
         this.isPaginationRequired = this.showIfPaginationRequired(this.config.itemsPerPage, totalCount);
       });
+
 
     // detect if Moobile resolution < 980px width
     this.isMobileResolution = this.windowRef.isMobile;
     this.windowRef.checkIfMobile();
     this.isMobileResolutionSubscription = this.windowRef.checkIfMobileUpdateListener()
+      .pipe(
+        // throttleTime(100),
+        // tap((isMobile) => {
+        //   console.log(isMobile);
+        //   this.isMobileResolution = isMobile;
+        // }),
+      )
       .subscribe((isMobile) => {
         this.isMobileResolution = isMobile;
       });
   }
 
   // SCROLLER
-  // TODO: to add remove on go up/down
-  // fetchMoreStart(event: ChangeEvent) {
-  //   console.log(event.startIndex);
-  // }
-  fetchMoreEnd(event: ChangeEvent) {
-     console.log(event.end);
-    if (event.end !== this.buffer.length - 1) {
+  fetchMoreEnd() {
+    console.log('scroll end');
+    console.log(`postsScroller.length = ` + this.postsScroller.length);
+    if (this.postsScroller.length >= this.config.totalItems) {
       return;
     }
-    if (this.buffer.length >= this.config.totalItems) {
-      return;
-    }
-    this.config.currentPage += 1;
-    this.postService.getPosts(this.url, this.config.itemsPerPage, this.config.currentPage);
+    this.currentPageScroller += 1;
+    return this.postService.getPosts(this.url, this.itemsPerScroll, this.currentPageScroller);
   }
 
   // PAGINATION
   onChangedPage(page: number) {
     this.config.currentPage = page;
-    this.postService.getPosts(this.url, this.config.itemsPerPage, this.config.currentPage);
+    return this.postService.getPosts(this.url, this.config.itemsPerPage, this.config.currentPage);
   }
+
   getUrl(params) {
     let url = '/posts';
     const category = params.get('category');
     const subcategory = params.get('subcategory');
     if (params.has('category')) {
       url = `/categories/posts/${category}`;
+      // Remove ASIDE if switch to category
+      this.isAsideRequired = false;
       if (params.has('subcategory')) {
         url = `/subcategories/posts/${subcategory}`;
+        // Remove ASIDE if switch to subcategory
+        this.isAsideRequired = false;
       }
+    } else {
+      //  ASIDE is visible only at HOME
+      this.isAsideRequired = true;
     }
     return url;
   }

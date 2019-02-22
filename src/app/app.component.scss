@@ -32,21 +32,3 @@
     }
   }
 }
-@media (max-width: $mobile) {
-  .wrapper {
-    .container {
-      grid-template-rows: 140px 1fr;
-      app-header {
-        grid-row: 1/2;
-        padding: 0 5px;
-        position: sticky;
-        top: 0;
-        z-index: 999;
-        @include gradient-main;
-      }
-      app-footer {
-        display: none;
-      }
-    }
-  }
-}

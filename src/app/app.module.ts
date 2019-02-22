@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { VirtualScrollerModule } from 'ngx-virtual-scroller';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -37,7 +37,7 @@ import { PostItemComponent } from './posts/post-item/post-item.component';
     HttpClientModule,
     AppRoutingModule,
     NgxPaginationModule,
-    VirtualScrollerModule,
+    InfiniteScrollModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

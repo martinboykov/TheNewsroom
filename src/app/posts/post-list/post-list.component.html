@@ -1,22 +1,26 @@
 <div class="wrapper">
-  <app-aside-right-tripple></app-aside-right-tripple>
+  <app-aside-right-tripple *ngIf="isAsideRequired || !isMobileResolution"></app-aside-right-tripple>
 
-  <virtual-scroller *ngIf="isMobileResolution"
-                    #scroll
-                    (vsUpdate)="viewPortItems = $event"
-                    (vsEnd)="fetchMoreEnd($event)"
-                    [items]="buffer"
-                    class="virtual-scroller">
-    <app-post-item *ngFor="let post of scroll.viewPortItems"
+  <!-- MOBILE - INFINITI SCROLLER -->
+  <div *ngIf="isMobileResolution"
+       class="virtual-scroller"
+       infinite-scroll
+       [infiniteScrollDistance]="scrollDistance"
+       [infiniteScrollUpDistance]="scrollUpDistance"
+       [infiniteScrollThrottle]="throttle"
+       (scrolled)="fetchMoreEnd()">
+    <app-post-item *ngFor="let post of postsScroller"
                    [post]="post"
                    class="app-post-item"></app-post-item>
-  </virtual-scroller>
+  </div>
 
   <div *ngIf="!isMobileResolution"
        class="posts desktop">
-    <app-post-item *ngFor="let post of posts | paginate: config"
+    <app-post-item *ngFor="let post of postsPagination | paginate: config"
                    [post]="post"></app-post-item>
   </div>
+
+  <!-- DESCTOP - PAGINATION -->
   <pagination-template *ngIf="!isMobileResolution"
                        class="pagination"
                        #p="paginationApi"
@@ -60,16 +64,5 @@
         &raquo;
       </span>
     </div>
-    <!-- <div class="pagination-next mobile"
-         *ngIf="isPaginationRequired">
-      <a class="pagination-next--link"
-         *ngIf="!p.isLastPage()"
-         (click)="p.next()">
-        Show more posts
-      </a>
-      <span class="pagination-next--span"
-            *ngIf="p.isLastPage()">
-      </span>
-    </div> -->
   </pagination-template>
 </div>
