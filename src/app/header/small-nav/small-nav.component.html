@@ -7,21 +7,18 @@
          routerLinkActive="router-link-active">
         Home
       </a>
-      <span *ngIf="routes[0]"
-            class="small-nav__item--arrow">&raquo;
-      </span>
     </li>
     <li class="small-nav__item"
         *ngFor="let route of routes; let i = index">
-      <a class="small-nav__item--link"
+      <a class="small-nav__item--link interim"
          [ngClass]="{'last': !routes[i+1]}"
          routerLink="/{{route.link}}"
          routerLinkActive="router-link-active">
         {{route.name}}
       </a>
-      <span *ngIf="routes[i+1]"
+      <!-- <span *ngIf="routes[i+1]"
             class="small-nav__item--arrow">&raquo;
-      </span>
+      </span> -->
     </li>
   </ul>
 </div>

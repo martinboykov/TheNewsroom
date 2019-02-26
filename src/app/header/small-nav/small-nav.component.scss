@@ -17,12 +17,15 @@
       padding-left: 4px;
       text-transform: capitalize;
       text-shadow: (1px 1px rgba(0, 0, 0, 1));
-      }
-    &--link.first{
+    }
+    &--link.interim::before {
+      content: "\00BB";
+    }
+    &--link.first {
       padding-left: 0px;
     }
   }
 }
-.last{
-  color:#8e8e8e;
+.last {
+  color: #8e8e8e;
 }

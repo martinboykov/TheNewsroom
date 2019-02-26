@@ -1,9 +1,7 @@
 import { HeaderService } from './../header.service';
-import { ActivatedRoute, Router, ParamMap, NavigationEnd, Params } from '@angular/router';
-import { Component, OnInit, Input } from '@angular/core';
-import { map, switchMap, filter } from 'rxjs/operators';
+import { ParamMap } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Location } from '@angular/common';
 @Component({
   selector: 'app-small-nav',
   templateUrl: './small-nav.component.html',

@@ -4,7 +4,7 @@
 // League Gothic - Regular
 @font-face {
   font-family: "League Gothic";
-  src: url("/assets/fonts/league_gothic/leaguegothic-regular-webfont.woff") format("woff");
+  src: url("/assets/fonts/League_Gothic/leaguegothic-regular-webfont.woff") format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -12,7 +12,7 @@
 // MyriadPro - Regular
 @font-face {
   font-family: "Myriad Pro";
-  src: url("/assets/fonts/MyriadPro/MyriadPro-Regular.woff") format("woff");
+  src: url("/assets/fonts/MyriadPro/MyriadPro-Regular.woff") format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -20,18 +20,20 @@
 // Yanone Kaffeesatz
 @font-face {
   font-family: "Yanone Kaffeesatz";
-  src: url("/assets/fonts/Yanone_Kaffeesatz/Yanone_Kaffeesatz_Regular_V2.woff") format("woff");
+  src: url("/assets/fonts/Yanone_Kaffeesatz/Yanone_Kaffeesatz_Regular_V2.woff") format('woff');
   font-weight: normal;
   font-style: normal;
 }
-// @import url('https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz');
 
 // Droid Sans - Regular
 @import url("https://fonts.googleapis.com/css?family=Droid+Sans:400,700");
+// @import url("https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz");
+// @import url("https://fonts.googleapis.com/css?family=PT+Sans"); // instead Myriad Pro
 
 $font-default: "Droid Sans", sans-serif;
 $font-lg: "League Gothic", sans-serif;
 $font-mp: "Myriad Pro", sans-serif;
+// $font-mp: "PT Sans", sans-serif; //alternative to Myriad Pro
 $font-yk: "Yanone Kaffeesatz", sans-serif;
 
 // Colors
@@ -53,7 +55,6 @@ $app-full-width: 1680px;
 $app-min-width: 320px;
 
 $main-full-width: 1560px; // 1550px + 2*5px padding
-
-
+$aside-right-tripple-width: 300px;
 // media queries breakpoints
 $mobile: 980px;

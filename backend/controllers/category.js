@@ -31,28 +31,18 @@ const getCategoryPosts = async (req, res, next) => {
   const categoryName = req.params.name;
   const pageSize = parseInt(req.query.pageSize, 10);
   const currentPage = parseInt(req.query.page, 10);
-  let posts = await Category.aggregate([
-    { $match: { name: categoryName } },
-    { $unwind: '$posts' },
-    { $sort: { 'posts': -1 } },
-    { $skip: pageSize * (currentPage - 1) },
-    { $limit: pageSize },
-    { $group: { _id: 1, posts: { $push: { post: '$posts' } } } },
-    { $project: { posts: '$posts', '_id': 0 } },
-  ]);
-  posts = await Post.populate(posts, {
-    path: 'posts.post',
-    select: '_id title content category dateCreated author imageMainPath',
-    options: { sort: { 'dateCreated': -1 } },
-  });
-  if (!posts[0]) {
-    posts = [];
-  } else {
-    posts = posts[0].posts.reduce((total, current) => {
-      total.push(current.post);
-      return total;
-    }, []);
+
+  const postQuery = Post.find({ 'category.name': categoryName });
+  if (pageSize && currentPage) {
+    postQuery
+      .skip(pageSize * (currentPage - 1))
+      .limit(pageSize);
   }
+  const posts = await postQuery
+    .select(
+      '_id title content category subcategory dateCreated author imageMainPath')
+    .sort({ 'dateCreated': -1 });
+
   posts.map((post) => {
     let content = post.content;
     // for eventual HTML post document

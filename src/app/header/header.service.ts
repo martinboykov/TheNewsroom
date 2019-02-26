@@ -19,7 +19,7 @@ export class HeaderService {
     private router: Router) { }
 
   getCategories() {
-    this.http
+    return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + '/categories')
       .subscribe((response) => {
         this.categories = response.data;

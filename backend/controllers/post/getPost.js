@@ -11,7 +11,8 @@ const getPosts = async (req, res, next) => {
       .limit(pageSize);
   }
   const posts = await postQuery
-    .select('_id title content category dateCreated author imageMainPath')
+    .select(
+      '_id title content category subcategory dateCreated author imageMainPath')
     .sort({ 'dateCreated': -1 });
 
   posts.map((post) => {

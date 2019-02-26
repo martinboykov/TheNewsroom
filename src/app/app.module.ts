@@ -17,7 +17,6 @@ import { SearchComponent } from './header/search/search.component';
 import { SmallNavComponent } from './header/small-nav/small-nav.component';
 import { DropdownDirective } from './header/dropdown.directive';
 import { PostItemComponent } from './posts/post-item/post-item.component';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +29,7 @@ import { PostItemComponent } from './posts/post-item/post-item.component';
     SearchComponent,
     SmallNavComponent,
     DropdownDirective,
-    PostItemComponent
+    PostItemComponent,
   ],
   imports: [
     BrowserModule,

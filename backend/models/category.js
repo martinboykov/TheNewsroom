@@ -10,7 +10,7 @@ const categorySchema = new mongoose.Schema({
     required: true,
     unique: true,
     minlength: 1,
-    maxlength: 200,
+    maxlength: 30,
     lowercase: true,
   },
   // not required data
@@ -30,7 +30,7 @@ function validateCategory(category) {
       .string()
       .lowercase()
       .min(1)
-      .max(200)
+      .max(30)
       .required(),
   });
 

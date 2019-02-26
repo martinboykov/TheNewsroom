@@ -1,8 +1,14 @@
 // Fonts mixins
-@mixin font-default($weight: 400, $style: normal) {
+@mixin font-smoothing {
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+@mixin font-default ($weight: 400, $style: normal) {
   font-family: $font-default;
   font-weight: $weight;
   font-style: $style;
+  @include font-smoothing;
 }
 
 // Gradients mixins
@@ -27,3 +33,13 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1d1c1d', endColorstr='#1d1c1d', GradientType=1);
 }
 
+@mixin gradient-border($top, $bottom, $width) {
+  @if $top {
+    border-top: $width solid transparent;
+  }
+  @if $bottom {
+    border-bottom: $width solid transparent;
+  }
+  border-image: url("/assets/images/main/posts/item/border.png") round;
+  border-image-slice: 30%;
+}

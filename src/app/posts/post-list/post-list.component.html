@@ -3,12 +3,11 @@
 
   <!-- MOBILE - INFINITI SCROLLER -->
   <div *ngIf="isMobileResolution"
-       class="virtual-scroller"
        infinite-scroll
        [infiniteScrollDistance]="scrollDistance"
-       [infiniteScrollUpDistance]="scrollUpDistance"
        [infiniteScrollThrottle]="throttle"
-       (scrolled)="fetchMoreEnd()">
+       (scrolled)="fetchMoreEnd()"
+       class="virtual-scroller">
     <app-post-item *ngFor="let post of postsScroller"
                    [post]="post"
                    class="app-post-item"></app-post-item>
@@ -17,7 +16,8 @@
   <div *ngIf="!isMobileResolution"
        class="posts desktop">
     <app-post-item *ngFor="let post of postsPagination | paginate: config"
-                   [post]="post"></app-post-item>
+                   [post]="post"
+                   ></app-post-item>
   </div>
 
   <!-- DESCTOP - PAGINATION -->

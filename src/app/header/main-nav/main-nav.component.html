@@ -26,8 +26,6 @@
               *ngFor="let subcategory of category.subcategories">
             <a routerLink="/{{category.name}}/{{subcategory.name}}"
                routerLinkActive="router-link-active-subitem"
-               [routerLinkActiveOptions]="{exact:
-                true}"
                class="main-nav__subitem--grid">
               <div class="main-nav__subitem--grid-arrows">
                 <svg xmlns="http://www.w3.org/2000/svg"

@@ -11,8 +11,9 @@
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-end;
     height: 100%;
+    // padding-top: 30px;
     &-link {
       span {
         font-family: $font-yk;
@@ -26,7 +27,7 @@
     grid-column: 1/2;
     grid-row: 2/3;
     height: 100%;
-    z-index:999 ;
+    z-index: 999;
   }
 
   app-search {
@@ -37,5 +38,47 @@
   app-small-nav {
     grid-row: 3/4;
     height: 100%;
+  }
+}
+
+@media (max-width: $mobile) {
+  .main-header {
+    grid-template-columns: 35px 1fr 1fr;
+    grid-template-rows: 10px 40px 30px;
+    // align-items: center;
+    .logo {
+      grid-column: 2/4;
+      grid-row: 2/3;
+      padding: 0px;
+      justify-content: flex-start;
+      align-items: center;
+      &-link {
+        span {
+          font-family: $font-yk;
+          font-size: 40px;
+          text-shadow: (1px 1px rgba(0, 0, 0, 1));
+          text-transform: uppercase;
+        }
+      }
+    }
+    app-main-nav {
+      grid-column: 1/2;
+      grid-row: 2/3;
+      height: 100%;
+      z-index: 999;
+    }
+
+    app-search {
+      display: none; // for revision later
+      grid-column: 2/4;
+      grid-row: 2/3;
+      justify-self: end;
+      height: 100%;
+    }
+    app-small-nav {
+      grid-column: 1/4;
+      grid-row: 3/4;
+      height: 100%;
+    }
   }
 }

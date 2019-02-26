@@ -2,11 +2,10 @@ import { WindowRef } from './../../shared/winref.service';
 import { Post } from './../post.model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { HeaderService } from './../../header/header.service';
-import { Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PostService } from '../post.service';
 import { PaginationInstance } from 'ngx-pagination';
-import { throttleTime, tap } from 'rxjs/operators';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
@@ -16,7 +15,8 @@ export class PostListComponent implements OnInit, OnDestroy {
   // Routing
   routerParameters: ParamMap;
   routerParametersSubscription: Subscription;
-  isAsideRequired = true;
+  isAsideRequired = true; // for mobile only at home route
+
   // Posts
   url: String;
   posts: Post[]; // strict Post model !?!
@@ -43,7 +43,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   // Scroller
   postsScroller: Post[];
   currentPageScroller = 1;
-  itemsPerScroll = 30;
+  itemsPerScroll = 15;
   throttle = 750;
   scrollDistance = 2;
   // scrollUpDistance = 2;
