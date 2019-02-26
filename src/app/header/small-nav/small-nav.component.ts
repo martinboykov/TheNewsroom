@@ -13,6 +13,7 @@ export class SmallNavComponent implements OnInit {
   category;
   subcategory;
   name;
+  _id;
   routes: any[] = [];
   // currentRoute: any;
 
@@ -21,6 +22,8 @@ export class SmallNavComponent implements OnInit {
   ngOnInit() {
     this.routerParametersSubscription = this.headerService.getRouterParametersUpdateListener()
       .subscribe((params: ParamMap) => {
+        console.log(params);
+
         this.routes = [];
         // this.routes.push({ name: 'Home', link: '' });
         this.routerParameters = params;
@@ -37,22 +40,27 @@ export class SmallNavComponent implements OnInit {
             name: this.subcategory,
             link: `${this.category}/${this.subcategory}`
           });
-          if (this.routerParameters.has('name')) {
-            this.name = this.routerParameters.get('name');
+          if (this.routerParameters.has('title')) {
+            this.name = this.routerParameters.get('title');
+            this._id = this.routerParameters.get('_id');
             this.routes.push({
               name: this.name,
-              link: `${this.category}/${this.subcategory}/post/${this.name}`
+              link: `${this.category}/${this.subcategory}/post/${this._id}/${this.name}`
             });
           }
         } else {
-          if (this.routerParameters.has('name')) {
-            this.name = this.routerParameters.get('name');
+          if (this.routerParameters.has('title')) {
+            this.name = this.routerParameters.get('title');
+            this._id = this.routerParameters.get('_id');
             this.routes.push({
               name: this.name,
-              link: `${this.category}/post/${this.name}`
+              link: `${this.category}/post/${this._id}/${this.name}`
             });
           }
         }
+        this.routes.forEach((route) => {
+          console.log('ROUTE PARAMS = ' + route.name);
+        });
       });
 
     // this.router.events.subscribe((val) => {
