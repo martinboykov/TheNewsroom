@@ -1,32 +1,146 @@
 <nav class="main-nav">
-  <div class="toggle"
-       appDropdown>
+  <div appDropdown
+       class="toggle">
     <button class="toggle-button">
       <span class="toggle-button__bar"></span>
       <span class="toggle-button__bar"></span>
       <span class="toggle-button__bar"></span>
     </button>
   </div>
-  <ul class="main-nav__items">
+
+  <div class="main-nav__items--mobile">
+    <div class="main-nav__item home"
+         routerLinkActive="router-link-active-item"
+         [routerLinkActiveOptions]="{exact:
+            true}">
+      <a routerLink="/"
+         class="main-nav__item--link">Home</a>
+    </div>
+    <div class="main-nav__item"
+         *ngFor="let category of categories"
+         routerLinkActive="router-link-active-item">
+
+      <div appDropdown
+           class="main-nav__item--accordeon">
+        <div class="accordeon__text">
+          {{category.name}}
+        </div>
+        <div class="accordeon__symbol">
+          <svg version="1.1"
+               id="Capa_1"
+               xmlns="http://www.w3.org/2000/svg"
+               xmlns:xlink="http://www.w3.org/1999/xlink"
+               x="0px"
+               y="0px"
+               width="255px"
+               height="255px"
+               viewBox="0 0 255 255"
+               style="enable-background:new 0 0 255 255;"
+               xml:space="preserve">
+            <g id="arrow-drop-down">
+              <polygon points="0,63.75 127.5,191.25 255,63.75 		"
+                       fill="#585858" />
+            </g>
+          </svg>
+
+        </div>
+      </div>
+
+      <!-- DROPDOWN WITH SUBITEMS LIST -->
+      <div class="main-nav__subitems">
+
+        <!-- ALL ITEMS OF CATEGORY -->
+        <div class="main-nav__subitem">
+          <a class="main-nav__subitem--link"
+             routerLink="/{{category.name}}">
+            <!-- <span class="main-nav__subitem--grid-arrows">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   xmlns:xlink="http://www.w3.org/1999/xlink"
+                   version="1.1"
+                   id="Capa_1"
+                   x="0px"
+                   y="0px"
+                   width="11px"
+                   height="11px"
+                   viewBox="0 0 220.682 220.682"
+                   style="enable-background:new 0 0 220.682 220.682;"
+                   xml:space="preserve">
+                <g>
+                  <polygon points="92.695,38.924 164.113,110.341 92.695,181.758 120.979,210.043 220.682,110.341 120.979,10.639  "
+                           fill="#585858" />
+                  <polygon points="28.284,210.043 127.986,110.341 28.284,10.639 0,38.924 71.417,110.341 0,181.758  "
+                           fill="#585858" />
+                </g>
+              </svg>
+            </span> -->
+            <span class="main-nav__subitem--grid-link">
+              All from {{category.name}}
+            </span>
+          </a>
+        </div>
+
+        <!-- ITEMS OF SUBCATEGORY ONLY-->
+        <div class="main-nav__subitem"
+             *ngFor="let subcategory of category.subcategories">
+          <a class="main-nav__subitem--link"
+             routerLink="/{{category.name}}/{{subcategory.name}}"
+             routerLinkActive="router-link-active-subitem">
+
+            <span class="main-nav__subitem--grid-arrows">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   xmlns:xlink="http://www.w3.org/1999/xlink"
+                   version="1.1"
+                   id="Capa_1"
+                   x="0px"
+                   y="0px"
+                   width="11px"
+                   height="11px"
+                   viewBox="0 0 220.682 220.682"
+                   style="enable-background:new 0 0 220.682 220.682;"
+                   xml:space="preserve">
+                <g>
+                  <polygon points="92.695,38.924 164.113,110.341 92.695,181.758 120.979,210.043 220.682,110.341 120.979,10.639  "
+                           fill="#585858" />
+                  <polygon points="28.284,210.043 127.986,110.341 28.284,10.639 0,38.924 71.417,110.341 0,181.758  "
+                           fill="#585858" />
+                </g>
+              </svg>
+            </span>
+
+            <span class="main-nav__subitem--grid-link">
+              {{subcategory.name}}
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul class="main-nav__items--desktop">
     <li class="dropdown main-nav__item"
         routerLinkActive="router-link-active-item"
         [routerLinkActiveOptions]="{exact:
-          true}">
+            true}">
       <a routerLink="/"
          class="main-nav__item--link">Home</a>
     </li>
     <li class="dropdown main-nav__item"
         *ngFor="let category of categories"
         routerLinkActive="router-link-active-item">
-      <a routerLink="/{{category.name}}"
-         class="main-nav__item--link">{{category.name}}</a>
+      <a class="main-nav__item--link"
+         routerLink="/{{category.name}}">
+        {{category.name}}
+      </a>
       <div class="dropdown-content">
+
         <ul class="main-nav__subitems">
-          <li class=" main-nav__subitem"
+
+          <li class="dropdown main-nav__subitem"
               *ngFor="let subcategory of category.subcategories">
-            <a routerLink="/{{category.name}}/{{subcategory.name}}"
-               routerLinkActive="router-link-active-subitem"
-               class="main-nav__subitem--grid">
+
+            <a class="main-nav__subitem--grid"
+               routerLink="/{{category.name}}/{{subcategory.name}}"
+               routerLinkActive="router-link-active-subitem">
+
               <div class="main-nav__subitem--grid-arrows">
                 <svg xmlns="http://www.w3.org/2000/svg"
                      xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -47,6 +161,7 @@
                   </g>
                 </svg>
               </div>
+
               <span class="main-nav__subitem--grid-link">
                 {{subcategory.name}}
               </span>
