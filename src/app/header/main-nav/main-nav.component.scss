@@ -189,9 +189,11 @@
         }
       }
       .main-nav__item.home {
-        @include gradient-main;
+        // @include gradient-main;
+        background: transparent;
         height: 0px;
         transition: height 0.5s, transform 0.5s;
+
       }
     }
     &__items--mobile.open {
@@ -227,7 +229,9 @@
         flex-flow: row nowrap;
         justify-content: space-between;
         height: 30px;
-        @include gradient-main;
+        // @include gradient-main;
+        background: transparent;
+
         transition: 0.5s;
         .accordeon__text {
           text-shadow: (1px 1px rgba(0, 0, 0, 1));
@@ -254,7 +258,9 @@
       }
       &--accordeon.activated,
       &--accordeon.activated:hover {
-        @include gradient-main;
+        // @include gradient-main;
+        background: transparent;
+
         .accordeon__text {
           opacity: 0;
         }
@@ -272,7 +278,9 @@
       transition-property: all;
       transition-duration: 0.5s;
       flex-flow: column nowrap;
-      @include gradient-main;
+      // @include gradient-main;
+      background: transparent;
+
       overflow: hidden;
       .main-nav__subitem {
         height: 0px;

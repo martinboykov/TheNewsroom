@@ -5,11 +5,14 @@ const router = express.Router();
 
 const postController = require('../controllers/post');
 
-router.get('/', postController.getPosts);
+const { redisMiddleware } = require('../middleware/redis');
 
-router.get('/totalCount', postController.getTotalCount);
 
-router.get('/post/:_id', postController.getPost);
+router.get('/', redisMiddleware, postController.getPosts);
+
+router.get('/totalCount', redisMiddleware, postController.getTotalCount);
+
+router.get('/post/:_id', redisMiddleware, postController.getPost);
 
 router.post('/', postController.addPost);
 
