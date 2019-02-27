@@ -43,9 +43,9 @@ export class PostListComponent implements OnInit, OnDestroy {
   // Scroller
   postsScroller: Post[];
   currentPageScroller = 1;
-  itemsPerScroll = 15;
+  itemsPerScroll = 30;
   throttle = 750;
-  scrollDistance = 2;
+  scrollDistance = 3;
   // scrollUpDistance = 2;
 
   // windowReference;
@@ -88,6 +88,8 @@ export class PostListComponent implements OnInit, OnDestroy {
 
     this.totalPostsSubscription = this.postService.getTotalPostsUpdateListener()
       .subscribe((totalCount: number) => {
+        console.log('TOTAL POST COUNT =  ' + totalCount);
+
         this.config.totalItems = totalCount;
         this.isPaginationRequired = this.showIfPaginationRequired(this.config.itemsPerPage, totalCount);
       });

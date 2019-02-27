@@ -3,20 +3,26 @@
 .small-nav {
   height: inherit;
   align-self: center;
+  padding: 5px 0;
   &__items {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     height: inherit;
   }
   &__item {
     align-self: center;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
     &--link {
       font-family: $font-mp;
       color: $dark-grey;
       padding-left: 4px;
       text-transform: capitalize;
       text-shadow: (1px 1px rgba(0, 0, 0, 1));
+      overflow: hidden;
+      white-space: nowrap;
     }
     &--link.interim::before {
       content: "\00BB";
