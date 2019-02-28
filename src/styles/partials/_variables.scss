@@ -4,7 +4,7 @@
 // League Gothic - Regular
 @font-face {
   font-family: "League Gothic";
-  src: url("/assets/fonts/League_Gothic/leaguegothic-regular-webfont.woff") format('woff');
+  src: url("/assets/fonts/League_Gothic/leaguegothic-regular-webfont.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
@@ -12,7 +12,7 @@
 // MyriadPro - Regular
 @font-face {
   font-family: "Myriad Pro";
-  src: url("/assets/fonts/MyriadPro/MyriadPro-Regular.woff") format('woff');
+  src: url("/assets/fonts/MyriadPro/MyriadPro-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
@@ -20,7 +20,7 @@
 // Yanone Kaffeesatz
 @font-face {
   font-family: "Yanone Kaffeesatz";
-  src: url("/assets/fonts/Yanone_Kaffeesatz/Yanone_Kaffeesatz_Regular_V2.woff") format('woff');
+  src: url("/assets/fonts/Yanone_Kaffeesatz/Yanone_Kaffeesatz_Regular_V2.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
@@ -35,6 +35,7 @@ $font-lg: "League Gothic", sans-serif;
 $font-mp: "Myriad Pro", sans-serif;
 // $font-mp: "PT Sans", sans-serif; //alternative to Myriad Pro
 $font-yk: "Yanone Kaffeesatz", sans-serif;
+$font-georgia: "Georgia", "Times New Roman", serif;
 
 // Colors
 $background: #323232;

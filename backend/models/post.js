@@ -32,7 +32,7 @@ const postSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  imageMainPath: { // to be checked later : mulgter?
+  imageMainPath: { // to be checked later : multer?
     type: String,
     minlength: 1,
     maxlength: 1000,
@@ -115,6 +115,7 @@ function validatePost(post) {
       .min(0)
       .max(200),
     tags: [Joi.array()
+      .max(10)
       .items(Joi
         .string()
         .lowercase()
@@ -128,8 +129,6 @@ function validatePost(post) {
   return Joi.validate(post, schema);
 }
 
-
-module.exports = mongoose.model('Post', postSchema);
 const Post = mongoose.model('Post', postSchema);
 
 module.exports = {

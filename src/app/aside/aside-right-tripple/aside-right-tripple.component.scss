@@ -7,4 +7,19 @@
   color: $gold;
   position: sticky;
   top: 0;
+  .latest-posts {
+    &__picker {
+    }
+    &__image {
+    }
+    &__title {
+    }
+    &__additional-info {
+      font-family: $font-georgia;
+      .additional-info__author {
+      }
+      .additional-info__date {
+      }
+    }
+  }
 }

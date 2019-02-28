@@ -18,7 +18,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   isAsideRequired = true; // for mobile only at home route
 
   // Posts
-  url: String;
+  url: string;
   posts: Post[]; // strict Post model !?!
   private postsSubscription: Subscription;
   private totalPostsSubscription: Subscription;

@@ -79,8 +79,8 @@
           <h1 class="related-posts-section__title black">Related Posts</h1>
           <ul class="related-posts-section__list">
             <li class="related-posts-section__item"
-                *ngFor="let  relatedPost of relatedPosts">
-              <a href=""
+                *ngFor="let relatedPost of relatedPosts">
+              <a routerLink="/{{relatedPost._id}}"
                  class="related-posts-section__item--link">
                 <span class="link-text">
                   {{ relatedPost.title}}

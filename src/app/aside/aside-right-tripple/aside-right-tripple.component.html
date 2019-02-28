@@ -1,3 +1,41 @@
 <div class="wrapper">
-  <h1>Aside</h1>
+  <section class="latest-posts">
+    <div class="latest-posts__picker">
+      <h1>latest</h1>
+    </div>
+    <div class="latest-post"
+         *ngFor="let  latestPost of latestPosts">
+      <div class="latest-post__image"
+           [style.background-image]=latestPost.imageMainPath>
+      </div>
+      <!-- [ngStyle]="{'background-image': url(' + post?.imageMainPath + ')}" -->
+      <div class="latest-post__title">
+        <span class="white">{{latestPost?.title}}</span>
+      </div>
+      <div class="latest-post__additional-info">
+        Posted by
+        <span class="additional-info__author">{{latestPost?.author.name}}</span>
+        <span class="additional-info__date">{{latestPost?.dateCreated | date:'LLL d' }}</span>
+      </div>
+    </div>
+    <div class="popular-posts__picker">
+      <h1>Popular</h1>
+    </div>
+    <div class="popular-post"
+         *ngFor="let  popularPost of popularPosts">
+      <div class="popular-post__image"
+           [style.background-image]=popularPost.imageMainPath>
+      </div>
+      <!-- [ngStyle]="{'background-image': url(' + post?.imageMainPath + ')}" -->
+      <div class="popular-post__title">
+        <span class="white">{{popularPost?.title}}</span>
+      </div>
+      <div class="popular-post__additional-info">
+        Posted by
+        <span class="additional-info__author">{{popularPost?.author.name}}</span>
+        <span class="additional-info__date">{{popularPost?.dateCreated | date:'LLL d' }}</span>
+      </div>
+    </div>
+
+  </section>
 </div>

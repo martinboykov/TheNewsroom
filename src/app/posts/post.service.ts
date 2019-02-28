@@ -1,5 +1,6 @@
 import { Post } from './post.model';
-import { Subject, Observable, of } from 'rxjs';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -12,10 +13,20 @@ const BACKEND_URL = environment.apiUrl;
 export class PostService {
   private post: Post; // only part of the data for each Post
   private posts: any[] = []; // only part of the data for each Post
+
+  // for post-list
+  private totalPostsCount: number;
   private postsUpdated = new Subject<any[]>();
   private postUpdated = new Subject<Post>();
-  private totalPostsCount: number;
   private totalPostsUpdated = new Subject<number>();
+
+  // for aside-tripple
+  private latestPosts: any[] = []; // only part of the data for each Post
+  private latestPostsUpdated = new Subject<any>();
+  private popularPosts: any[] = []; // only part of the data for each Post
+  private popularPostsUpdated = new Subject<any>();
+
+
   constructor(private http: HttpClient) { }
 
   getPosts(url: String, postsPerPage: number, currentPage: number) {
@@ -44,44 +55,80 @@ export class PostService {
       });
   }
 
-  getTotalPostsCount(url: String) {
-    console.log(`${BACKEND_URL}` + url + `/totalCount`);
-    return this.http.get<{ message: string, data: number }>(`${BACKEND_URL}` + url + `/totalCount`)
+  getTotalPostsCount(subRoute: string) {
+    const route = subRoute + `/totalCount`;
+    return this.http.get<{ message: string, data: number }>(`${BACKEND_URL}` + route)
       .subscribe((response) => {
         this.totalPostsCount = response.data;
         this.totalPostsUpdated.next(this.totalPostsCount);
       });
   }
 
+
+
   getPost(id: string) {
     const _id = id;
-    const url = '/posts/post/';
+    const route = '/posts/post/details/' + _id;
     return this.http
-      .get<{ message: string, data: Post }>(BACKEND_URL + url + _id)
-      .subscribe((postData) => {
-        this.post = postData.data;
-        this.postUpdated.next(this.post);
+      .get<{ message: string, data: Post }>(BACKEND_URL + route);
+  }
+
+  getRelatedPosts(post: Post) {
+    const _id = post._id;
+    const category = post.category.name;
+    const subcategory = post.subcategory.name;
+    const route = `/posts/post/related/${_id}`;
+    const queryParams = `?category=${category}&subcategory=${subcategory}`;
+    return this.http
+      .get<{ message: string, data: any }>(BACKEND_URL + route + queryParams)
+      .pipe(
+        map((response) => {
+          return response.data;
+        })
+      );
+  }
+
+  // for Aside-Tripple
+  getlatestPosts() {
+    const route = '/posts/latest';
+    return this.http.get<{ message: string, data: any[] }>(`${BACKEND_URL}` + route)
+      .subscribe((response) => {
+        this.latestPosts = response.data;
+        this.latestPostsUpdated.next(this.latestPosts);
+      });
+  }
+
+  getPopularPosts() {
+    const route = '/posts/popular';
+    return this.http.get<{ message: string, data: any[] }>(`${BACKEND_URL}` + route)
+      .subscribe((response) => {
+        this.popularPosts = response.data;
+        this.popularPostsUpdated.next(this.popularPosts);
       });
   }
 
   addPost(data) {
+    const route = '/posts';
     this.http
       .post<{ message: string, post: Post }>(
-        'http://localhost:3000/api/posts',
+        BACKEND_URL + route,
         data)
-        .subscribe((responseData) => {
-          console.log(responseData);
-        });
+      .subscribe((responseData) => {
+        console.log(responseData);
+      });
   }
 
   getPostsUpdateListener() { // as we set postUpdate as private
     return this.postsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }
-  getPostUpdateListener() { // as we set postUpdate as private
-    return this.postUpdated.asObservable(); // returns object to which we can listen, but we cant emit
-  }
 
   getTotalPostsUpdateListener() { // as we set postUpdate as private
     return this.totalPostsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
+  }
+  getLatestPostsUpdateListener() { // as we set postUpdate as private
+    return this.latestPostsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
+  }
+  getPopularPostsUpdateListener() { // as we set postUpdate as private
+    return this.popularPostsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }
 }
