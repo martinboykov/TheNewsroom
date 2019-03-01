@@ -6,6 +6,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PostService } from '../post.service';
 import { PaginationInstance } from 'ngx-pagination';
+import { throttleTime } from 'rxjs/operators';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
@@ -95,12 +96,12 @@ export class PostListComponent implements OnInit, OnDestroy {
       });
 
 
-    // detect if Moobile resolution < 980px width
+    // detect if Moobile resolution < 979px width
     this.isMobileResolution = this.windowRef.isMobile;
     this.windowRef.checkIfMobile();
     this.isMobileResolutionSubscription = this.windowRef.checkIfMobileUpdateListener()
       .pipe(
-        // throttleTime(100),
+        throttleTime(100),
         // tap((isMobile) => {
         //   console.log(isMobile);
         //   this.isMobileResolution = isMobile;

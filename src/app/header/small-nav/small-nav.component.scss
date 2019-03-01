@@ -12,7 +12,7 @@
   }
   &__item {
     align-self: center;
-    max-width: 200px;
+    max-width: 500px;
     overflow: hidden;
     text-overflow: ellipsis;
     &--link {
@@ -34,4 +34,18 @@
 }
 .last {
   color: #8e8e8e;
+}
+@media (max-width: $mobile) {
+  .small-nav {
+    &__item {
+      max-width: 400px;
+    }
+  }
+}
+@media (max-width: 400px) {
+  .small-nav {
+    &__item {
+      max-width: 300px;
+    }
+  }
 }

@@ -1,44 +1,72 @@
 @import "./partials/variables";
 @import "./partials/mixins";
-
-.wrapper {
-  @include gradient-main;
-  min-width: $app-min-width;
-  max-width: $app-full-width;
-  margin: 0 auto;
-  .container {
+@media (min-width: $desctop) {
+  .wrapper {
+    @include gradient-main;
+    min-width: $app-min-width;
+    max-width: $app-full-width;
     margin: 0 auto;
-    min-height: 100vh;
-    max-width: $main-full-width;
-    display: grid;
-    // grid-template-rows: minmax(140px auto) 1fr 60px;
-    grid-template-columns: 1fr;
-    grid-template-rows: 140px 1fr 60px;
+    .container {
+      margin: 0 auto;
+      min-height: 100vh;
+      max-width: $main-full-width;
+      display: grid;
+      // grid-template-rows: minmax(140px auto) 1fr 60px;
+      grid-template-columns: 1fr;
+      grid-template-rows: min-content 1fr 60px;
 
-    app-header {
-      grid-column: 1/2;
-      grid-row: 1/2;
-      padding: 0 5px;
-    }
-    main {
-      grid-column: 1/2;
-      grid-row: 2/3;
-      padding: 0 5px;
-    }
+      app-header {
+        grid-column: 1/2;
+        grid-row: 1/2;
+        padding: 0 5px;
+      }
+      main {
+        grid-column: 1/2;
+        grid-row: 2/3;
+        padding: 0 5px;
+      }
 
-    app-footer {
-      grid-column: 1/2;
-      grid-row: 3/4;
-      border: 1px solid gray;
-      padding: 0 5px;
+      app-footer {
+        grid-column: 1/2;
+        grid-row: 3/4;
+        border: 1px solid gray;
+        padding: 0 5px;
+      }
     }
   }
 }
 @media (max-width: $mobile) {
   .wrapper {
+    @include gradient-main;
+    min-width: $app-min-width;
+    max-width: $app-full-width;
+    margin: 0 auto;
     .container {
+      margin: 0 auto;
+      min-height: 100vh;
+      max-width: $main-full-width;
+      display: grid;
+      // grid-template-rows: minmax(140px auto) 1fr 60px;
       grid-template-columns: 1fr;
       grid-template-rows: min-content 1fr 60px;
+
+      app-header {
+        grid-column: 1/2;
+        grid-row: 1/2;
+        padding: 0 5px;
+      }
+      main {
+        grid-column: 1/2;
+        grid-row: 2/3;
+        padding: 0 5px;
+      }
+
+      app-footer {
+        grid-column: 1/2;
+        grid-row: 3/4;
+        border: 1px solid gray;
+        padding: 0 5px;
+      }
     }
   }
 }

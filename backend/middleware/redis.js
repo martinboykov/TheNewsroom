@@ -19,7 +19,6 @@ const redisMiddleware = (req, res, next) => {
     res.send = (body) => {
       console.log(key + 'fetched by mongodb');
       const data = JSON.parse(body).data;
-      console.log(data);
       client.setex(key, 3600, JSON.stringify(data));
       res.sendResponse(body);
     };

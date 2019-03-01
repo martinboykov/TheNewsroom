@@ -17,7 +17,7 @@ export class WindowRef {
     return _window();
   }
   get isMobile() {
-    if (this.nativeWindow.innerWidth < 980) {
+    if (this.nativeWindow.innerWidth <= 979) { // on firefox native.innerWidth is bugged at 980 (skips 981)
       return true;
     } else {
       return false;
@@ -29,8 +29,10 @@ export class WindowRef {
   checkIfMobile() {
     return fromEvent(this.nativeWindow, 'resize')
       .subscribe((event) => {
+        console.log(this.nativeWindow.innerWidth);
+
         // output new window width and height
-        if (this.nativeWindow.innerWidth < 980) {
+        if (this.nativeWindow.innerWidth <= 979) {
           this.isMobileResolution = true;
         } else {
           this.isMobileResolution = false;

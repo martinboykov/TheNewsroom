@@ -21,8 +21,7 @@
           <ul class="tags-section__items-list">
             <li class="tags-section__item"
                 *ngFor="let tag of post?.tags">
-              <a (click)="onTagClick(tag.name)"
-                 title={{tag?.name}}
+              <a title={{tag?.name}}
                  class="tags-section__item--link"> {{tag?.name}}
               </a>
             </li>
