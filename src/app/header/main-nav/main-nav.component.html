@@ -26,23 +26,14 @@
           {{category.name}}
         </div>
         <div class="accordeon__symbol">
-          <svg version="1.1"
-               id="Capa_1"
-               xmlns="http://www.w3.org/2000/svg"
-               xmlns:xlink="http://www.w3.org/1999/xlink"
-               x="0px"
-               y="0px"
-               width="255px"
-               height="255px"
-               viewBox="0 0 255 255"
-               style="enable-background:new 0 0 255 255;"
-               xml:space="preserve">
-            <g id="arrow-drop-down">
-              <polygon points="0,63.75 127.5,191.25 255,63.75 		"
-                       fill="#585858" />
-            </g>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               viewBox="0 0 24 24"
+               fill="#585858"
+               id="arrow-down"
+               width="10"
+               height="10">
+            <path d="M12 3l12 18h-24z" />
           </svg>
-
         </div>
       </div>
 
@@ -51,9 +42,9 @@
 
         <!-- ALL ITEMS OF CATEGORY -->
         <div class="main-nav__subitem">
-          <a class="main-nav__subitem--link"
+          <a class="main-nav__subitem__link"
              routerLink="/{{category.name}}">
-            <!-- <span class="main-nav__subitem--grid-arrows">
+            <span class="main-nav__subitem--arrows">
               <svg xmlns="http://www.w3.org/2000/svg"
                    xmlns:xlink="http://www.w3.org/1999/xlink"
                    version="1.1"
@@ -72,8 +63,8 @@
                            fill="#585858" />
                 </g>
               </svg>
-            </span> -->
-            <span class="main-nav__subitem--grid-link">
+            </span>
+            <span class="main-nav__subitem__link--text">
               All from {{category.name}}
             </span>
           </a>
@@ -82,11 +73,11 @@
         <!-- ITEMS OF SUBCATEGORY ONLY-->
         <div class="main-nav__subitem"
              *ngFor="let subcategory of category.subcategories">
-          <a class="main-nav__subitem--link"
+          <a class="main-nav__subitem__link"
              routerLink="/{{category.name}}/{{subcategory.name}}"
              routerLinkActive="router-link-active-subitem">
 
-            <span class="main-nav__subitem--grid-arrows">
+            <span class="main-nav__subitem--arrows">
               <svg xmlns="http://www.w3.org/2000/svg"
                    xmlns:xlink="http://www.w3.org/1999/xlink"
                    version="1.1"
@@ -107,7 +98,7 @@
               </svg>
             </span>
 
-            <span class="main-nav__subitem--grid-link">
+            <span class="main-nav__subitem--text">
               {{subcategory.name}}
             </span>
           </a>

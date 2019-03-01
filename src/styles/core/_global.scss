@@ -36,7 +36,8 @@ img {
 a {
   text-decoration: none;
   transition: width 0.4s;
-  &:hover, &:active {
+  &:hover,
+  &:active {
     text-decoration: none;
     cursor: pointer;
   }
@@ -47,7 +48,6 @@ ul {
   padding: 0;
   list-style: none;
 }
-
 
 // HELPER CLASSES (diff design specific)
 // font

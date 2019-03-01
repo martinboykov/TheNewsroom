@@ -1,14 +1,59 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>MeanApp</title>
+
   <base href="/">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+  <link rel="icon"
+        type="image/x-icon"
+        href="favicon.ico">
+  <script>
+    (function() {
+      function loadFonts() {
+        if (!("fonts" in document)) {
+          return;
+        }
+        const yanonekaffeesatz = new FontFace("Yanone Kaffeesatz", "url('/assets/fonts/Yanone_Kaffeesatz/YanoneKaffeesatz-Regular.woff') format('woff')", {
+          weight: "400",
+          style: "normal"
+			});
+        const leagueGothic = new FontFace("League Gothic", "url('/assets/fonts/League_Gothic/leaguegothic-regular-webfont.woff') format('woff')", {
+          weight: "400",
+          style: "normal"
+			});
+        const myriadPro = new FontFace("Myriad Pro", "url('/assets/fonts/MyriadPro/MyriadPro-Regular.woff') format('woff')", {
+          weight: "400",
+          style: "normal"
+			});
+        Promise.all([
+          yanonekaffeesatz.load(),
+          leagueGothic.load(),
+          myriadPro.load(),
+        ]).then(function(loadedFonts) {
+          // Render them at the same time
+          loadedFonts.forEach(function(font) {
+            document.fonts.add(font);
+          });
+        });
+      }
+      if ("matchMedia" in window && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        // do nothing
+      } else {
+        loadFonts();
+      }
+    })();
+  </script>
 </head>
+
 <body>
-  <app-root></app-root>
+  <app-root>
+          Loading...
+  </app-root>
 </body>
+
 </html>

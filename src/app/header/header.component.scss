@@ -1,46 +1,47 @@
 @import "./partials/variables";
-.main-header {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  grid-template-rows: 80px 30px 30px;
-  align-items: center;
-  .logo {
-    grid-column: 1/3;
-    grid-row: 1/2;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: flex-end;
-    height: 100%;
-    // padding-top: 30px;
-    &-link {
-      span {
-        font-family: $font-yk;
-        font-size: 60px;
-        text-shadow: (1px 1px rgba(0, 0, 0, 1));
-        text-transform: uppercase;
+@media (min-width: $desctop) {
+  .main-header {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    grid-template-rows: 80px 30px 30px;
+    align-items: center;
+    .logo {
+      grid-column: 1/3;
+      grid-row: 1/2;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-items: flex-end;
+      height: 100%;
+      // padding-top: 30px;
+      &-link {
+        span {
+          font-family: $font-yk;
+          font-size: 60px;
+          text-shadow: (1px 1px rgba(0, 0, 0, 1));
+          text-transform: uppercase;
+        }
       }
     }
-  }
-  app-main-nav {
-    grid-column: 1/2;
-    grid-row: 2/3;
-    height: 100%;
-    z-index: 999;
-  }
+    app-main-nav {
+      grid-column: 1/2;
+      grid-row: 2/3;
+      height: 100%;
+      z-index: 999;
+    }
 
-  app-search {
-    grid-row: 2/3;
-    justify-self: end;
-    height: 100%;
-  }
-  app-small-nav {
-    grid-row: 3/4;
-    height: 100%;
+    app-search {
+      grid-row: 2/3;
+      justify-self: end;
+      height: 100%;
+    }
+    app-small-nav {
+      grid-row: 3/4;
+      height: 100%;
+    }
   }
 }
-
 @media (max-width: $mobile) {
   .main-header {
     grid-template-columns: auto 1fr 1fr;

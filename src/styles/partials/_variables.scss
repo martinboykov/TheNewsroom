@@ -1,41 +1,45 @@
 /* Fonts */
 
-// added resolve-url-loader
-// League Gothic - Regular
-@font-face {
-  font-family: "League Gothic";
-  src: url("/assets/fonts/League_Gothic/leaguegothic-regular-webfont.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
-
-// MyriadPro - Regular
-@font-face {
-  font-family: "Myriad Pro";
-  src: url("/assets/fonts/MyriadPro/MyriadPro-Regular.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
 
 // Yanone Kaffeesatz
-@font-face {
-  font-family: "Yanone Kaffeesatz";
-  src: url("/assets/fonts/Yanone_Kaffeesatz/Yanone_Kaffeesatz_Regular_V2.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
+// @font-face {
+//   font-family: "Yanone Kaffeesatz";
+//   src: local("/assets/fonts/Yanone_Kaffeesatz/YanoneKaffeesatz-Regular.woff"),
+//   url("/assets/fonts/Yanone_Kaffeesatz/YanoneKaffeesatz-Regular.woff") format("woff");
+//   font-weight: normal;
+//   font-style: normal;
+// }
+// @import url("https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz");
+
+// League Gothic - Regular
+// @font-face {
+//   font-family: "League Gothic";
+//   src: url("/assets/fonts/League_Gothic/leaguegothic-regular-webfont.woff") format("woff");
+//   font-weight: normal;
+//   font-style: normal;
+
+// }
+
+// MyriadPro - Regular
+// @font-face {
+//   font-family: "Myriad Pro";
+//   src: url("/assets/fonts/MyriadPro/MyriadPro-Regular.woff") format("woff");
+//   font-weight: normal;
+//   font-style: normal;
+// }
+
+
 
 // Droid Sans - Regular
 @import url("https://fonts.googleapis.com/css?family=Droid+Sans:400,700");
-// @import url("https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz");
 // @import url("https://fonts.googleapis.com/css?family=PT+Sans"); // instead Myriad Pro
 
 $font-default: "Droid Sans", sans-serif;
-$font-lg: "League Gothic", sans-serif;
-$font-mp: "Myriad Pro", sans-serif;
+$font-lg: "League Gothic", arial, sans-serif;
+$font-mp: "Myriad Pro", arial, sans-serif;
 // $font-mp: "PT Sans", sans-serif; //alternative to Myriad Pro
-$font-yk: "Yanone Kaffeesatz", sans-serif;
-$font-georgia: "Georgia", "Times New Roman", serif;
+$font-yk: "Yanone Kaffeesatz", arial, sans-serif;
+$font-georgia: "Georgia", "Times New Roman", "Times", serif;
 
 // Colors
 $background: #323232;
