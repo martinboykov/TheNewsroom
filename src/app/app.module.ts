@@ -17,7 +17,7 @@ import { PostListComponent } from './posts/post-list/post-list.component';
 import { MainNavComponent } from './header/main-nav/main-nav.component';
 import { SearchComponent } from './header/search/search.component';
 import { SmallNavComponent } from './header/small-nav/small-nav.component';
-import { DropdownDirective } from './header/dropdown.directive';
+import { ToggleNavigationDirective, ToggleSubNavigationDirective, MainNavigationDirective } from './header/dropdown.directive';
 import { PostItemComponent } from './posts/post-item/post-item.component';
 @NgModule({
   declarations: [
@@ -30,8 +30,10 @@ import { PostItemComponent } from './posts/post-item/post-item.component';
     MainNavComponent,
     SearchComponent,
     SmallNavComponent,
-    DropdownDirective,
     PostItemComponent,
+    ToggleNavigationDirective,
+    ToggleSubNavigationDirective,
+    MainNavigationDirective,
   ],
   imports: [
     BrowserModule,

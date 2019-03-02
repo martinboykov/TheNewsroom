@@ -1,37 +1,61 @@
-<nav class="main-nav">
-  <div appDropdown
-       class="toggle">
-    <button class="toggle-button">
+<nav class="main-nav"
+     appMainNavigation>
+  <div class="toggle">
+    <button class="toggle-button"
+            [appToggleNavigation]="{buttonToggle:'.main-nav__items--mobile'}">
       <span class="toggle-button__bar"></span>
       <span class="toggle-button__bar"></span>
       <span class="toggle-button__bar"></span>
     </button>
   </div>
-
   <div class="main-nav__items--mobile">
     <div class="main-nav__item home"
          routerLinkActive="router-link-active-item"
          [routerLinkActiveOptions]="{exact:
             true}">
       <a routerLink="/"
-         class="main-nav__item--link">Home</a>
+         class="main-nav__item__link">Home</a>
     </div>
     <div class="main-nav__item"
          *ngFor="let category of categories"
          routerLinkActive="router-link-active-item">
 
-      <div appDropdown
-           class="main-nav__item--accordeon">
-        <div class="accordeon__text">
-          {{category.name}}
+      <div class="main-nav__item--accordeon">
+        <div class="main-nav__item__link">
+          <a class="main-nav__item__link"
+             routerLink="/{{category.name}}">
+            <!-- <span class="main-nav__subitem--arrows">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   xmlns:xlink="http://www.w3.org/1999/xlink"
+                   version="1.1"
+                   id="Capa_1"
+                   x="0px"
+                   y="0px"
+                   width="11px"
+                   height="11px"
+                   viewBox="0 0 220.682 220.682"
+                   style="enable-background:new 0 0 220.682 220.682;"
+                   xml:space="preserve">
+                <g>
+                  <polygon points="92.695,38.924 164.113,110.341 92.695,181.758 120.979,210.043 220.682,110.341 120.979,10.639  "
+                           fill="#585858" />
+                  <polygon points="28.284,210.043 127.986,110.341 28.284,10.639 0,38.924 71.417,110.341 0,181.758  "
+                           fill="#585858" />
+                </g>
+              </svg>
+            </span> -->
+              {{category.name}}
+          </a>
         </div>
-        <div class="accordeon__symbol">
+        <div class="accordeon__symbol"
+             [appToggleSubNavigation]="{arrowToggle:'.main-nav__subitems'}"
+             *ngIf="category.subcategories.length>0">
           <svg xmlns="http://www.w3.org/2000/svg"
                viewBox="0 0 24 24"
                fill="#585858"
                id="arrow-down"
-               width="10"
-               height="10">
+               width="16"
+               height="16">
             <path d="M12 3l12 18h-24z" />
           </svg>
         </div>
@@ -41,7 +65,7 @@
       <div class="main-nav__subitems">
 
         <!-- ALL ITEMS OF CATEGORY -->
-        <div class="main-nav__subitem">
+        <!-- <div class="main-nav__subitem">
           <a class="main-nav__subitem__link"
              routerLink="/{{category.name}}">
             <span class="main-nav__subitem--arrows">
@@ -68,7 +92,7 @@
               All from {{category.name}}
             </span>
           </a>
-        </div>
+        </div> -->
 
         <!-- ITEMS OF SUBCATEGORY ONLY-->
         <div class="main-nav__subitem"
@@ -106,6 +130,7 @@
       </div>
     </div>
   </div>
+
   <ul class="main-nav__items--desktop">
     <li class="dropdown main-nav__item"
         routerLinkActive="router-link-active-item"

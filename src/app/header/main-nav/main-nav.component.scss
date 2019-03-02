@@ -20,7 +20,6 @@
       flex-wrap: nowrap;
       height: inherit;
       .main-nav__item {
-
         align-self: center;
         &:nth-child(1) {
           margin-left: -5px;
@@ -139,10 +138,8 @@
     display: flex;
     flex-flow: column nowrap;
     align-items: flex-start;
-    margin-top: 8px;
-    // height: inherit;
     .toggle {
-      margin-bottom: 5px;
+      width: 100%;
       .toggle-button {
         display: block;
         width: 30px;
@@ -174,6 +171,7 @@
     &__items--desktop {
       display: none;
     }
+
     &__items--mobile {
       // display: none;
       opacity: 0;
@@ -191,6 +189,7 @@
       }
       .main-nav__item.home {
         // @include gradient-main;
+        margin-top: 5px;
         background: transparent;
         height: 0px;
         transition: height 0.5s, transform 0.5s;
@@ -215,7 +214,7 @@
 
     &__item {
       cursor: pointer;
-      &--link {
+      &__link {
         text-shadow: (1px 1px rgba(0, 0, 0, 1));
         font-family: $font-lg;
         text-decoration: none;
@@ -251,20 +250,22 @@
           margin-left: 5px;
           svg {
             transform: scale(1, -1);
+            transition: scale 0.5s;
           }
         }
+        .accordeon__symbol.pushed {
+          svg {
+            transform: scale(1, 1);
+          }
       }
-      &--accordeon.activated,
-      &--accordeon.activated:hover {
+      &--accordeon.pushed,
+      &--accordeon.pushed:hover {
         // @include gradient-main;
         background: transparent;
 
         .accordeon__text {
         }
-        .accordeon__symbol {
-          svg {
-            transform: scale(1, 1);
-          }
+
         }
       }
     }

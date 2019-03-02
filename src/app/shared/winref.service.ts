@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
 
 function _window(): any {
   // return the global native browser window object
@@ -28,6 +29,9 @@ export class WindowRef {
 
   checkIfMobile() {
     return fromEvent(this.nativeWindow, 'resize')
+      .pipe(
+        throttleTime(100),
+      )
       .subscribe((event) => {
         console.log(this.nativeWindow.innerWidth);
 
@@ -39,7 +43,6 @@ export class WindowRef {
         }
         this.isMobileResolutionUpdated.next(this.isMobileResolution);
       });
-
   }
   checkIfMobileUpdateListener() { // as we set postUpdate as private
     return this.isMobileResolutionUpdated.asObservable(); // returns object to which we can listen, but we cant emit

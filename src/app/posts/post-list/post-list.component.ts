@@ -102,13 +102,13 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.isMobileResolution = this.windowRef.isMobile;
     this.windowRef.checkIfMobile();
     this.isMobileResolutionSubscription = this.windowRef.checkIfMobileUpdateListener()
-      .pipe(
-        throttleTime(100),
-        // tap((isMobile) => {
-        //   console.log(isMobile);
-        //   this.isMobileResolution = isMobile;
-        // }),
-      )
+      // .pipe(
+      //   throttleTime(100),
+      //   // tap((isMobile) => {
+      //   //   console.log(isMobile);
+      //   //   this.isMobileResolution = isMobile;
+      //   // }),
+      // )
       .subscribe((isMobile) => {
         this.isMobileResolution = isMobile;
       });
