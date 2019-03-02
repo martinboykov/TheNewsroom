@@ -1,4 +1,5 @@
 import { Post } from './post.model';
+import { Comment } from './comment.model';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -70,17 +71,19 @@ export class PostService {
     const _id = id;
     const route = '/posts/post/details/' + _id;
     return this.http
-      .get<{ message: string, data: Post }>(BACKEND_URL + route);
+      .get<{ message: string, data: Post }>(BACKEND_URL + route)
+      .subscribe((response: any) => {
+        const post = response.data;
+        this.postUpdated.next(post);
+      });
+
   }
 
   getRelatedPosts(post: Post) {
     const _id = post._id;
-    const category = post.category.name;
-    const subcategory = post.subcategory.name;
     const route = `/posts/post/related/${_id}`;
-    const queryParams = `?category=${category}&subcategory=${subcategory}`;
     return this.http
-      .get<{ message: string, data: any }>(BACKEND_URL + route + queryParams)
+      .get<{ message: string, data: any }>(BACKEND_URL + route)
       .pipe(
         map((response) => {
           return response.data;
@@ -107,6 +110,29 @@ export class PostService {
       });
   }
 
+  addComment(postId: string, author, content: string) {
+    const route = '/posts/post/addComment/' + postId;
+
+    const newComment: Comment = {
+      author: author,
+      content: content,
+      postId: postId,
+    };
+
+    // ADD COMMENT TYPE TODO:???!?!
+    return this.http.put<{ message: string, data: Post }>(
+      BACKEND_URL + route,
+      newComment)
+      .subscribe((response) => {
+        console.log(response);
+        const post = response.data;
+        // method 1 Pesimistic updating: only after success
+        // this.post.comments.push(comment);
+        this.postUpdated.next(post);
+      });
+  }
+
+  // fake service
   addPost(data) {
     const route = '/posts';
     this.http
@@ -118,6 +144,9 @@ export class PostService {
       });
   }
 
+  getPostUpdateListener() { // as we set postUpdate as private
+    return this.postUpdated.asObservable(); // returns object to which we can listen, but we cant emit
+  }
   getPostsUpdateListener() { // as we set postUpdate as private
     return this.postsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }

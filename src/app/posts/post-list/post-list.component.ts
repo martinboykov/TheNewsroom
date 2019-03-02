@@ -71,6 +71,8 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.postsScroller = [];
       this.headerService.setRouterParameters(params);
       this.url = this.getUrl(params);
+      console.log(this.url);
+
       this.postService.getTotalPostsCount(this.url);
       this.postService.getPosts(this.url, this.itemsPerScroll, this.currentPageScroller);
     });

@@ -32,6 +32,9 @@ const updatePost = async (req, res, next) => {
   postUpdated.title = data.title;
   postUpdated.content = data.content;
 
+  // Add comment
+
+
   // Start the transaction
   const task = new Fawn.Task(); // eslint-disable-line new-cap
 
@@ -218,6 +221,7 @@ const updatePost = async (req, res, next) => {
       });
     });
 };
+
 
 module.exports = {
   updatePost,

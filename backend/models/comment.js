@@ -13,7 +13,6 @@ const commentSchema = new mongoose.Schema({
     _id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
     avatar: {
       type: String,
@@ -22,7 +21,7 @@ const commentSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    minlength: 1,
+    minlength: 2,
     maxlength: 2000,
     required: true,
   },
@@ -30,12 +29,9 @@ const commentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  post: {
-    _id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Post',
-      required: true,
-    },
+  postId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post',
   },
 });
 
@@ -44,7 +40,7 @@ function validateComment(comment) {
     content: Joi
       .string()
       .lowercase()
-      .min(1)
+      .min(2)
       .max(2000)
       .required(),
   });

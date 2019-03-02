@@ -14,11 +14,13 @@ router.get('/subcategories/:_id',
   categoryController.getCategorySubcategories);
 
 router.get('/posts/:name',
-  redisMiddleware, categoryController.getCategoryPosts);
+  // redisMiddleware,
+  categoryController.getCategoryPosts);
 
 router.get(
   '/posts/:name/totalCount',
-  redisMiddleware, categoryController.getCategoryPostsTotalCount,
+  // redisMiddleware,
+  categoryController.getCategoryPostsTotalCount,
 );
 
 router.post('/', categoryController.addCategory);

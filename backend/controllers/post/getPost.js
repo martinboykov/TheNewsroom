@@ -44,7 +44,9 @@ const getTotalCount = async (req, res, next) => {
 };
 
 const getPost = async (req, res, next) => {
-  const post = await Post.findOne({ _id: req.params._id });
+  const post = await Post.findOne({ _id: req.params._id })
+  .populate('comments');
+
   if (!post) return res.status(400).json({ message: 'No such post.' });
   return res.status(200).json({
     message: `Post with _id: ${post._id} fetched successfully`,
@@ -54,11 +56,7 @@ const getPost = async (req, res, next) => {
 
 const getRelatedPosts = async (req, res, next) => {
   const _id = req.params._id;
-  const category = req.query.category;
-  const subcategory = req.query.subcategory;
   const post = await Post.findOne({
-    'category.name': category,
-    'subcategory.name': subcategory,
     _id: _id,
   });
   const tags = post.tags.reduce((accumulator, current) => {

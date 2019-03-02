@@ -105,7 +105,57 @@
     </div>
     <div class="bottom">
       <section class="comments">
-        <h1>COMMENTS</h1>
+        <div class="comments__heading">
+          <h1 class="red">{{post?.comments.length}} <span>&nbsp;</span> Comments </h1>
+        </div>
+        <div class="comments__list">
+          <div class="comment"
+               *ngFor="let comment of post?.comments">
+            <div class="image-section"
+            [ngStyle]="{'background-image': 'url(' + comment.author.avatar + ')'}">
+              <!-- [ngStyle]="{'background-image': url(' + comment.author.avatar + ')}"> -->
+              <div class="image-section__month">
+                <h2 class="white">{{comment?.dateCreated | date:'LLL' }}</h2>
+              </div>
+              <div class="image-section__day ">
+                <h2 class="white">{{comment?.dateCreated | date:'d' }}</h2>
+              </div>
+            </div>
+            <div class="text-section">
+              <div class="text-section__title">
+                <h2 class="black">{{comment?.author.name}}</h2>
+              </div>
+              <div class="text-section__content">
+                {{comment?.content}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="new-comment">
+          <h1 class="red">Leave a comment</h1>
+          <form [formGroup]="commentForm"
+                (ngSubmit)="onPostComment()">
+            <textarea formControlName="content"
+                      placeholder="Post Comment"
+                      rows="6"></textarea>
+            <span *ngIf="contentErrorRequired && content.touched"
+                  class="help-block">Please enter correct username</span>
+            <span *ngIf="contentErrorLength"
+                  class="help-block">Comment length is unacceptable</span>
+            <button [disabled]="!commentForm.valid"
+                    type="submit">Post Comment</button>
+          </form>
+          <div class="dev-check">
+            <p>Form Status: {{ commentForm.status }}</p>
+            <p>Form Values: {{ commentForm.value | json}}</p>
+            <p>Errors:</p>
+            <ul>
+              <li>
+                <p>Content Errors: {{ content.errors | json}}</p>
+              </li>
+            </ul>
+          </div>
+        </div>
       </section>
     </div>
   </article>

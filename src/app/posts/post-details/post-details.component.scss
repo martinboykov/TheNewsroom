@@ -207,6 +207,48 @@
         grid-row: 1/2;
         @include gradient-border(true, true, 10px);
         background: white;
+        &__heading{
+
+        }
+        &__list{
+
+          .comment{
+
+            display: grid;
+            grid-template-columns: 80px max-content;
+            border-bottom: 1px dashed $light-grey;
+            .image-section {
+              grid-column: 1/2;
+              margin-bottom: 25px;
+              display: grid;
+              grid-template-columns: 1fr;
+              grid-template-rows: 43px 48px;
+              align-items: start;
+              justify-items: end;
+              max-height: 65px;
+              max-width: 65px;
+              box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 1) inset;
+              background-size: contain;
+              background-position: center;
+              background-repeat: no-repeat;
+              border: 5px solid #efefef;
+
+              &__month,
+              &__day {
+                h2 {
+                  margin-right: 6px;
+                  color: white;
+                  font-size: 25px;
+                  line-height: 45px;
+                  text-shadow: 0px 0px 4px rgba(0, 0, 0, 1);
+                }
+              }
+            }
+            .text-section{
+              grid-column: 2/3;
+            }
+          }
+        }
       }
     }
   }
@@ -324,12 +366,55 @@
       }
       .bottom {
         grid-row: 2/3;
-        grid-template-columns: 1fr;
+        // grid-template-columns: 1fr;
+        display: grid;
 
         .comments {
           grid-column: 1/2;
           @include gradient-border(true, true, 10px);
           background: white;
+          &__heading{
+
+          }
+          &__list{
+
+            .comment{
+
+              display: grid;
+              grid-template-columns: 80px max-content;
+              border-bottom: 1px dashed $light-grey;
+              .image-section {
+                grid-column: 1/2;
+                margin-bottom: 25px;
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: 43px 48px;
+                align-items: start;
+                justify-items: end;
+                max-height: 65px;
+                max-width: 65px;
+                box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 1) inset;
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
+                border: 5px solid #efefef;
+
+                &__month,
+                &__day {
+                  h2 {
+                    margin-right: 6px;
+                    color: white;
+                    font-size: 25px;
+                    line-height: 45px;
+                    text-shadow: 0px 0px 4px rgba(0, 0, 0, 1);
+                  }
+                }
+              }
+              .text-section{
+                grid-column: 2/3;
+              }
+            }
+          }
         }
       }
     }

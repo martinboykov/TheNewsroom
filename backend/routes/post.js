@@ -15,11 +15,11 @@ router.get('/totalCount',
   postController.getTotalCount);
 
 router.get('/latest',
-  redisMiddleware,
+  // redisMiddleware,
   postController.getLatestPosts);
 
 router.get('/popular',
-  redisMiddleware,
+  // redisMiddleware,
   postController.getPopularPosts);
 
 router.get('/commented',
@@ -27,16 +27,19 @@ router.get('/commented',
   postController.getComentedPosts);
 
 router.get('/post/details/:_id',
-  redisMiddleware,
+  // redisMiddleware,
   postController.getPost);
 
 router.get('/post/related/:_id',
-  redisMiddleware,
+  // redisMiddleware,
   postController.getRelatedPosts);
 
 router.post('/', postController.addPost);
 
+router.put('/post/addComment/:_id', postController.addComment);
+
 router.put('/post/:_id', postController.updatePost);
+
 
 router.delete('/post/:_id', postController.deletePost);
 

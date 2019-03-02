@@ -16,7 +16,7 @@ router.get(
 
 router.get(
   '/posts/:name/totalCount',
-  redisMiddleware,
+  // redisMiddleware,
   subcategoryController.getSubcategoryPostsTotalCount,
 );
 
