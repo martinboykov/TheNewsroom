@@ -1,12 +1,12 @@
 @import "./partials/variables";
-
+@media (min-width: $desctop) {
 .wrapper {
   min-width: 300px;
   height: 600px;
   background: $dark-grey;
   color: $gold;
-  position: sticky;
-  top: 0;
+   position: sticky;
+   top: 0;
   .latest-posts {
     &__picker {
     }
@@ -19,6 +19,31 @@
       .additional-info__author {
       }
       .additional-info__date {
+      }
+    }
+  }
+}
+}
+@media (max-width: $mobile) {
+  .wrapper {
+    min-width: 300px;
+    height: 600px;
+    background: $dark-grey;
+    color: $gold;
+    z-index: 0;
+    .latest-posts {
+      &__picker {
+      }
+      &__image {
+      }
+      &__title {
+      }
+      &__additional-info {
+        font-family: $font-georgia;
+        .additional-info__author {
+        }
+        .additional-info__date {
+        }
       }
     }
   }

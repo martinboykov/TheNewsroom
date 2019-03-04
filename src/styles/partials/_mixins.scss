@@ -4,7 +4,7 @@
   font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-@mixin font-default ($weight: 400, $style: normal) {
+@mixin font-default($weight: 400, $style: normal) {
   font-family: $font-default;
   font-weight: $weight;
   font-style: $style;
@@ -26,6 +26,26 @@
     #323232 79%,
     #2b2b2a 87%,
     #1e1e1e 97%,
+    #1d1c1d 100%
+  );
+
+  /* IE6-9 */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1d1c1d', endColorstr='#1d1c1d', GradientType=1);
+}
+
+@mixin gradient-navigation() {
+  // if no support for linear-gradient
+  background: #1d1c1d;
+
+  background: linear-gradient(
+    to bottom,
+    #1d1c1d 0%,
+    #1e1e1e 10%,
+    #2b2b2a 30%,
+    #323232 49%,
+    #323232 51%,
+    #2b2b2a 70%,
+    #1e1e1e 90%,
     #1d1c1d 100%
   );
 

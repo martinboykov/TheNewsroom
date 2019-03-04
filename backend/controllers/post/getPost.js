@@ -25,7 +25,6 @@ const getPosts = async (req, res, next) => {
 
     content = content.substring(0, 300); // for now...
     post.content = content;
-    // console.log(post);
     return post;
   });
   res.status(200).json({
@@ -36,7 +35,6 @@ const getPosts = async (req, res, next) => {
 
 const getTotalCount = async (req, res, next) => {
   const postsCount = await Post.countDocuments();
-  console.log(postsCount);
   res.status(200).json({
     message: 'Total posts count fetched successfully',
     data: postsCount,
@@ -63,7 +61,6 @@ const getRelatedPosts = async (req, res, next) => {
     accumulator.push(current._id);
     return accumulator;
   }, []);
-  console.log(tags);
   const posts = await Post
     .find({ 'tags._id': [...tags] })
     .sort({ 'dateCreated': -1 })
@@ -79,7 +76,6 @@ const getRelatedPosts = async (req, res, next) => {
 
 const getLatestPosts = async (req, res, next) => {
   const postsCount = await Post.countDocuments();
-  console.log(postsCount);
   const posts = await Post
     .find()
     .limit(5)
@@ -131,7 +127,6 @@ const getComentedPosts = async (req, res, next) => {
       $sort: { 'comments_count': 1 },
     },
   ]);
-  console.log(posts);
   // .find({
   //   dateCreated: {
   //     $gte: new Date(dateNow.setDate(dateNow.getDate() - 1)),

@@ -28,7 +28,7 @@ router.get('/post/related/:_id',
 
 router.post('/', postController.addPost);
 
-router.put('/post/comment/:_id', postController.addComment);
+router.put('/post/comments/:_id', postController.addComment);
 
 router.put('/post/:_id', postController.updatePost);
 

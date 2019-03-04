@@ -16,5 +16,5 @@ module.exports = ((app) => {
         debug('Connected to MongoDB database...');
       }
     });
-  app.use(redis);
+  // app.use(redis);
 });

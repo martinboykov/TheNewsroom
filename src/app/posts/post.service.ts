@@ -113,7 +113,7 @@ export class PostService {
   }
 
   addComment(postId: string, author, content: string) {
-    const route = '/posts/post/comment/' + postId;
+    const route = '/posts/post/comments/' + postId;
 
     const newComment: Comment = {
       author: author,

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { NgxPaginationModule } from 'ngx-pagination';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
@@ -17,7 +17,9 @@ import { PostListComponent } from './posts/post-list/post-list.component';
 import { MainNavComponent } from './header/main-nav/main-nav.component';
 import { SearchComponent } from './header/search/search.component';
 import { SmallNavComponent } from './header/small-nav/small-nav.component';
-import { ToggleNavigationDirective, ToggleSubNavigationDirective, MainNavigationDirective } from './header/dropdown.directive';
+import { ToggleNavigationDirective } from './header/toggleNavigation.directive';
+import { ToggleSubNavigationDirective } from './header/toggleSubNavigation.directive';
+import { MainNavigationDirective } from './header/mainNavigation.directive';
 import { PostItemComponent } from './posts/post-item/post-item.component';
 @NgModule({
   declarations: [

@@ -1,3 +1,4 @@
+import { WindowRef } from './../../shared/winref.service';
 import { Post } from './../post.model';
 import { PostService } from './../post.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -7,7 +8,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 
 import { environment } from '../../../environments/environment';
-import { concatMap } from 'rxjs/operators';
+import { concatMap, distinctUntilChanged } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 const APP_URL = environment.appUrl;
 @Component({
@@ -33,10 +34,12 @@ export class PostDetailsComponent implements OnInit {
     private headerService: HeaderService,
     private postService: PostService,
     public route: ActivatedRoute,
+    private windowRef: WindowRef,
     private router: Router) {
   }
 
   ngOnInit() {
+    this.windowRef.scrollToTop(1000);
     this.commentForm = new FormGroup({
       content: new FormControl(null, [Validators.required, Validators.minLength(2), Validators.maxLength(3000)]),
     });
@@ -97,7 +100,7 @@ export class PostDetailsComponent implements OnInit {
     const author = this.fakeAuthor;
     const postId = this.post._id;
     const content = this.commentForm.value.content;
-    this.postService.addComment(postId, author, content)
+    this.postService.addComment(postId, author, content);
 
     this.commentForm.reset();
   }

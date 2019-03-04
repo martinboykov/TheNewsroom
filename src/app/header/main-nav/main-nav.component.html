@@ -20,88 +20,79 @@
          *ngFor="let category of categories"
          routerLinkActive="router-link-active-item">
 
+      <!-- Link to category posts -->
       <div class="main-nav__item--accordeon">
         <div class="main-nav__item__link">
           <a class="main-nav__item__link"
              routerLink="/{{category.name}}">
-            <!-- <span class="main-nav__subitem--arrows">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   xmlns:xlink="http://www.w3.org/1999/xlink"
-                   version="1.1"
-                   id="Capa_1"
-                   x="0px"
-                   y="0px"
-                   width="11px"
-                   height="11px"
-                   viewBox="0 0 220.682 220.682"
-                   style="enable-background:new 0 0 220.682 220.682;"
-                   xml:space="preserve">
-                <g>
-                  <polygon points="92.695,38.924 164.113,110.341 92.695,181.758 120.979,210.043 220.682,110.341 120.979,10.639  "
-                           fill="#585858" />
-                  <polygon points="28.284,210.043 127.986,110.341 28.284,10.639 0,38.924 71.417,110.341 0,181.758  "
-                           fill="#585858" />
-                </g>
-              </svg>
-            </span> -->
-              {{category.name}}
+            {{category.name}}
           </a>
         </div>
+        <!-- Button to show Dropdown with subitems list  -->
         <div class="accordeon__symbol"
              [appToggleSubNavigation]="{arrowToggle:'.main-nav__subitems'}"
              *ngIf="category.subcategories.length>0">
-          <svg xmlns="http://www.w3.org/2000/svg"
-               viewBox="0 0 24 24"
-               fill="#585858"
-               id="arrow-down"
-               width="16"
-               height="16">
-            <path d="M12 3l12 18h-24z" />
+          <svg version="1.1"
+               id="Capa_1"
+               xmlns="http://www.w3.org/2000/svg"
+               xmlns:xlink="http://www.w3.org/1999/xlink"
+               x="0px"
+               y="0px"
+               width="16px"
+               height="16px"
+               viewBox="0 0 292.362 292.362"
+               style="enable-background:new 0 0 292.362 292.362;"
+               xml:space="preserve"
+               fill="#585858">
+            <filter xmlns="http://www.w3.org/2000/svg"
+                    id="accordeon-symbol-shadow">
+              <feGaussianBlur in="SourceAlpha"
+                              stdDeviation="1" />
+              <feOffset dx="1"
+                        dy="-1"
+                        result="offsetblur" />
+              <feComponentTransfer xmlns="http://www.w3.org/2000/svg">
+                <feFuncA type="linear"
+                         slope="0.5" />
+              </feComponentTransfer>
+              <feMerge xmlns="http://www.w3.org/2000/svg">
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter xmlns="http://www.w3.org/2000/svg"
+                    id="accordeon-symbol-shadow-reverse">
+              <feGaussianBlur in="SourceAlpha"
+                              stdDeviation="1" />
+              <feOffset dx="1"
+                        dy="1"
+                        result="offsetblur" />
+              <feComponentTransfer xmlns="http://www.w3.org/2000/svg">
+                <feFuncA type="linear"
+                         slope="0.5" />
+              </feComponentTransfer>
+              <feMerge xmlns="http://www.w3.org/2000/svg">
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <path
+                  d="M286.935,69.377c-3.614-3.617-7.898-5.424-12.848-5.424H18.274c-4.952,0-9.233,1.807-12.85,5.424
+		C1.807,72.998,0,77.279,0,82.228c0,4.948,1.807,9.229,5.424,12.847l127.907,127.907c3.621,3.617,7.902,5.428,12.85,5.428
+		s9.233-1.811,12.847-5.428L286.935,95.074c3.613-3.617,5.427-7.898,5.427-12.847C292.362,77.279,290.548,72.998,286.935,69.377z" />
           </svg>
         </div>
       </div>
 
       <!-- DROPDOWN WITH SUBITEMS LIST -->
       <div class="main-nav__subitems">
-
-        <!-- ALL ITEMS OF CATEGORY -->
-        <!-- <div class="main-nav__subitem">
-          <a class="main-nav__subitem__link"
-             routerLink="/{{category.name}}">
-            <span class="main-nav__subitem--arrows">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   xmlns:xlink="http://www.w3.org/1999/xlink"
-                   version="1.1"
-                   id="Capa_1"
-                   x="0px"
-                   y="0px"
-                   width="11px"
-                   height="11px"
-                   viewBox="0 0 220.682 220.682"
-                   style="enable-background:new 0 0 220.682 220.682;"
-                   xml:space="preserve">
-                <g>
-                  <polygon points="92.695,38.924 164.113,110.341 92.695,181.758 120.979,210.043 220.682,110.341 120.979,10.639  "
-                           fill="#585858" />
-                  <polygon points="28.284,210.043 127.986,110.341 28.284,10.639 0,38.924 71.417,110.341 0,181.758  "
-                           fill="#585858" />
-                </g>
-              </svg>
-            </span>
-            <span class="main-nav__subitem__link--text">
-              All from {{category.name}}
-            </span>
-          </a>
-        </div> -->
-
-        <!-- ITEMS OF SUBCATEGORY ONLY-->
         <div class="main-nav__subitem"
              *ngFor="let subcategory of category.subcategories">
-          <a class="main-nav__subitem__link"
+          <a class="subitem__link"
              routerLink="/{{category.name}}/{{subcategory.name}}"
              routerLinkActive="router-link-active-subitem">
 
-            <span class="main-nav__subitem--arrows">
+            <span class="link__arrows">
               <svg xmlns="http://www.w3.org/2000/svg"
                    xmlns:xlink="http://www.w3.org/1999/xlink"
                    version="1.1"
@@ -112,17 +103,28 @@
                    height="11px"
                    viewBox="0 0 220.682 220.682"
                    style="enable-background:new 0 0 220.682 220.682;"
-                   xml:space="preserve">
-                <g>
-                  <polygon points="92.695,38.924 164.113,110.341 92.695,181.758 120.979,210.043 220.682,110.341 120.979,10.639  "
-                           fill="#585858" />
-                  <polygon points="28.284,210.043 127.986,110.341 28.284,10.639 0,38.924 71.417,110.341 0,181.758  "
-                           fill="#585858" />
-                </g>
+                   xml:space="preserve"
+                   filter="url(#svg-arrows-shadow)">
+                <filter xmlns="http://www.w3.org/2000/svg"
+                        id="svg-arrows-shadow">
+                  <feGaussianBlur in="SourceAlpha"
+                                  stdDeviation="1" />
+                  <feOffset dx="1"
+                            dy="1"
+                            result="offsetblur" />
+                  <feMerge>
+                    <feMergeNode />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <polygon points="92.695,38.924 164.113,110.341 92.695,181.758 120.979,210.043 220.682,110.341 120.979,10.639  "
+                         fill="#585858" />
+                <polygon points="28.284,210.043 127.986,110.341 28.284,10.639 0,38.924 71.417,110.341 0,181.758  "
+                         fill="#585858" />
               </svg>
             </span>
 
-            <span class="main-nav__subitem--text">
+            <span class="link__text">
               {{subcategory.name}}
             </span>
           </a>

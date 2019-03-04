@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
-import { throttleTime } from 'rxjs/operators';
+import { throttleTime, distinctUntilChanged } from 'rxjs/operators';
 
 function _window(): any {
   // return the global native browser window object
@@ -31,6 +31,7 @@ export class WindowRef {
     return fromEvent(this.nativeWindow, 'resize')
       .pipe(
         throttleTime(100),
+        distinctUntilChanged(),
       )
       .subscribe((event) => {
         console.log(this.nativeWindow.innerWidth);
@@ -43,6 +44,24 @@ export class WindowRef {
         }
         this.isMobileResolutionUpdated.next(this.isMobileResolution);
       });
+  }
+  scrollToTop(scrollDuration) {
+    const window = this.nativeWindow;
+    const scrollHeight = window.scrollY,
+      scrollStep = Math.PI / (scrollDuration / 15),
+      cosParameter = scrollHeight / 2;
+    let scrollCount = 0;
+    let scrollMargin;
+    const scrollInterval = setInterval(function () {
+      if (window.scrollY !== 0) {
+        scrollCount = scrollCount + 1;
+        scrollMargin = cosParameter - cosParameter * Math.cos(scrollCount * scrollStep);
+        window.scrollTo(0, (scrollHeight - scrollMargin));
+      } else {
+        clearInterval(scrollInterval);
+      }
+    }, 15);
+    // window.scrollTo(0, 0);
   }
   checkIfMobileUpdateListener() { // as we set postUpdate as private
     return this.isMobileResolutionUpdated.asObservable(); // returns object to which we can listen, but we cant emit
