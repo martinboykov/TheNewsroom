@@ -11,7 +11,6 @@ module.exports = ((app) => {
   Fawn.init(mongoose, 'fawn_transaction');
   app.use(bodyParser.json());
 
-
   if (process.env.NODE_ENV === 'production') {
     app.use(helmet());
 

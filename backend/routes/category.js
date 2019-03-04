@@ -5,21 +5,17 @@ const router = express.Router();
 
 const categoryController = require('../controllers/category');
 
-const { redisMiddleware } = require('../middleware/redis');
-
-router.get('/', redisMiddleware, categoryController.getCategories);
+router.get('/',
+ categoryController.getCategories);
 
 router.get('/subcategories/:_id',
-  redisMiddleware,
   categoryController.getCategorySubcategories);
 
 router.get('/posts/:name',
-  // redisMiddleware,
   categoryController.getCategoryPosts);
 
 router.get(
   '/posts/:name/totalCount',
-  // redisMiddleware,
   categoryController.getCategoryPostsTotalCount,
 );
 

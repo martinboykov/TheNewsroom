@@ -3,8 +3,9 @@ const winston = require('winston');
 const debug = require('debug')('debug');
 const mongoose = require('mongoose');
 const MONGO_URI = `mongodb+srv://${process.env.MONGO_ATLAS_USER_NAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-ekat5.mongodb.net/test?retryWrites=true`;
+const redis = require('./../middleware/redis.js').redisMiddleware;
 
-module.exports = (() => {
+module.exports = ((app) => {
   // mongoose.set('debug', true);
   mongoose.connect(MONGO_URI, { useCreateIndex: true, useNewUrlParser: true })
     .then(() => {
@@ -15,4 +16,5 @@ module.exports = (() => {
         debug('Connected to MongoDB database...');
       }
     });
+  app.use(redis);
 });

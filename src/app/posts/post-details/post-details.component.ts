@@ -50,8 +50,7 @@ export class PostDetailsComponent implements OnInit {
           const _id = paramMap.get('_id');
 
           // second request
-          this.postService.getPost(_id);
-          return this.postService.getPostUpdateListener();
+          return this.postService.getPost(_id);
         })
       )
       .pipe(

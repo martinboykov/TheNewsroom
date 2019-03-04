@@ -4,16 +4,6 @@ const app = express();
 
 // const path = require('path');
 
-require('express-async-errors');
-
-require('./starter/third-party')(app);
-
-require('./starter/db')();
-
-require('./starter/logging')(app);
-
-// app.use('/', express.static(path.join(__dirname, '/angular')));
-
 // REMOVE CORSE HEADERS IF NOT REQUIRED IN CASE OF ONE ORIGIN (ONE_APP) DEPLOYMENT
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -26,6 +16,16 @@ app.use((req, res, next) => {
     'Origin, X-Requested-With, Content-Type, Accept, Authorization, x-auth-token'); // eslint-disable-line max-len
   next();
 });
+
+require('express-async-errors');
+
+require('./starter/third-party')(app);
+
+require('./starter/db')(app);
+
+require('./starter/logging')(app);
+
+// app.use('/', express.static(path.join(__dirname, '/angular')));
 
 require('./starter/routes')(app);
 

@@ -1,11 +1,15 @@
+/* eslint-disable no-process-env*/
 const { Post } = require('../../models/post');
 
 const { Comment, validateComment } = require('../../models/comment');
 
+const client = require('./../../middleware/redis').client;
+const HOST_ADDRESS = process.env.HOST_ADDRESS;
+
 // PUT
 const addComment = async (req, res, next) => {
   const comment = req.body;
-  console.log(comment);
+  // console.log(comment);
   const { error } = validateComment({ content: comment.content });
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
@@ -22,7 +26,7 @@ const addComment = async (req, res, next) => {
     postId: comment.postId,
   });
   const addedComment = await newComment.save();
-  console.log(addedComment);
+  // console.log(addedComment);
   // { _id: req.params.id, creator: req.user._id },
   // {
   //   $set: {
@@ -43,7 +47,12 @@ const addComment = async (req, res, next) => {
   post.save();
   const postUpdated = await Post.populate(post, { path: 'comments' });
   // await post.save();
-  console.log(postUpdated);
+  // console.log(postUpdated);
+
+  const key =
+    (HOST_ADDRESS + req.originalUrl || req.url)
+      .replace('comment', 'details');
+  client.setex(key, 3600, JSON.stringify(postUpdated));
   return res.status(201).json({
     message: 'Comment added successfully to Post',
     data: postUpdated,

@@ -65,18 +65,20 @@ export class PostService {
       });
   }
 
-
-
   getPost(id: string) {
     const _id = id;
     const route = '/posts/post/details/' + _id;
     return this.http
       .get<{ message: string, data: Post }>(BACKEND_URL + route)
-      .subscribe((response: any) => {
-        const post = response.data;
-        this.postUpdated.next(post);
-      });
-
+      .pipe(
+        map((response) => {
+          return response.data;
+        })
+      );
+    // .subscribe((response: any) => {
+    //   const post = response.data;
+    //   this.postUpdated.next(post);
+    // });
   }
 
   getRelatedPosts(post: Post) {
@@ -111,7 +113,7 @@ export class PostService {
   }
 
   addComment(postId: string, author, content: string) {
-    const route = '/posts/post/addComment/' + postId;
+    const route = '/posts/post/comment/' + postId;
 
     const newComment: Comment = {
       author: author,
