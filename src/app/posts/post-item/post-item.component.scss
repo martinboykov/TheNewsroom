@@ -1,8 +1,8 @@
 @import "./partials/variables";
 @import "./partials/mixins";
 
-div {
-  a {
+.wrapper {
+  .link {
     .item {
       width: 100%;
       height: 100%;
@@ -99,5 +99,10 @@ div {
         }
       }
     }
+  }
+}
+@media (max-width: $mobile) {
+  .wrapper {
+    margin-bottom: 20px;
   }
 }

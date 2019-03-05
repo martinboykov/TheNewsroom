@@ -57,11 +57,11 @@
       padding: 0px;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
       &-link {
         span {
           font-family: $font-yk;
-          font-size: 35px;
+          font-size: 40px;
           text-shadow: (1px 1px rgba(0, 0, 0, 1));
           text-transform: uppercase;
         }

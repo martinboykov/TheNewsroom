@@ -39,7 +39,7 @@ export class PostDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.windowRef.scrollToTop(1000);
+
     this.commentForm = new FormGroup({
       content: new FormControl(null, [Validators.required, Validators.minLength(2), Validators.maxLength(3000)]),
     });
@@ -71,6 +71,7 @@ export class PostDetailsComponent implements OnInit {
       .subscribe((post: Post) => {
         this.post = post;
       });
+    this.windowRef.scrollToTop(0);
   }
 
   get content() { return this.commentForm.get('content'); }

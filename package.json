@@ -10,7 +10,7 @@
     "e2e": "ng e2e",
     "build-report:prod": "ng build --prod --stats-json",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
-    "server:dev": "set NODE_ENV=development&&SET DEBUG=debug&& nodemon --no-deprecation server.js",
+    "server:dev": "set NODE_ENV=development&&SET DEBUG=*&& nodemon --no-deprecation --inspect=0.0.0.0:9229 server.js",
     "server:prod": "set NODE_ENV=production&& nodemon server.js",
     "server:lint": "eslint backend/**"
   },
