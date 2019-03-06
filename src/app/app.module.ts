@@ -14,13 +14,15 @@ import { FooterComponent } from './footer/footer.component';
 import { AsideRightTrippleComponent } from './aside/aside-right-tripple/aside-right-tripple.component';
 import { PostDetailsComponent } from './posts/post-details/post-details.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
+import { PostItemComponent } from './posts/post-item/post-item.component';
 import { MainNavComponent } from './header/main-nav/main-nav.component';
 import { SearchComponent } from './header/search/search.component';
 import { SmallNavComponent } from './header/small-nav/small-nav.component';
+
 import { ToggleNavigationDirective } from './header/toggleNavigation.directive';
 import { ToggleSubNavigationDirective } from './header/toggleSubNavigation.directive';
 import { MainNavigationDirective } from './header/mainNavigation.directive';
-import { PostItemComponent } from './posts/post-item/post-item.component';
+import { TimeAgoPipe } from './shared/time-ago.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,6 +38,7 @@ import { PostItemComponent } from './posts/post-item/post-item.component';
     ToggleNavigationDirective,
     ToggleSubNavigationDirective,
     MainNavigationDirective,
+    TimeAgoPipe,
   ],
   imports: [
     BrowserModule,

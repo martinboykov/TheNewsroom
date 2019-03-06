@@ -22,8 +22,6 @@ export class SmallNavComponent implements OnInit {
   ngOnInit() {
     this.routerParametersSubscription = this.headerService.getRouterParametersUpdateListener()
       .subscribe((params: ParamMap) => {
-        console.log(params);
-
         this.routes = [];
         // this.routes.push({ name: 'Home', link: '' });
         this.routerParameters = params;
@@ -58,9 +56,9 @@ export class SmallNavComponent implements OnInit {
             });
           }
         }
-        this.routes.forEach((route) => {
-          console.log('ROUTE PARAMS = ' + route.name);
-        });
+        // this.routes.forEach((route) => {
+        //   console.log('ROUTE PARAMS = ' + route.name);
+        // });
       });
 
     // this.router.events.subscribe((val) => {

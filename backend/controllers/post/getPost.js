@@ -2,8 +2,8 @@ const { Post } = require('../../models/post');
 
 // GET
 const getPosts = async (req, res, next) => {
-  const pageSize = parseInt(req.query.pageSize, 10);
-  const currentPage = parseInt(req.query.page, 10);
+  const pageSize = parseInt(req.query.pageSize, 10) || 10;
+  const currentPage = parseInt(req.query.page, 10) || 1;
   const postQuery = Post.find();
   if (pageSize && currentPage) {
     postQuery
@@ -33,7 +33,7 @@ const getPosts = async (req, res, next) => {
   });
 };
 
-const getTotalCount = async (req, res, next) => {
+const getPostsTotalCount = async (req, res, next) => {
   const postsCount = await Post.countDocuments();
   res.status(200).json({
     message: 'Total posts count fetched successfully',
@@ -42,13 +42,51 @@ const getTotalCount = async (req, res, next) => {
 };
 
 const getPost = async (req, res, next) => {
-  const post = await Post.findOne({ _id: req.params._id })
-  .populate('comments');
-
+  const _id = req.params._id;
+  const pageSize = parseInt(req.query.pageSize, 10);
+  const currentPage = parseInt(req.query.page, 10);
+  const post = await Post.findOne({ _id: _id });
+  const totalCommentsCount = post.comments.length;
+  const postWithLastComments = await Post.populate(post,
+    {
+      path: 'comments',
+      options: {
+        sort: { dateCreated: -1 },
+        skip: pageSize * (currentPage - 1),
+        limit: pageSize,
+      },
+    });
   if (!post) return res.status(400).json({ message: 'No such post.' });
+
   return res.status(200).json({
     message: `Post with _id: ${post._id} fetched successfully`,
-    data: post,
+    data: {
+      post: postWithLastComments,
+      totalCommentsCount: totalCommentsCount,
+    },
+
+  });
+};
+
+const getPostComments = async (req, res, next) => {
+  const _id = req.params._id;
+  const pageSize = parseInt(req.query.pageSize, 10);
+  const currentPage = parseInt(req.query.page, 10);
+  const post = await Post.findOne({ _id: _id });
+  if (!post) return res.status(400).json({ message: 'No such post.' });
+
+  const comments = await Post.populate(post,
+    {
+      path: 'comments',
+      options: {
+        sort: { dateCreated: -1 },
+        skip: pageSize * (currentPage - 1),
+        limit: pageSize,
+      },
+    });
+  return res.status(200).json({
+    message: `Comments for page: ${currentPage} of Post with _id:${post._id} fetched successfully`, // eslint-disable-line max-len
+    data: comments,
   });
 };
 
@@ -145,8 +183,9 @@ const getComentedPosts = async (req, res, next) => {
 
 module.exports = {
   getPosts,
-  getTotalCount,
+  getPostsTotalCount,
   getPost,
+  getPostComments,
   getRelatedPosts,
   getLatestPosts,
   getPopularPosts,

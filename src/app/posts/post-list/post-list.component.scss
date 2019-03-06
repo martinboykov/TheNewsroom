@@ -100,7 +100,8 @@
           color: $gold;
         }
         &:active {
-          color: white;
+          color: $gold;
+          transform: scale(0.8,0.8)
         }
       }
     }
@@ -108,12 +109,15 @@
       &--link {
         &:hover,
         &:active {
-          font-size: 48px;
+          color: $gold;
+        }
+        &:active {
+          transform: scale(0.8,0.8)
         }
       }
       &--span {
         &:hover {
-          font-size: 48px;
+          // font-size: 48px;
         }
       }
     }

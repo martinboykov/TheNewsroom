@@ -1,16 +1,15 @@
 /* eslint-disable no-process-env*/
 const redis = require('redis');
 const HOST_ADDRESS = process.env.HOST_ADDRESS;
-
 const client = redis.createClient();
 
 const redisMiddleware = (req, res, next) => {
   if (req.method !== 'GET') return next();
   const key = HOST_ADDRESS + req.originalUrl || req.url;
-  return client.get(key, async (error, reply) => {
+  return client.get(key, (error, reply) => {
     if (reply) {
       console.log(key + ' fetched by redis');
-      const result = await JSON.parse(reply);
+      const result = JSON.parse(reply);
       return res.status(200).json({
         message: 'Data fetched successfully by redis',
         data: result,

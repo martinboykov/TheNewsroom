@@ -9,7 +9,7 @@ router.get('/',
   postController.getPosts);
 
 router.get('/totalCount',
-  postController.getTotalCount);
+  postController.getPostsTotalCount);
 
 router.get('/latest',
   postController.getLatestPosts);
@@ -22,6 +22,8 @@ router.get('/commented',
 
 router.get('/post/details/:_id',
   postController.getPost);
+router.get('/post/comments/:_id',
+  postController.getPostComments);
 
 router.get('/post/related/:_id',
   postController.getRelatedPosts);

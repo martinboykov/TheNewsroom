@@ -1,33 +1,62 @@
 import { WindowRef } from './../../shared/winref.service';
 import { Post } from './../post.model';
+import { Comment } from './../comment.model';
 import { PostService } from './../post.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { HeaderService } from './../../header/header.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 
 import { environment } from '../../../environments/environment';
-import { concatMap, distinctUntilChanged } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
+
+import { PaginationInstance } from 'ngx-pagination';
+import { ScrollToService } from './../../shared/scrollTo.service';
+
 const APP_URL = environment.appUrl;
 @Component({
   selector: 'app-post-details',
   templateUrl: './post-details.component.html',
   styleUrls: ['./post-details.component.scss']
 })
-export class PostDetailsComponent implements OnInit {
+export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy {
+
+  // remove once users are incorporated
+  fakeAuthor = {
+    name: 'fakeName',
+    _id: '111111111111111111111111',
+    avatar: '/assets/images/main/posts/details/avatar.svg',
+  };
+
   currentUrl: string;
+  routerUrl = '/';
   post: Post; // strict Post model !?!
-  private postSubscription: Subscription;
+
   mainImage: string;
   relatedPosts: any[];
 
   commentForm: FormGroup;
-  fakeAuthor = { // One-to-Many with Denornmalization: stays the same almost always
-    name: 'fakeName',
-    _id: '111111111111111111111111',
-    avatar: '/assets/images/main/posts/details/avatar.svg',
+
+  comments: Comment[];
+  // Pagination comments
+  isPaginationRequired: boolean;
+  defaultPaginator = {
+    itemsPerPage: 10,
+    currentPage: 1,
+  };
+  paginator: PaginationInstance = {
+    id: 'paginator',
+    itemsPerPage: this.defaultPaginator.itemsPerPage,
+    currentPage: this.defaultPaginator.currentPage,
+    totalItems: 0,
+  };
+  labels: any = {
+    previousLabel: '',
+    nextLabel: '',
+    screenReaderPaginationLabel: 'Pagination',
+    screenReaderPageLabel: 'Page',
+    screenReaderCurrentLabel: `You're on page`
   };
 
   constructor(
@@ -35,7 +64,8 @@ export class PostDetailsComponent implements OnInit {
     private postService: PostService,
     public route: ActivatedRoute,
     private windowRef: WindowRef,
-    private router: Router) {
+    private scrollService: ScrollToService,
+    private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -43,22 +73,28 @@ export class PostDetailsComponent implements OnInit {
     this.commentForm = new FormGroup({
       content: new FormControl(null, [Validators.required, Validators.minLength(2), Validators.maxLength(3000)]),
     });
+    // this.route.snapshot.url.forEach((route) => {
+    //   this.routerUrl = this.routerUrl + route.path + '/';
+    // });
+    // console.log(this.routerUrl);
 
-    this.currentUrl = APP_URL + this.router.url;
+    this.currentUrl = APP_URL + this.route.url;
     // first request
     this.route.paramMap
       .pipe(
         concatMap((paramMap: ParamMap) => {
           this.headerService.setRouterParameters(paramMap);
           const _id = paramMap.get('_id');
-
           // second request
-          return this.postService.getPost(_id);
+          return this.postService.getPost(_id, this.paginator.itemsPerPage, this.paginator.currentPage);
         })
       )
       .pipe(
         concatMap((response) => {
-          this.post = response;
+          this.post = response.post;
+          this.comments = [...this.post.comments];
+          this.paginator.totalItems = response.totalCommentsCount;
+          this.isPaginationRequired = this.showIfPaginationRequired(this.paginator.itemsPerPage, this.paginator.totalItems);
           this.mainImage = `url(${this.post.imageMainPath})`;
           // third request
           return this.postService.getRelatedPosts(this.post);
@@ -67,11 +103,9 @@ export class PostDetailsComponent implements OnInit {
       .subscribe((data) => {
         this.relatedPosts = data || [];
       });
-    this.postSubscription = this.postService.getPostUpdateListener()
-      .subscribe((post: Post) => {
-        this.post = post;
-      });
+
     this.windowRef.scrollToTop(0);
+    this.changeDetectorRef.detectChanges();
   }
 
   get content() { return this.commentForm.get('content'); }
@@ -95,14 +129,52 @@ export class PostDetailsComponent implements OnInit {
       return null;
     }
   }
-  onPostComment() {
+
+
+
+  onAddComment() {
     if (this.commentForm.invalid) { return; }
     // const userId = this.authService.getUserId();
     const author = this.fakeAuthor;
     const postId = this.post._id;
     const content = this.commentForm.value.content;
-    this.postService.addComment(postId, author, content);
-
+    const newComment = { postId, author, content };
+    this.postService.addComment(newComment, this.defaultPaginator)
+      .subscribe((response) => {
+        this.comments = [...response.data.comments];
+        this.paginator.totalItems = response.data.totalCommentsCount;
+        this.paginator.currentPage = 1;
+      });
     this.commentForm.reset();
+  }
+
+  scrollTo(element) {
+    this.scrollService.scrollTo(element, 1, 0);
+  }
+
+  onChangedPage(page: number) {
+    this.paginator.currentPage = page;
+    const url = '/posts/post/comments/' + this.post._id;
+    this.postService.getPostComments(url, this.paginator.itemsPerPage, this.paginator.currentPage)
+      .subscribe((response) => {
+        this.comments = [...response.data.comments];
+      });
+  }
+
+  showIfPaginationRequired(postsPerPage, totalPostsCount) {
+    if (postsPerPage >= totalPostsCount) {
+      return false;
+    }
+    return true;
+  }
+
+  ngAfterViewChecked() {
+    // to prevent error ExpressionChangedAfterItHasBeenCheckedError
+    // https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
+    this.changeDetectorRef.detectChanges();
+  }
+
+  ngOnDestroy() {
+
   }
 }

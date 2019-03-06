@@ -27,8 +27,8 @@ export class PostListComponent implements OnInit, OnDestroy {
   // Pagination
   postsPagination: Post[];
   isPaginationRequired: boolean;
-  config: PaginationInstance = {
-    id: 'paginator',
+  paginator: PaginationInstance = {
+    id: 'paginatorComments',
     itemsPerPage: 15,
     currentPage: 1,
     totalItems: 0,
@@ -63,9 +63,9 @@ export class PostListComponent implements OnInit, OnDestroy {
     // subscribe to changing routes => to fetch corresponding recourses
     this.route.paramMap.subscribe((params: ParamMap) => {
       // reset on route change
-      this.config.currentPage = 1;
+      this.paginator.currentPage = 1;
       this.currentPageScroller = 1;
-      this.config.totalItems = 0;
+      this.paginator.totalItems = 0;
       this.posts = [];
       this.postsPagination = [];
       this.postsScroller = [];
@@ -81,7 +81,7 @@ export class PostListComponent implements OnInit, OnDestroy {
       .subscribe((posts: Post[]) => {
         this.posts = posts;
         if (this.postsPagination.length === 0 || !this.isMobileResolution) {
-          this.postsPagination = posts.slice(0, this.config.itemsPerPage);
+          this.postsPagination = posts.slice(0, this.paginator.itemsPerPage);
         }
         if (this.postsScroller.length === 0 || this.isMobileResolution) {
           this.postsScroller = [...this.postsScroller, ...posts];
@@ -93,8 +93,8 @@ export class PostListComponent implements OnInit, OnDestroy {
       .subscribe((totalCount: number) => {
         console.log('TOTAL POST COUNT =  ' + totalCount);
 
-        this.config.totalItems = totalCount;
-        this.isPaginationRequired = this.showIfPaginationRequired(this.config.itemsPerPage, totalCount);
+        this.paginator.totalItems = totalCount;
+        this.isPaginationRequired = this.showIfPaginationRequired(this.paginator.itemsPerPage, totalCount);
       });
 
 
@@ -102,13 +102,6 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.isMobileResolution = this.windowRef.isMobile;
     this.windowRef.checkIfMobile();
     this.isMobileResolutionSubscription = this.windowRef.checkIfMobileUpdateListener()
-      // .pipe(
-      //   throttleTime(100),
-      //   // tap((isMobile) => {
-      //   //   console.log(isMobile);
-      //   //   this.isMobileResolution = isMobile;
-      //   // }),
-      // )
       .subscribe((isMobile) => {
         this.isMobileResolution = isMobile;
       });
@@ -118,7 +111,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   fetchMoreEnd() {
     console.log('scroll end');
     console.log(`postsScroller.length = ` + this.postsScroller.length);
-    if (this.postsScroller.length >= this.config.totalItems) {
+    if (this.postsScroller.length >= this.paginator.totalItems) {
       return;
     }
     this.currentPageScroller += 1;
@@ -126,9 +119,15 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   // PAGINATION
+  showIfPaginationRequired(postsPerPage, totalPostsCount) {
+    if (postsPerPage >= totalPostsCount) {
+      return false;
+    }
+    return true;
+  }
   onChangedPage(page: number) {
-    this.config.currentPage = page;
-    return this.postService.getPosts(this.url, this.config.itemsPerPage, this.config.currentPage);
+    this.paginator.currentPage = page;
+    return this.postService.getPosts(this.url, this.paginator.itemsPerPage, this.paginator.currentPage);
   }
 
   getUrl(params) {
@@ -149,12 +148,6 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.isAsideRequired = true;
     }
     return url;
-  }
-  showIfPaginationRequired(postsPerPage, totalPostsCount) {
-    if (postsPerPage >= totalPostsCount) {
-      return false;
-    }
-    return true;
   }
 
   ngOnDestroy() {

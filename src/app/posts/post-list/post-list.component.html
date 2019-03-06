@@ -15,7 +15,7 @@
 
   <div *ngIf="!isMobileResolution"
        class="posts desktop">
-    <app-post-item *ngFor="let post of postsPagination | paginate: config"
+    <app-post-item *ngFor="let post of postsPagination | paginate: paginator"
                    [post]="post"
                    ></app-post-item>
   </div>
@@ -24,7 +24,7 @@
   <pagination-template *ngIf="!isMobileResolution"
                        class="pagination"
                        #p="paginationApi"
-                       [id]="config.id"
+                       [id]="paginator.id"
                        (pageChange)="onChangedPage($event)">
     <div *ngIf="isPaginationRequired"
          class="pagination-previous desktop">

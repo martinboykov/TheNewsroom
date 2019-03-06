@@ -18,7 +18,7 @@ export class PostService {
   // for post-list
   private totalPostsCount: number;
   private postsUpdated = new Subject<any[]>();
-  private postUpdated = new Subject<Post>();
+  // private postUpdated = new Subject<Post>();
   private totalPostsUpdated = new Subject<number>();
 
   // for aside-tripple
@@ -30,8 +30,8 @@ export class PostService {
 
   constructor(private http: HttpClient) { }
 
-  getPosts(url: String, postsPerPage: number, currentPage: number) {
-    const queryParams = `?pageSize=${postsPerPage}&page=${currentPage}`;
+  getPosts(url: String, commentsPerPage: number, currentPage: number) {
+    const queryParams = `?pageSize=${commentsPerPage}&page=${currentPage}`;
     console.log(BACKEND_URL + url + queryParams);
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams)
@@ -56,6 +56,13 @@ export class PostService {
       });
   }
 
+  getPostComments(url: String, commentsPerPage: number, currentPage: number) {
+    const queryParams = `?pageSize=${commentsPerPage}&page=${currentPage}`;
+    console.log(BACKEND_URL + url + queryParams);
+    return this.http
+      .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams);
+  }
+
   getTotalPostsCount(subRoute: string) {
     const route = subRoute + `/totalCount`;
     return this.http.get<{ message: string, data: number }>(`${BACKEND_URL}` + route)
@@ -65,11 +72,12 @@ export class PostService {
       });
   }
 
-  getPost(id: string) {
+  getPost(id: string, commentsPerPage: number, currentPage: number) {
     const _id = id;
-    const route = '/posts/post/details/' + _id;
+    const queryParams = `?pageSize=${commentsPerPage}&page=${currentPage}`;
+    const route = '/posts/post/details/' + _id + queryParams;
     return this.http
-      .get<{ message: string, data: Post }>(BACKEND_URL + route)
+      .get<{ message: string, data: { post: Post, totalCommentsCount: number } }>(BACKEND_URL + route)
       .pipe(
         map((response) => {
           return response.data;
@@ -79,6 +87,22 @@ export class PostService {
     //   const post = response.data;
     //   this.postUpdated.next(post);
     // });
+  }
+
+  // dafaultPaginater argument is added, so the Application can adopt pagesize as needed
+  addComment(newComment, defaultPaginator) {
+    const pageSize = defaultPaginator.itemsPerPage;
+    const page = defaultPaginator.currentPage;
+    const queryParams = `?pageSize=${pageSize}&page=${page}`;
+    const route = '/posts/post/comments/' + newComment.postId + queryParams;
+    const comment: Comment = {
+      author: newComment.author,
+      content: newComment.content,
+      postId: newComment.postId,
+    };
+    return this.http.put<{ message: string, data: { comments: Comment[], totalCommentsCount: number } }>(
+      BACKEND_URL + route,
+      comment);
   }
 
   getRelatedPosts(post: Post) {
@@ -112,28 +136,6 @@ export class PostService {
       });
   }
 
-  addComment(postId: string, author, content: string) {
-    const route = '/posts/post/comments/' + postId;
-
-    const newComment: Comment = {
-      author: author,
-      content: content,
-      postId: postId,
-    };
-
-    // ADD COMMENT TYPE TODO:???!?!
-    return this.http.put<{ message: string, data: Post }>(
-      BACKEND_URL + route,
-      newComment)
-      .subscribe((response) => {
-        console.log(response);
-        const post = response.data;
-        // method 1 Pesimistic updating: only after success
-        // this.post.comments.push(comment);
-        this.postUpdated.next(post);
-      });
-  }
-
   // fake service
   addPost(data) {
     const route = '/posts';
@@ -146,9 +148,9 @@ export class PostService {
       });
   }
 
-  getPostUpdateListener() { // as we set postUpdate as private
-    return this.postUpdated.asObservable(); // returns object to which we can listen, but we cant emit
-  }
+  // getPostUpdateListener() { // as we set postUpdate as private
+  //   return this.postUpdated.asObservable(); // returns object to which we can listen, but we cant emit
+  // }
   getPostsUpdateListener() { // as we set postUpdate as private
     return this.postsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }
@@ -156,6 +158,8 @@ export class PostService {
   getTotalPostsUpdateListener() { // as we set postUpdate as private
     return this.totalPostsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }
+
+
   getLatestPostsUpdateListener() { // as we set postUpdate as private
     return this.latestPostsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }

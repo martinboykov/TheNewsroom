@@ -27,7 +27,7 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
         .subscribe((posts: any[]) => {
           this.popularPosts = posts;
         });
-  };
+  }
 
   ngOnDestroy() {
     this.latestPostsSubscription.unsubscribe();
