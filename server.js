@@ -1,7 +1,7 @@
 /* eslint-disable no-process-env*/
 const http = require('http');
 const app = require('./backend/app');
-const debug = require('debug')('node-angular');
+const debug = require('debug')('debug');
 
 const normalizePort = (val) => { // checks if env ports are valid numbers
   const port = parseInt(val, 10);
@@ -49,4 +49,4 @@ app.set('port', port); // port is reserved word in express
 const server = http.createServer(app);
 server.on('error', onError);
 server.on('listening', onListening);
-server.listen(port, () => console.log(`Server is listening on port: ${port}`));
+server.listen(port);

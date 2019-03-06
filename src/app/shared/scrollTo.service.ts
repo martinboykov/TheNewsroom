@@ -1,4 +1,4 @@
-// Created by MarcinMichalik
+// Created by MarcinMichalik (with window object injection modification)
 // https://github.com/MarcinMichalik/ng-scrollTo
 
 import { Injectable } from '@angular/core';

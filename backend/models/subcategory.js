@@ -12,6 +12,7 @@ const subcategorySchema = new mongoose.Schema({
     minlength: 1,
     maxlength: 30,
     lowercase: true,
+    trim: true,
   },
   // not required data
   categoryId: {
@@ -23,6 +24,8 @@ const subcategorySchema = new mongoose.Schema({
     ref: 'Post',
   }],
 });
+
+subcategorySchema.index({ name: 1 }); // schema level
 
 function validateSubcategory(subcategory) {
   const schema = Joi.object({

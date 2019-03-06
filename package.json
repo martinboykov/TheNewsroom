@@ -10,7 +10,7 @@
     "e2e": "ng e2e",
     "build-report:prod": "ng build --prod --stats-json",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
-    "server:dev": "set NODE_ENV=development&&SET DEBUG=*&& nodemon --no-deprecation --inspect=0.0.0.0:9229 server.js",
+    "server:dev": "set NODE_ENV=development&&SET DEBUG=http,express:router,debug&& nodemon --no-deprecation server.js",
     "server:prod": "set NODE_ENV=production&& nodemon server.js",
     "server:lint": "eslint backend/**"
   },
@@ -24,6 +24,7 @@
     "@angular/platform-browser": "~7.2.0",
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
+    "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
     "core-js": "^2.5.4",

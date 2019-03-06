@@ -30,7 +30,6 @@ module.exports = ((app) => {
 
   if (process.env.NODE_ENV === 'development') {
     app.use(morgan('tiny'));
-
     process.on('uncaughtException', (ex) => { // for sync code outside express
       debug(ex);
     });

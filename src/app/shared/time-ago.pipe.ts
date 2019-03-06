@@ -1,4 +1,4 @@
-// time-ago-pipe by AndrewPoyntz
+// time-ago-pipe by AndrewPoyntz (with window object injection modification)
 // https://github.com/AndrewPoyntz/time-ago-pipe/blob/master/time-ago.pipe.ts
 
 import { WindowRef } from './winref.service';

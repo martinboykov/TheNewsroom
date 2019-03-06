@@ -12,6 +12,7 @@ const tagSchema = new mongoose.Schema({
     lowercase: true,
     minlength: 1,
     maxlength: 25,
+    trim: true,
   },
   posts: {
     type: [{
@@ -22,6 +23,8 @@ const tagSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+tagSchema.index({ name: 1 }); // schema level
 
 function validateTag(tag) {
   const schema = Joi.object({

@@ -125,11 +125,12 @@
         }
 
         .related-posts-section.desctop {
-          &__list {
+          display: block;
+          .related-posts-section__list {
             display: flex;
             flex-flow: column nowrap;
           }
-          &__item {
+          .related-posts-section__item {
             justify-content: center;
             margin-bottom: 10px;
             &--link {
@@ -153,7 +154,7 @@
               }
             }
           }
-          &__itemlink:last-child {
+          .related-posts-section__itemlink:last-child {
             margin-bottom: 0px;
           }
         }
@@ -550,9 +551,8 @@
             flex-flow: row nowrap;
             justify-content: flex-end;
             align-items: flex-end;
-            // height: 30px;
-            // width: 150px;
             margin: 0 20px 10px 0;
+            background: transparent;
             &__title {
               display: none;
             }
@@ -610,6 +610,7 @@
             margin: 0 15px;
           }
           .related-posts-section.mobile {
+            display: block;
             padding-top: 10px;
             border-top: 1px dotted rgba(0, 0, 0, 0.35);
             .related-posts-section__title {

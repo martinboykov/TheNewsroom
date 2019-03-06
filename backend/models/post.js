@@ -10,6 +10,7 @@ const postSchema = new mongoose.Schema({
     required: true,
     minlength: 1,
     maxlength: 200,
+    trim: true,
   },
   content: {
     type: String, // T0D0: TO BE CHECKED LATER (HTML editor or not)
@@ -86,6 +87,8 @@ const postSchema = new mongoose.Schema({
     default: undefined,
   },
 });
+
+postSchema.index({ 'category.name': 1, 'subcategory.name': 1 }); // schema level
 
 function validatePost(post) {
   const schema = Joi.object({
