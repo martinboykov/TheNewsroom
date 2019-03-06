@@ -1,10 +1,15 @@
 /* Global styles */
 
 ::selection {
-  background: $gold;
-  color: white;
+  background: $very-light-grey;
+  color: $black;
   text-shadow: 0px 1px 1px rgba(black, 0.6);
 }
+// ::selection {
+//   background: $gold;
+//   color: white;
+//   text-shadow: 0px 1px 1px rgba(black, 0.6);
+// }
 
 html {
   font-size: 62.5%; //

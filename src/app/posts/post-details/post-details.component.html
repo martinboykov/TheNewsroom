@@ -74,7 +74,7 @@
           </div>
         </section>
 
-        <section class="related-posts-section">
+        <section class="related-posts-section desctop">
           <h1 class="related-posts-section__title black">Related Posts</h1>
           <ul class="related-posts-section__list">
             <li class="related-posts-section__item"
@@ -95,12 +95,26 @@
           <h1 class="basic-information__title red">{{post?.title}}</h1>
           <h3 class="basic-information__author black">
             posted by {{post?.author.name}} in {{post?.category.name}} category | <span
-                  class="digit">{{post?.comments.length}}</span> comments
+                  class="digit">{{paginator.totalItems}}</span> comments
           </h3>
         </div>
         <div class="content">
           <p>{{post?.content}}</p>
         </div>
+        <section class="related-posts-section mobile">
+          <span class="related-posts-section__title black">Related Posts</span>
+          <ul class="related-posts-section__list">
+            <li class="related-posts-section__item"
+                *ngFor="let relatedPost of relatedPosts">
+              <a routerLink="/{{relatedPost._id}}"
+                 class="related-posts-section__item--link">
+                <span class="link-text">
+                  {{ relatedPost.title}}
+                </span>
+              </a>
+            </li>
+          </ul>
+        </section>
       </section>
     </div>
     <div class="bottom"
@@ -188,23 +202,33 @@
             </span>
           </div>
         </pagination-template>
-        {{isPaginationRequired}}
         <div class="new-comment">
-          <h1 class="red">Leave a comment</h1>
-          <form [formGroup]="commentForm"
+          <div class="new-comment__heading">
+            <h1 class="heading_title red">Leave a comment</h1>
+          </div>
+          <form class="new-comment__form"
+                [formGroup]="commentForm"
                 (ngSubmit)="onAddComment()">
-            <textarea formControlName="content"
+            <textarea class="form__textarea"
+                      formControlName="content"
                       placeholder="Post Comment"
                       rows="6"></textarea>
-            <span *ngIf="contentErrorRequired && content.touched"
-                  class="help-block">Please enter text</span>
-            <span *ngIf="contentErrorLength"
-                  class="help-block">Comment length is unacceptable</span>
-            <button [disabled]="!commentForm.valid"
+            <div class="form__error-messages">
+              <span *ngIf="contentErrorRequired && content.touched"
+                    class="help-block">*Please enter text</span>
+              <span *ngIf="contentMinLengthError && content.touched"
+                    class="help-block">*Comment is too short</span>
+              <span *ngIf="contentMaxLengthError && content.touched"
+                    class="help-block">*Comment is too long</span>
+            </div>
+            <button class="form__submit-button w3-button w3-black w3-round-small"
+                    [disabled]="!commentForm.valid"
                     (click)="scrollTo(ankor)"
-                    type="submit">Post Comment</button>
+                    type="submit">Submit</button>
+            <!-- <button class="form__submit-button "
+                    type="submit">Submit</button> -->
           </form>
-          <div class="dev-check">
+          <!-- <div class="dev-check">
             <p>Form Status: {{ commentForm.status }}</p>
             <p>Form Values: {{ commentForm.value | json}}</p>
             <p>Errors:</p>
@@ -213,7 +237,7 @@
                 <p>Content Errors: {{ content.errors | json}}</p>
               </li>
             </ul>
-          </div>
+          </div> -->
         </div>
       </section>
     </div>

@@ -21,7 +21,7 @@ const commentSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    minlength: 2,
+    minlength: 20,
     maxlength: 2000,
     required: true,
   },
@@ -40,7 +40,7 @@ function validateComment(comment) {
     content: Joi
       .string()
       .lowercase()
-      .min(2)
+      .min(20)
       .max(2000)
       .required(),
   });

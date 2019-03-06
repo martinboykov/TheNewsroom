@@ -71,7 +71,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   ngOnInit() {
 
     this.commentForm = new FormGroup({
-      content: new FormControl(null, [Validators.required, Validators.minLength(2), Validators.maxLength(3000)]),
+      content: new FormControl(null, [Validators.required, Validators.minLength(20), Validators.maxLength(2000)]),
     });
     // this.route.snapshot.url.forEach((route) => {
     //   this.routerUrl = this.routerUrl + route.path + '/';
@@ -119,10 +119,20 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
       return null;
     }
   }
-  get contentErrorLength() {
+  get contentMinLengthError() {
     if (this.content.errors) {
       // console.log(this.content.errors);
-      if (this.content.errors.minlength || this.content.errors.maxlength) {
+      if (this.content.errors.minlength) {
+        return true;
+      }
+    } else {
+      return null;
+    }
+  }
+  get contentMaxLengthError() {
+    if (this.content.errors) {
+      // console.log(this.content.errors);
+      if (this.content.errors.maxlength) {
         return true;
       }
     } else {
