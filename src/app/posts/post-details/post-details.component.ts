@@ -151,7 +151,8 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
 
   onChangedPage(page: number) {
     this.paginator.currentPage = page;
-    const url = '/posts/post/comments/' + this.post._id;
+    const _id = this.post._id;
+    const url = `/posts/${_id}/comments`;
     this.postService.getPostComments(url, this.paginator.itemsPerPage, this.paginator.currentPage)
       .subscribe((response) => {
         this.comments = [...response.data];

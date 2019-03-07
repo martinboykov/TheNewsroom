@@ -43,6 +43,7 @@ const addComment = async (req, res, next) => {
   const post = await Post.findOne({ _id: _id });
   post.comments.push(savedComment._id);
   const totalCommentsCount = post.comments.length;
+
   await post.save();
 
   // getiing current Post with populated comments
@@ -54,22 +55,24 @@ const addComment = async (req, res, next) => {
       },
     });
 
+
   // delete old comments pages from redis... (outdated)
-  const baseUrl = HOST_ADDRESS + '/api/posts/post/comments/' + _id;
-  const patternComments = baseUrl + '*'; // eslint-disable-line max-len
+  const baseUrl = HOST_ADDRESS + `/api/posts/${_id}/comments`;
+  const patternComments = baseUrl + '*';
   const keysComments = await client.keysAsync(patternComments);
-  await client.delAsync(keysComments);
+  if (keysComments.length > 0) {
+    await client.delAsync(keysComments);
+    // restores redis db for all comments in the Post
+    const commentsAllPopulated = postWithCommentsPopulated.comments;
+    restoreRedisDbComments(commentsAllPopulated, pageSize, baseUrl);
+  }
 
-
-  // restores redis db for all comments in the Post
-  const commentsAllPopulated = postWithCommentsPopulated.comments;
-  restoreRedisDbComments(commentsAllPopulated, pageSize, baseUrl);
 
   // delete old Post details page from redis... (outdated) and restores with the new cooments for first cooments page
   const commentsFirstPage =
     postWithCommentsPopulated.comments.slice(0, pageSize);
   postWithCommentsPopulated.comments = commentsFirstPage;
-  const patternPost = HOST_ADDRESS + '/api/posts/post/details/' + _id + '*';
+  const patternPost = HOST_ADDRESS + `/api/posts/${_id}/details` + '*';
   const keyPost = (await client.keysAsync(patternPost))[0]; // only one as there is only one post with _id.....
   if (keyPost) {
     // delets the outdated key for .../api/posts/post/details/...

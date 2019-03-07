@@ -20,22 +20,23 @@ router.get('/popular',
 router.get('/commented',
   postController.getComentedPosts);
 
-router.get('/post/details/:_id',
+router.get('/:_id/details',
   postController.getPost);
-router.get('/post/comments/:_id',
+
+router.get('/:_id/comments',
   postController.getPostComments);
 
-router.get('/post/related/:_id',
+router.get('/:_id/related/',
   postController.getRelatedPosts);
 
 router.post('/', postController.addPost);
 
-router.put('/post/comments/:_id', postController.addComment);
+router.put('/:_id/comments/', postController.addComment);
 
-router.put('/post/:_id', postController.updatePost);
+router.put('/:_id', postController.updatePost);
 
-router.put('/post/popularity/:_id', postController.popularityIncrease);
+router.put('/:_id/popularity', postController.popularityIncrease);
 
-router.delete('/post/:_id', postController.deletePost);
+router.delete('/:_id', postController.deletePost);
 
 module.exports = router;

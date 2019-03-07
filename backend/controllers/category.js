@@ -17,14 +17,14 @@ const getCategories = async (req, res, next) => {
 
 // not required, as getCategories populates all subcategories names
 const getCategorySubcategories = async (req, res, next) => {
-  const subcategories = await Category
-    .findOne({ _id: req.params._id })
-    .select('subcategories')
-    .populate('subcategories', 'name');
-  res.status(200).json({
-    message: `Subcategories of Category with _id: ${req.params._id} fetched successfully`, // eslint-disable-line max-len
-    data: subcategories,
-  });
+  // const subcategories = await Category
+  //   .findOne({ _id: req.params._id })
+  //   .select('subcategories')
+  //   .populate('subcategories', 'name');
+  // res.status(200).json({
+  //   message: `Subcategories of Category with _id: ${req.params._id} fetched successfully`, // eslint-disable-line max-len
+  //   data: subcategories,
+  // });
 };
 
 const getCategoryPosts = async (req, res, next) => {

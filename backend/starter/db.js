@@ -16,14 +16,15 @@ module.exports = ((app) => {
     mongooseConnection.then(() => {
       winston.info('Connected to MongoDB database...');
       mongoose.set('autoIndex', false);
-      debug('Connected to MongoDB database...');
     });
     // we already are catching the errors with winston.uncoughterror.....
 
     client.on('connect', function() {
       winston.info('Redis client connected');
     });
-    // we already are catching the errors with winston.uncoughterror.....
+    client.on('error', function(err) {
+      winston.info('Something went wrong ' + err);
+    });
   }
   if (process.env.NODE_ENV === 'development') {
     mongooseConnection.then(() => {
@@ -37,5 +38,5 @@ module.exports = ((app) => {
       debug('Something went wrong ' + err);
     });
   }
-  // app.use(redis);
+  app.use(redis);
 });

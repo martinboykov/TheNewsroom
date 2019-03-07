@@ -130,11 +130,11 @@ export class PostListComponent implements OnInit, OnDestroy {
     const category = params.get('category');
     const subcategory = params.get('subcategory');
     if (params.has('category')) {
-      url = `/categories/posts/${category}`;
+      url = `/categories/${category}/posts`;
       // Remove ASIDE if switch to category
       this.isAsideRequired = false;
       if (params.has('subcategory')) {
-        url = `/subcategories/posts/${subcategory}`;
+        url = `/${subcategory}/subcategories/posts`;
         // Remove ASIDE if switch to subcategory
         this.isAsideRequired = false;
       }

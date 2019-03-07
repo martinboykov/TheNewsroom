@@ -10,11 +10,11 @@ router.get(
   subcategoryController.getSubcategories);
 
 router.get(
-  '/posts/:name',
+  '/:name/posts',
   subcategoryController.getSubcategoryPosts);
 
 router.get(
-  '/posts/:name/totalCount',
+  '/:name/posts/totalCount',
   subcategoryController.getSubcategoryPostsTotalCount,
 );
 

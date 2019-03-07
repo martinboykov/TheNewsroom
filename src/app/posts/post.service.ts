@@ -75,7 +75,7 @@ export class PostService {
   getPost(id: string, commentsPerPage: number, currentPage: number) {
     const _id = id;
     const queryParams = `?pageSize=${commentsPerPage}&page=${currentPage}`;
-    const route = '/posts/post/details/' + _id + queryParams;
+    const route = `/posts/${_id}/details/${queryParams}`;
     return this.http
       .get<{ message: string, data: { post: Post, totalCommentsCount: number } }>(BACKEND_URL + route)
       .pipe(
@@ -91,10 +91,11 @@ export class PostService {
 
   // dafaultPaginater argument is added, so the Application can adopt pagesize as needed
   addComment(newComment, defaultPaginator) {
+    const _id = newComment.postId;
     const pageSize = defaultPaginator.itemsPerPage;
     const page = defaultPaginator.currentPage;
     const queryParams = `?pageSize=${pageSize}&page=${page}`;
-    const route = '/posts/post/comments/' + newComment.postId + queryParams;
+    const route = `/posts/${_id}/comments${queryParams}`;
     const comment: Comment = {
       author: newComment.author,
       content: newComment.content,
@@ -107,7 +108,7 @@ export class PostService {
 
   getRelatedPosts(post: Post) {
     const _id = post._id;
-    const route = `/posts/post/related/${_id}`;
+    const route = `/posts/${_id}/related`;
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + route)
       .pipe(

@@ -8,14 +8,14 @@ const categoryController = require('../controllers/category');
 router.get('/',
  categoryController.getCategories);
 
-router.get('/subcategories/:_id',
+router.get('/:_id/subcategories',
   categoryController.getCategorySubcategories);
 
-router.get('/posts/:name',
+router.get('/:name/posts',
   categoryController.getCategoryPosts);
 
 router.get(
-  '/posts/:name/totalCount',
+  '/:name/posts/totalCount',
   categoryController.getCategoryPostsTotalCount,
 );
 
