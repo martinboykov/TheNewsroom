@@ -75,7 +75,7 @@ const getPostComments = async (req, res, next) => {
   const post = await Post.findOne({ _id: _id });
   if (!post) return res.status(400).json({ message: 'No such post.' });
 
-  const comments = await Post.populate(post,
+  const postPopulatedComments = await Post.populate(post,
     {
       path: 'comments',
       options: {
@@ -84,6 +84,7 @@ const getPostComments = async (req, res, next) => {
         limit: pageSize,
       },
     });
+  const comments = postPopulatedComments.comments;
   return res.status(200).json({
     message: `Comments for page: ${currentPage} of Post with _id:${post._id} fetched successfully`, // eslint-disable-line max-len
     data: comments,

@@ -1,5 +1,6 @@
 /* eslint-disable no-process-env*/
 const HOST_ADDRESS = process.env.HOST_ADDRESS;
+const debug = require('debug')('debug');
 
 const redis = require('redis');
 const bluebird = require('bluebird');
@@ -13,7 +14,7 @@ const redisMiddleware = async (req, res, next) => {
   const reply = await client.getAsync(key);
   const result = JSON.parse(reply);
   if (reply) {
-    console.log(key + ' fetched by redis');
+    debug(key + ' fetched by redis');
     return res.status(200).json({
       message: 'Data fetched successfully by redis',
       data: result,
@@ -21,34 +22,12 @@ const redisMiddleware = async (req, res, next) => {
   }
   res.sendResponse = res.send;
   res.send = async (body) => {
-    console.log(key + ' fetched by mongodb');
+    debug(key + ' fetched by mongodb');
     const data = JSON.parse(body).data;
     await client.setexAsync(key, 3600, JSON.stringify(data));
     res.sendResponse(body);
   };
   return next();
 };
-// return client.get(key, (error, reply) => {
-//   if (error) throw new Error(error);
-//   if (reply) {
-//     console.log(key + ' fetched by redis');
-//     const result = JSON.parse(reply);
-//     return res.status(200).json({
-//       message: 'Data fetched successfully by redis',
-//       data: result,
-//     });
-//   }
-//   res.sendResponse = res.send;
-//   res.send = (body) => {
-//     console.log(key + ' fetched by mongodb');
-//     const data = JSON.parse(body).data;
-//     client.setex(key, 3600, JSON.stringify(data));
-//     res.sendResponse(body);
-//   };
-//   return next();
-// });
 
 module.exports = { client, redisMiddleware };
-// module.exports = { client, redisMiddleware };
-
-

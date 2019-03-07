@@ -29,8 +29,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     avatar: '/assets/images/main/posts/details/avatar.svg',
   };
 
-  currentUrl: string;
-  routerUrl = '/';
+  currentUrl: string; // for sharing the post
   post: Post; // strict Post model !?!
 
   mainImage: string;
@@ -69,14 +68,9 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   }
 
   ngOnInit() {
-
     this.commentForm = new FormGroup({
       content: new FormControl(null, [Validators.required, Validators.minLength(20), Validators.maxLength(2000)]),
     });
-    // this.route.snapshot.url.forEach((route) => {
-    //   this.routerUrl = this.routerUrl + route.path + '/';
-    // });
-    // console.log(this.routerUrl);
 
     this.currentUrl = APP_URL + this.route.url;
     // first request
@@ -104,14 +98,14 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
         this.relatedPosts = data || [];
       });
 
-    this.windowRef.scrollToTop(0);
+    this.windowRef.scrollToTop(0); // consistency for user expirience
     this.changeDetectorRef.detectChanges();
   }
 
+  // Get form related date/errors
   get content() { return this.commentForm.get('content'); }
   get contentErrorRequired() {
     if (this.content.errors) {
-      // console.log(this.content.errors);
       if (this.content.errors.required) {
         return true;
       }
@@ -121,7 +115,6 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   }
   get contentMinLengthError() {
     if (this.content.errors) {
-      // console.log(this.content.errors);
       if (this.content.errors.minlength) {
         return true;
       }
@@ -131,7 +124,6 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   }
   get contentMaxLengthError() {
     if (this.content.errors) {
-      // console.log(this.content.errors);
       if (this.content.errors.maxlength) {
         return true;
       }
@@ -140,8 +132,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     }
   }
 
-
-
+  // add comment to Post
   onAddComment() {
     if (this.commentForm.invalid) { return; }
     // const userId = this.authService.getUserId();
@@ -151,15 +142,11 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     const newComment = { postId, author, content };
     this.postService.addComment(newComment, this.defaultPaginator)
       .subscribe((response) => {
-        this.comments = [...response.data.comments];
+        this.comments = [...response.data.commentsFirstPage];
         this.paginator.totalItems = response.data.totalCommentsCount;
         this.paginator.currentPage = 1;
       });
     this.commentForm.reset();
-  }
-
-  scrollTo(element) {
-    this.scrollService.scrollTo(element, 1, 0);
   }
 
   onChangedPage(page: number) {
@@ -167,8 +154,14 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     const url = '/posts/post/comments/' + this.post._id;
     this.postService.getPostComments(url, this.paginator.itemsPerPage, this.paginator.currentPage)
       .subscribe((response) => {
-        this.comments = [...response.data.comments];
+        this.comments = [...response.data];
       });
+  }
+
+  // On comment page change scroll to top of comments.
+  // (otherwise the client view may change depending the difference in the sizes of the comments in the next and previous page)
+  scrollToAnkor(element) {
+    this.scrollService.scrollTo(element, 1, 0);
   }
 
   showIfPaginationRequired(postsPerPage, totalPostsCount) {

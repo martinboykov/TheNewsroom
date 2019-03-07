@@ -71,7 +71,6 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.postsScroller = [];
       this.headerService.setRouterParameters(params);
       this.url = this.getUrl(params);
-      console.log(this.url);
 
       this.postService.getTotalPostsCount(this.url);
       this.postService.getPosts(this.url, this.itemsPerScroll, this.currentPageScroller);
@@ -85,13 +84,11 @@ export class PostListComponent implements OnInit, OnDestroy {
         }
         if (this.postsScroller.length === 0 || this.isMobileResolution) {
           this.postsScroller = [...this.postsScroller, ...posts];
-          console.log(`postsScroller.length = ` + this.postsScroller.length);
         }
       });
 
     this.totalPostsSubscription = this.postService.getTotalPostsUpdateListener()
       .subscribe((totalCount: number) => {
-        console.log('TOTAL POST COUNT =  ' + totalCount);
 
         this.paginator.totalItems = totalCount;
         this.isPaginationRequired = this.showIfPaginationRequired(this.paginator.itemsPerPage, totalCount);
@@ -109,8 +106,6 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   // SCROLLER
   fetchMoreEnd() {
-    console.log('scroll end');
-    console.log(`postsScroller.length = ` + this.postsScroller.length);
     if (this.postsScroller.length >= this.paginator.totalItems) {
       return;
     }

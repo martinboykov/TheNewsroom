@@ -32,7 +32,7 @@ export class PostService {
 
   getPosts(url: String, commentsPerPage: number, currentPage: number) {
     const queryParams = `?pageSize=${commentsPerPage}&page=${currentPage}`;
-    console.log(BACKEND_URL + url + queryParams);
+    // console.log(BACKEND_URL + url + queryParams);
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams)
       // content substringing is done in the backend for now
@@ -58,7 +58,7 @@ export class PostService {
 
   getPostComments(url: String, commentsPerPage: number, currentPage: number) {
     const queryParams = `?pageSize=${commentsPerPage}&page=${currentPage}`;
-    console.log(BACKEND_URL + url + queryParams);
+    // console.log(BACKEND_URL + url + queryParams);
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams);
   }
@@ -100,7 +100,7 @@ export class PostService {
       content: newComment.content,
       postId: newComment.postId,
     };
-    return this.http.put<{ message: string, data: { comments: Comment[], totalCommentsCount: number } }>(
+    return this.http.put<{ message: string, data: { commentsFirstPage: Comment[], totalCommentsCount: number } }>(
       BACKEND_URL + route,
       comment);
   }
@@ -158,7 +158,6 @@ export class PostService {
   getTotalPostsUpdateListener() { // as we set postUpdate as private
     return this.totalPostsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }
-
 
   getLatestPostsUpdateListener() { // as we set postUpdate as private
     return this.latestPostsUpdated.asObservable(); // returns object to which we can listen, but we cant emit

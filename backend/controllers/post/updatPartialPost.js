@@ -12,7 +12,6 @@ const addComment = async (req, res, next) => {
   const _id = req.params._id;
   const comment = req.body;
   const pageSize = parseInt(req.query.pageSize, 10) || 10;
-  const currentPage = parseInt(req.query.page, 10) || 1;
   const { error } = validateComment({ content: comment.content });
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
@@ -21,81 +20,57 @@ const addComment = async (req, res, next) => {
 
   // creating new Comment
   const newComment = createNewComment(comment);
+
   // saving new Comment to mongodb
   const savedComment = await newComment.save();
-  // Adding the new Comment to Post
+
+  // adding the new Comment to current Post and save to mongodb
   const post = await Post.findOne({ _id: _id });
   post.comments.push(savedComment._id);
   const totalCommentsCount = post.comments.length;
-  // save to mongodb
   await post.save();
 
-  // populate last 10 (pageSize) comments
-  const postWithLastComments = await Post.populate(post,
+  // getiing current Post with populated comments
+  const postWithCommentsPopulated = await Post.populate(post,
     {
       path: 'comments',
       options: {
         sort: { dateCreated: -1 },
-        skip: pageSize * (currentPage - 1),
-        limit: pageSize,
       },
     });
-  // const commentsToPopulate = post.comments.splice(0, 10); // 10 = comments pageSize
-  const comments = await Comment.populate(post.comments,
-    {
-      path: 'comments',
-      options: {
-        sort: { dateCreated: -1 },
-        limit: 10,
-      },
-    });
-  // delete old pages from redis... (oldDated)
-  const patternComments = HOST_ADDRESS + '/api/posts/post/comments/' + _id + '*'; // eslint-disable-line max-len
+
+  // delete old comments pages from redis... (outdated)
+  const baseUrl = HOST_ADDRESS + '/api/posts/post/comments/' + _id;
+  const patternComments = baseUrl + '*'; // eslint-disable-line max-len
   const keysComments = await client.keysAsync(patternComments);
-  if (keysComments.length > 0) {
-    await client.delAsync(keysComments);
-    await client.setexAsync(
-      keysComments[keysComments.length - 1],
-      86400,
-      JSON.stringify(postWithLastComments),
-    );
-  }
+  await client.delAsync(keysComments);
+
+
+  // restores redis db for all comments in the Post
+  const commentsAllPopulated = postWithCommentsPopulated.comments;
+  restoreRedisDbComments(commentsAllPopulated, pageSize, baseUrl);
+
+  // delete old Post details page from redis... (outdated) and restores with the new cooments for first cooments page
+  const commentsFirstPage =
+    postWithCommentsPopulated.comments.slice(0, pageSize);
+  postWithCommentsPopulated.comments = commentsFirstPage;
   const patternPost = HOST_ADDRESS + '/api/posts/post/details/' + _id + '*';
   const keyPost = (await client.keysAsync(patternPost))[0]; // only one as there is only one post with _id.....
   if (keyPost) {
+    // delets the outdated key for .../api/posts/post/details/...
     await client.delAsync(keyPost);
+    // sets new key with the current date
     await client.setexAsync(
       keyPost, 86400, JSON.stringify({
-        post: postWithLastComments,
+        post: postWithCommentsPopulated,
         totalCommentsCount: totalCommentsCount,
       }));
   }
 
-  // save the current route to redis
-  // let key = (HOST_ADDRESS + req.originalUrl || req.url);
-  // // .replace('comments', 'details');
-  // set to expire in one day
-  // client.setex(keyPost, 86400, JSON.stringify({
-  //   message: `Comments fetched successfully by redis`,
-  //   comments,
-  // }));
-
-  // save first page to redis...
-  // from   -> /api/posts/post/comments/:id (current url)
-  // using  -> replace 'comment' with 'details'
-  // to     -> /api/posts/post/details/:id (where it should be saved in redis)
-  // set to expire in one day
-  // key = (HOST_ADDRESS + req.originalUrl || req.url)
-  //   .replace('comments', 'details');
-  // client.setex(key, 86400, JSON.stringify({
-  //   post: postWithLastComments,
-  //   totalCommentsCount: totalCommentsCount,
-  // }));
-
   return res.status(201).json({
     message: 'Comment added successfully to Post',
     data: {
-      comments,
+      commentsFirstPage,
       totalCommentsCount,
     },
   });
@@ -116,4 +91,18 @@ function createNewComment(comment) {
     postId: comment.postId,
   });
   return newComment;
+}
+
+async function restoreRedisDbComments(commentsAll, pageSize, baseUrl) {
+  let page = 1;
+  while (commentsAll.length > 0) {
+    const comments = (commentsAll.slice(0, pageSize));
+    await client.setexAsync(
+      baseUrl + `?pageSize=${pageSize}&page=${page}`,
+      86400,
+      JSON.stringify(comments),
+    );
+    page += 1;
+    commentsAll.splice(0, pageSize);
+  }
 }

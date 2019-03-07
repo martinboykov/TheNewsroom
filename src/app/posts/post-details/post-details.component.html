@@ -165,7 +165,7 @@
             <a class="pagination-previous--link"
                *ngIf="!p.isFirstPage()"
                (click)="p.previous()"
-               (click)="scrollTo(ankor)">
+               (click)="scrollToAnkor(ankor)">
               &laquo;
             </a>
             <span class="pagination-previous--span"
@@ -179,7 +179,7 @@
               <a class="pagination-current--link"
                  *ngIf="p.getCurrent() !== page.value"
                  (click)="p.setCurrent(page.value)"
-                 (click)="scrollTo(ankor)">
+                 (click)="scrollToAnkor(ankor)">
                 {{ page.label }}
               </a>
               <span class="pagination-current--span"
@@ -193,7 +193,7 @@
             <a class="pagination-next--link"
                *ngIf="!p.isLastPage()"
                (click)="p.next()"
-               (click)="scrollTo(ankor)">
+               (click)="scrollToAnkor(ankor)">
               &raquo;
             </a>
             <span class="pagination-next--span"
@@ -223,7 +223,7 @@
             </div>
             <button class="form__submit-button w3-button w3-black w3-round-small"
                     [disabled]="!commentForm.valid"
-                    (click)="scrollTo(ankor)"
+                    (click)="scrollToAnkor(ankor)"
                     type="submit">Submit</button>
             <!-- <button class="form__submit-button "
                     type="submit">Submit</button> -->
