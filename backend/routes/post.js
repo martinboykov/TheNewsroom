@@ -34,6 +34,7 @@ router.put('/post/comments/:_id', postController.addComment);
 
 router.put('/post/:_id', postController.updatePost);
 
+router.put('/post/popularity/:_id', postController.popularityIncrease);
 
 router.delete('/post/:_id', postController.deletePost);
 

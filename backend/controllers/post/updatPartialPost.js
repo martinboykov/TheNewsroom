@@ -8,6 +8,21 @@ const { Comment, validateComment } = require('../../models/comment');
 const client = require('./../../middleware/redis').client;
 
 // PUT
+const popularityIncrease = async (req, res, next) => {
+  const _id = req.params._id;
+  const post = await Post.findOneAndUpdate(
+    { _id: _id },
+    { $inc: { popularity: 1 } },
+    { new: true },
+  );
+
+  return res.status(201).json({
+    message: 'Post popularity updated successfully',
+    data: post,
+  });
+};
+
+
 const addComment = async (req, res, next) => {
   const _id = req.params._id;
   const comment = req.body;
@@ -78,6 +93,7 @@ const addComment = async (req, res, next) => {
 
 module.exports = {
   addComment,
+  popularityIncrease,
 };
 
 function createNewComment(comment) {

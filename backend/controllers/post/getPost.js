@@ -114,7 +114,6 @@ const getRelatedPosts = async (req, res, next) => {
 };
 
 const getLatestPosts = async (req, res, next) => {
-  const postsCount = await Post.countDocuments();
   const posts = await Post
     .find()
     .limit(5)
@@ -133,7 +132,7 @@ const getPopularPosts = async (req, res, next) => {
   const posts = await Post
     .find({
       dateCreated: {
-        $gte: new Date(dateNow.setDate(dateNow.getDate() - 1)),
+        $gte: new Date(dateNow.setDate(dateNow.getDate() - 20)),
       },
     })
     .sort({ 'popularity': -1 })
