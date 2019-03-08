@@ -30,6 +30,7 @@
           cursor: pointer;
           .#{$type}__heading {
             color: $red;
+            text-shadow: 1px 1px 0px white;
           }
         }
         .#{$type}.active {
@@ -78,12 +79,14 @@
                 color: $light-black;
                 font-size: 14px;
                 margin-bottom: 5px;
+                text-shadow: 1px 1px 0px white;
               }
               .additional-info__author,
               .additional-info__date {
                 color: $light-grey;
                 font-family: $font-georgia;
                 font-style: italic;
+                text-shadow: 1px 1px 0px white;
               }
               .additional-info__specific {
                 margin-top: 5px;

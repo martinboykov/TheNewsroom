@@ -7,6 +7,11 @@ const tagController = require('../controllers/tag');
 
 router.get('/', tagController.getTags);
 
-router.get('/:_id', tagController.getTagPosts);
+router.get('/:name/posts', tagController.getTagPosts);
+
+router.get(
+  '/:name/posts/totalCount',
+  tagController.getTagPostsTotalCount,
+);
 
 module.exports = router;

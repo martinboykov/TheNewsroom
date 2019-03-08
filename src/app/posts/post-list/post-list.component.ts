@@ -89,7 +89,6 @@ export class PostListComponent implements OnInit, OnDestroy {
 
     this.totalPostsSubscription = this.postService.getTotalPostsUpdateListener()
       .subscribe((totalCount: number) => {
-
         this.paginator.totalItems = totalCount;
         this.isPaginationRequired = this.showIfPaginationRequired(this.paginator.itemsPerPage, totalCount);
       });
@@ -125,17 +124,24 @@ export class PostListComponent implements OnInit, OnDestroy {
     return this.postService.getPosts(this.url, this.paginator.itemsPerPage, this.paginator.currentPage);
   }
 
+
   getUrl(params) {
+
     let url = '/posts';
+    const tag = params.get('tag');
     const category = params.get('category');
     const subcategory = params.get('subcategory');
+    if (params.has('tag')) {
+      url = `/tags/${tag}/posts`; // Remove ASIDE if switch to tags
+      this.isAsideRequired = false;
+    }
     if (params.has('category')) {
-      url = `/categories/${category}/posts`;
-      // Remove ASIDE if switch to category
+      url = `/categories/${category}/posts`; // Remove ASIDE if switch to category
+
       this.isAsideRequired = false;
       if (params.has('subcategory')) {
-        url = `/subcategories/${subcategory}/posts`;
-        // Remove ASIDE if switch to subcategory
+        url = `/subcategories/${subcategory}/posts`; // Remove ASIDE if switch to subcategory
+
         this.isAsideRequired = false;
       }
     } else {
