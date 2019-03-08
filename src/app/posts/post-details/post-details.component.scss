@@ -179,10 +179,14 @@
             display: block;
             align-self: flex-start;
             width: 100%;
-            line-height: 30px;
             margin-bottom: 10px;
-            line-height: 18px;
             overflow-wrap: break-word;
+          }
+          &__title{
+            // line-height: 30px;
+          }
+          &__author {
+            // line-height: 18px;
           }
         }
         .content {
@@ -198,7 +202,8 @@
       grid-row: 2/3;
       display: grid;
       grid-template-columns: 250px 1fr;
-      grid-template-rows: minmax(550px, auto);
+      grid-template-rows: min-content;
+      // grid-template-rows: minmax(550px, auto);
       background: transparent;
 
       .comments {

@@ -8,6 +8,7 @@ const { Comment, validateComment } = require('../../models/comment');
 const client = require('./../../middleware/redis').client;
 
 // PUT
+// -----------------------------------------------------
 const popularityIncrease = async (req, res, next) => {
   const _id = req.params._id;
   const post = await Post.findOneAndUpdate(
@@ -22,7 +23,7 @@ const popularityIncrease = async (req, res, next) => {
   });
 };
 
-
+// -----------------------------------------------------
 const addComment = async (req, res, next) => {
   const _id = req.params._id;
   const comment = req.body;
@@ -47,44 +48,45 @@ const addComment = async (req, res, next) => {
   await post.save();
 
   // getiing current Post with populated comments
-  const postWithCommentsPopulated = await Post.populate(post,
+  const postAllComments = await Post.populate(post,
     {
       path: 'comments',
       options: {
         sort: { dateCreated: -1 },
       },
     });
-
+  const commentsFirstPage = postAllComments.comments.slice(0, pageSize);
+  const postFirstPageComents = postAllComments;
+  postFirstPageComents.comments = commentsFirstPage;
 
   // delete old comments pages from redis... (outdated)
   const baseUrl = HOST_ADDRESS + `/api/posts/${_id}/comments`;
   const patternComments = baseUrl + '*';
-  const keysComments = await client.keysAsync(patternComments);
-  if (keysComments.length > 0) {
-    await client.delAsync(keysComments);
-    // restores redis db for all comments in the Post
-    const commentsAllPopulated = postWithCommentsPopulated.comments;
-    restoreRedisDbComments(commentsAllPopulated, pageSize, baseUrl);
+
+  // if there is no connection to redis -> return response directly
+  if (client.connected) {
+    const keysComments = await client.keysAsync(patternComments);
+    if (keysComments.length > 0) {
+      await client.delAsync(keysComments);
+      // restores redis db for all comments in the Post
+      const commentsAllPopulated = postAllComments.comments;
+      restoreRedisDbComments(commentsAllPopulated, pageSize, baseUrl);
+    }
+    // delete old Post details page from redis... (outdated) and restores with the new cooments for first cooments page
+
+    const patternPost = HOST_ADDRESS + `/api/posts/${_id}/details` + '*';
+    const keyPost = (await client.keysAsync(patternPost))[0]; // only one as there is only one post with _id.....
+    if (keyPost) {
+      // delets the outdated key for .../api/posts/post/details/...
+      await client.delAsync(keyPost);
+      // sets new key with the current date
+      await client.setexAsync(
+        keyPost, 86400, JSON.stringify({
+          post: postAllComments,
+          totalCommentsCount: totalCommentsCount,
+        }));
+    }
   }
-
-
-  // delete old Post details page from redis... (outdated) and restores with the new cooments for first cooments page
-  const commentsFirstPage =
-    postWithCommentsPopulated.comments.slice(0, pageSize);
-  postWithCommentsPopulated.comments = commentsFirstPage;
-  const patternPost = HOST_ADDRESS + `/api/posts/${_id}/details` + '*';
-  const keyPost = (await client.keysAsync(patternPost))[0]; // only one as there is only one post with _id.....
-  if (keyPost) {
-    // delets the outdated key for .../api/posts/post/details/...
-    await client.delAsync(keyPost);
-    // sets new key with the current date
-    await client.setexAsync(
-      keyPost, 86400, JSON.stringify({
-        post: postWithCommentsPopulated,
-        totalCommentsCount: totalCommentsCount,
-      }));
-  }
-
   return res.status(201).json({
     message: 'Comment added successfully to Post',
     data: {

@@ -17,14 +17,10 @@ module.exports = ((app) => {
       winston.info('Connected to MongoDB database...');
       mongoose.set('autoIndex', false);
     });
-    // we already are catching the errors with winston.uncoughterror.....
-
     client.on('connect', function() {
       winston.info('Redis client connected');
     });
-    client.on('error', function(err) {
-      winston.info('Something went wrong ' + err);
-    });
+    // we already are catching the errors with winston.uncoughterror.....
   }
   if (process.env.NODE_ENV === 'development') {
     mongooseConnection.then(() => {
