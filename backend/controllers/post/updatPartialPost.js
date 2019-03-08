@@ -34,18 +34,14 @@ const addComment = async (req, res, next) => {
     // return res.status(400).json({ message: 'Invalid request data' });
   }
 
-  // creating new Comment
   const newComment = createNewComment(comment);
-
-  // saving new Comment to mongodb
   const savedComment = await newComment.save();
-
-  // adding the new Comment to current Post and save to mongodb
-  const post = await Post.findOne({ _id: _id });
-  post.comments.push(savedComment._id);
-  const totalCommentsCount = post.comments.length;
-
-  await post.save();
+  const post = await Post.findOneAndUpdate(
+    { _id: _id },
+    { $push: { comments: savedComment } },
+    { new: true },
+  );
+  if (!post) return res.status(400).json({ message: 'No such post.' });
 
   // getiing current Post with populated comments
   const postAllComments = await Post.populate(post,
@@ -55,38 +51,14 @@ const addComment = async (req, res, next) => {
         sort: { dateCreated: -1 },
       },
     });
-  const commentsFirstPage = postAllComments.comments.slice(0, pageSize);
-  const postFirstPageComents = postAllComments;
-  postFirstPageComents.comments = commentsFirstPage;
-
-  // delete old comments pages from redis... (outdated)
-  const baseUrl = HOST_ADDRESS + `/api/posts/${_id}/comments`;
-  const patternComments = baseUrl + '*';
+  const totalCommentsCount = post.comments.length;
 
   // if there is no connection to redis -> return response directly
   if (client.connected) {
-    const keysComments = await client.keysAsync(patternComments);
-    if (keysComments.length > 0) {
-      await client.delAsync(keysComments);
-      // restores redis db for all comments in the Post
-      const commentsAllPopulated = postAllComments.comments;
-      restoreRedisDbComments(commentsAllPopulated, pageSize, baseUrl);
-    }
-    // delete old Post details page from redis... (outdated) and restores with the new cooments for first cooments page
-
-    const patternPost = HOST_ADDRESS + `/api/posts/${_id}/details` + '*';
-    const keyPost = (await client.keysAsync(patternPost))[0]; // only one as there is only one post with _id.....
-    if (keyPost) {
-      // delets the outdated key for .../api/posts/post/details/...
-      await client.delAsync(keyPost);
-      // sets new key with the current date
-      await client.setexAsync(
-        keyPost, 86400, JSON.stringify({
-          post: postAllComments,
-          totalCommentsCount: totalCommentsCount,
-        }));
-    }
+    handleRedisState(_id, postAllComments, pageSize, totalCommentsCount);
   }
+
+  const commentsFirstPage = postAllComments.comments.slice(0, pageSize);
   return res.status(201).json({
     message: 'Comment added successfully to Post',
     data: {
@@ -114,6 +86,30 @@ function createNewComment(comment) {
   return newComment;
 }
 
+async function handleRedisState(_id, allComments, pageSize, totalCount) {
+  const baseUrl = HOST_ADDRESS + `/api/posts/${_id}/comments`;
+  const patternComments = baseUrl + '*';
+  const keysComments = await client.keysAsync(patternComments);
+  // delete old comments pages from redis... (outdated)
+  if (keysComments.length > 0) await client.delAsync(keysComments);
+  // restores redis db for all comments in the Post
+  const commentsAll = allComments.comments.slice();
+  restoreRedisDbComments(commentsAll, pageSize, baseUrl);
+
+  const patternPost = HOST_ADDRESS + `/api/posts/${_id}/details` + '*';
+  const keyPost = (await client.keysAsync(patternPost))[0]; // only one as there is only one post with _id.....
+  // delets and restores the outdated key for .../api/posts/post/details/...
+  if (keyPost) await client.delAsync(keyPost);
+  const postFirstPageComents = allComments;
+  postFirstPageComents.comments =
+    postFirstPageComents.comments.slice(0, pageSize);
+  // restores with the new cooments for first cooments page
+  await client.setexAsync(
+    keyPost, 86400, JSON.stringify({
+      post: postFirstPageComents,
+      totalCommentsCount: totalCount,
+    }));
+}
 async function restoreRedisDbComments(commentsAll, pageSize, baseUrl) {
   let page = 1;
   while (commentsAll.length > 0) {
