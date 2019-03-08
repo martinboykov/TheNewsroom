@@ -148,6 +148,13 @@ export class PostService {
       });
   }
 
+  updatePopularity(_id: string) {
+    const route = `/posts/${_id}/popularity`;
+    return this.http.put<{ message: string, data: number }>(
+      BACKEND_URL + route, {})
+      .subscribe(() => { });
+  }
+
   // fake service
   addPost(data) {
     const route = '/posts';
@@ -155,9 +162,7 @@ export class PostService {
       .post<{ message: string, post: Post }>(
         BACKEND_URL + route,
         data)
-      .subscribe((responseData) => {
-        console.log(responseData);
-      });
+      .subscribe(() => { });
   }
 
   // getPostUpdateListener() { // as we set postUpdate as private

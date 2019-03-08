@@ -9,7 +9,7 @@
   .wrapper {
     display: grid;
     grid-template-rows: 60px 1fr;
-    width: 300px;
+    width: 295px; // +5 border = 300px
     min-height: 490px;
     position: sticky;
     top: 0;
@@ -103,7 +103,7 @@
 }
 @media (max-width: $mobile) {
   .wrapper {
-    min-width: 300px;
+    min-width: 295; // +5 border = 300px
     height: 600px;
     background: transparent;
     z-index: 0;

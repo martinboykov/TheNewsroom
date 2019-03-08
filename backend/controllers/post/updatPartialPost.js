@@ -14,12 +14,12 @@ const popularityIncrease = async (req, res, next) => {
   const post = await Post.findOneAndUpdate(
     { _id: _id },
     { $inc: { popularity: 1 } },
-    { new: true },
+    // { new: true },
   );
 
   return res.status(201).json({
     message: 'Post popularity updated successfully',
-    data: post,
+    data: post.popularity,
   });
 };
 

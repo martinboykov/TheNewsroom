@@ -2,9 +2,10 @@
 @import "./partials/mixins";
 .wrapper {
   display: grid;
-  grid-template-columns: 1fr $aside-right-tripple-width;
-  grid-column-gap: 20px;
+  grid-template-columns: 1fr;
+  // grid-column-gap: 20px;
   margin-bottom: 20px;
+  margin-right: 10px;
   .post {
     grid-column: 1/2;
     grid-row: 1/2;
@@ -484,11 +485,11 @@
       }
     }
   }
-  app-aside-right-tripple {
-    grid-column: 2/3;
-    grid-row: 1/2;
-    background: transparent;
-  }
+  // app-aside-right-tripple {
+  //   grid-column: 2/3;
+  //   grid-row: 1/2;
+  //   background: transparent;
+  // }
 }
 
 @media (max-width: $mobile) {
@@ -768,10 +769,10 @@
         }
       }
     }
-    app-aside-right-tripple {
-      grid-column: 1/2;
-      grid-row: 2/3;
-    }
+    // app-aside-right-tripple {
+    //   grid-column: 1/2;
+    //   grid-row: 2/3;
+    // }
   }
 }
 

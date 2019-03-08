@@ -80,6 +80,8 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
           this.headerService.setRouterParameters(paramMap);
           const _id = paramMap.get('_id');
           // second request
+
+          this.postService.updatePopularity(_id);
           return this.postService.getPost(_id, this.paginator.itemsPerPage, this.paginator.currentPage);
         })
       )
