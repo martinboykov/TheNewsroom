@@ -1,6 +1,6 @@
-import { Post } from './../post.model';
+import { Router } from '@angular/router';
+import { HelperService } from './../../shared/helper.service';
 import { Component, OnInit, Input } from '@angular/core';
-import { ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-post-item',
@@ -9,21 +9,14 @@ import { ParamMap } from '@angular/router';
 })
 export class PostItemComponent implements OnInit {
   @Input() post: any;
-  postRoute: string;
-  constructor() { }
+  postLink;
+  constructor(private helper: HelperService, private router: Router) { }
 
   ngOnInit() {
-    let category;
-    let subcategory;
-    let title;
-    if (this.post.category.name) {
-      category = this.post.category.name;
-      this.postRoute = `/${category}/post/${this.post._id}/${this.post.title}`;
-      if (this.post.subcategory.name) {
-        subcategory = this.post.subcategory.name;
-        title = this.post.title.replace(/\s+/g, '-');
-        this.postRoute = `/${category}/${subcategory}/post/${this.post._id}/${title}`;
-      }
-    }
+    const post = this.post;
+    this.postLink = this.helper.createRoute(post)
+  }
+  onPostSelected() {
+    this.router.navigateByUrl(this.postLink);
   }
 }

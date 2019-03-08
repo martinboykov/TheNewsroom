@@ -1,7 +1,10 @@
+import { HelperService } from './../../shared/helper.service';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { PostService } from 'src/app/posts/post.service';
 import { Subscription } from 'rxjs';
-
+import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
+const APP_URL = environment.appUrl;
 @Component({
   selector: 'app-aside-right-tripple',
   templateUrl: './aside-right-tripple.component.html',
@@ -18,7 +21,10 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
   private popularPostsSubscription: Subscription;
   private commentedPostsSubscription: Subscription;
 
-  constructor(private postService: PostService) { }
+  constructor(
+    private postService: PostService,
+    private helper: HelperService,
+    private router: Router) { }
 
   ngOnInit() {
     this.isLatestSelected = true;
@@ -39,8 +45,12 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
         this.commentedPosts = posts;
       });
   }
+  onPostSelected(post) {
+    const postRoute = this.helper.createRoute(post);
+    this.router.navigateByUrl(postRoute);
+  }
 
-  onSelect(selector) {
+  onTypeSelected(selector) {
     if (selector === 'latest') {
       this.isLatestSelected = true;
       this.isPopularSelected = false;

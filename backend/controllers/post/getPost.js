@@ -101,11 +101,11 @@ const getRelatedPosts = async (req, res, next) => {
     return accumulator;
   }, []);
   const posts = await Post
-    .find({ 'tags._id': [...tags] })
+    .find({ 'tags._id': [...tags], _id: { $ne: _id } })
     .sort({ 'dateCreated': -1 })
     .limit(5)
     .select(
-      '_id title');
+      '_id title category subcategory');
   return res.status(200).json({
     message:
       `Related posts for Post with _id: ${post._id} fetched successfully`,
@@ -119,7 +119,7 @@ const getLatestPosts = async (req, res, next) => {
     .limit(6)
     .sort({ 'dateCreated': -1 })
     .select(
-      '_id title dateCreated author imageMainPath');
+      '_id title category subcategory dateCreated author imageMainPath');
   return res.status(200).json({
     message:
       `Latest Posts fetched successfully`,
@@ -139,7 +139,7 @@ const getPopularPosts = async (req, res, next) => {
     .sort({ 'popularity': -1 })
     .limit(6)
     .select(
-      '_id title dateCreated author imageMainPath popularity');
+      '_id title category subcategory dateCreated author imageMainPath popularity'); // eslint-disable-line max-len
   return res.status(200).json({
     message:
       `Latest Posts fetched successfully`,
@@ -174,6 +174,8 @@ const getComentedPosts = async (req, res, next) => {
         _id: 1,
         title: 1,
         author: 1,
+        category: 1,
+        subcategory: 1,
         dateCreated: 1,
         imageMainPath: 1,
         comments_count: 1,

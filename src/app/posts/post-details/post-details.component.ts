@@ -1,3 +1,4 @@
+import { HelperService } from './../../shared/helper.service';
 import { WindowRef } from './../../shared/winref.service';
 import { Post } from './../post.model';
 import { Comment } from './../comment.model';
@@ -62,6 +63,8 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     private headerService: HeaderService,
     private postService: PostService,
     public route: ActivatedRoute,
+    private router: Router,
+    private helper: HelperService,
     private windowRef: WindowRef,
     private scrollService: ScrollToService,
     private changeDetectorRef: ChangeDetectorRef) {
@@ -132,6 +135,10 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     } else {
       return null;
     }
+  }
+  onRelatedPostSelected(post) {
+    const postRoute = this.helper.createRoute(post);
+    this.router.navigateByUrl(postRoute);
   }
 
   // add comment to Post

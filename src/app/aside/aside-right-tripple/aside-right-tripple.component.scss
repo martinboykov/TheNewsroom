@@ -58,41 +58,51 @@
       .#{$type}-posts {
         background: #e7e7e7;
         .#{$type}-post {
-          display: grid;
-          grid-template-columns: 70px 1fr;
-          height: 70px;
-          align-items: center;
           border-bottom: 1px dotted #969696;
-          .#{$type}-post__image {
-            height: 57px;
-            width: 57px;
-            border: 3px solid #d6d6d6;
-            background-size: cover;
-            background-position: 50% 50%;
-          }
+          .#{$type}-post__link {
+            display: grid;
+            grid-template-columns: 70px 1fr;
+            height: 70px;
+            align-items: center;
+            .#{$type}-post__image {
+              height: 57px;
+              width: 57px;
+              border: 3px solid #d6d6d6;
+              background-size: cover;
+              background-position: 50% 50%;
+            }
 
-          .#{$type}-post__additional-info {
-            font-size: 11px;
-            .additional-info__title {
-              color: $light-black;
-              font-size: 14px;
-              margin-bottom: 5px;
-            }
-            .additional-info__author,
-            .additional-info__date {
-              color: $light-grey;
-              font-family: $font-georgia;
-              font-style: italic;
-            }
-            .additional-info__specific {
-              margin-top: 5px;
-              .specific--text{
-                padding: 0 5px;
+            .#{$type}-post__additional-info {
+              font-size: 11px;
+              .additional-info__title {
                 color: $light-black;
-                background: #d6d6d6;;
+                font-size: 14px;
+                margin-bottom: 5px;
+              }
+              .additional-info__author,
+              .additional-info__date {
+                color: $light-grey;
+                font-family: $font-georgia;
+                font-style: italic;
+              }
+              .additional-info__specific {
+                margin-top: 5px;
+                .specific--text {
+                  padding: 0 5px;
+                  color: $light-black;
+                  background: #d6d6d6;
+                }
               }
             }
+            .#{$type}-post__additional-info:hover,
+            .#{$type}-post__additional-info:active {
+              text-decoration: underline;
+            }
           }
+        }
+        .#{$type}-post:active {
+          position: relative;
+          top: 1px;
         }
         .#{$type}-post:last-child {
           border-bottom: none;

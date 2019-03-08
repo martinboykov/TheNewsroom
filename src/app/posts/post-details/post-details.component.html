@@ -79,8 +79,8 @@
           <ul class="related-posts-section__list">
             <li class="related-posts-section__item"
                 *ngFor="let relatedPost of relatedPosts">
-              <a routerLink="/{{relatedPost._id}}"
-                 class="related-posts-section__item--link">
+              <a class="related-posts-section__item--link"
+                 (click)="onRelatedPostSelected(relatedPost)">
                 <span class="link-text">
                   {{ relatedPost.title}}
                 </span>
@@ -106,8 +106,8 @@
           <ul class="related-posts-section__list">
             <li class="related-posts-section__item"
                 *ngFor="let relatedPost of relatedPosts">
-              <a routerLink="/{{relatedPost._id}}"
-                 class="related-posts-section__item--link">
+              <a class="related-posts-section__item--link"
+                 (click)="onRelatedPostSelected(relatedPost)">
                 <span class="link-text">
                   {{ relatedPost.title}}
                 </span>
