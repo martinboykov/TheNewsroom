@@ -116,7 +116,7 @@ const getRelatedPosts = async (req, res, next) => {
 const getLatestPosts = async (req, res, next) => {
   const posts = await Post
     .find()
-    .limit(5)
+    .limit(6)
     .sort({ 'dateCreated': -1 })
     .select(
       '_id title dateCreated author imageMainPath');
@@ -129,14 +129,15 @@ const getLatestPosts = async (req, res, next) => {
 
 const getPopularPosts = async (req, res, next) => {
   const dateNow = new Date();
+  const daysInPast = 10; // should be 1 day before
   const posts = await Post
     .find({
       dateCreated: {
-        $gte: new Date(dateNow.setDate(dateNow.getDate() - 20)),
+        $gte: new Date(dateNow.setDate(dateNow.getDate() - daysInPast)),
       },
     })
     .sort({ 'popularity': -1 })
-    .limit(5)
+    .limit(6)
     .select(
       '_id title dateCreated author imageMainPath popularity');
   return res.status(200).json({
@@ -148,11 +149,12 @@ const getPopularPosts = async (req, res, next) => {
 
 const getComentedPosts = async (req, res, next) => {
   const dateNow = new Date();
+  const daysInPast = 10; // should be 1 day before
   const posts = await Post.aggregate([
     {
       $match: {
         'dateCreated': {
-          $gte: new Date(dateNow.setDate(dateNow.getDate() - 1)),
+          $gte: new Date(dateNow.setDate(dateNow.getDate() - daysInPast)),
         },
       },
     },
@@ -162,18 +164,24 @@ const getComentedPosts = async (req, res, next) => {
       },
     },
     {
-      $sort: { 'comments_count': 1 },
+      $sort: { 'comments_count': -1, dateCreated: -1 },
     },
+    {
+      $limit: 6,
+    },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        author: 1,
+        dateCreated: 1,
+        imageMainPath: 1,
+        comments_count: 1,
+      },
+    },
+
   ]);
-  // .find({
-  //   dateCreated: {
-  //     $gte: new Date(dateNow.setDate(dateNow.getDate() - 1)),
-  //   },
-  // })
-  // .sort({ 'comments': -1 })
-  // .limit(5)
-  // .select(
-  //   '_id title dateCreated author imageMainPath popularity');
+
   return res.status(200).json({
     message:
       `Latest Posts fetched successfully`,

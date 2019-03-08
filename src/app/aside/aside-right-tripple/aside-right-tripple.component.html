@@ -1,41 +1,81 @@
 <div class="wrapper">
-  <section class="latest-posts">
-    <div class="latest-posts__picker">
-      <h1>latest</h1>
+  <div class="type-selector">
+    <div class="latest"
+         [ngClass]="{'active':isLatestSelected}"
+         (click)="onSelect('latest')">
+      <h1 class="latest__heading">latest</h1>
     </div>
+    <div class="popular"
+         [ngClass]="{'active':isPopularSelected}"
+         (click)="onSelect('popular')">
+      <h1 class="popular__heading">Popular</h1>
+    </div>
+    <div class="commented"
+         [ngClass]="{'active':isCommentedSelected}"
+         (click)="onSelect('commented')">
+      <h1 class="commented__heading">Commented</h1>
+    </div>
+  </div>
+
+  <section class="latest-posts"
+           [ngClass]=" (isLatestSelected)? 'open': 'hidden' ">
     <div class="latest-post"
-         *ngFor="let  latestPost of latestPosts">
+         *ngFor="let latestPost of latestPosts">
       <div class="latest-post__image"
-           [style.background-image]=latestPost.imageMainPath>
-      </div>
-      <!-- [ngStyle]="{'background-image': url(' + post?.imageMainPath + ')}" -->
-      <div class="latest-post__title">
-        <span class="white">{{latestPost?.title}}</span>
+           [ngStyle]="{'background-image': 'url(' + latestPost.imageMainPath + ')'}">
       </div>
       <div class="latest-post__additional-info">
-        Posted by
-        <span class="additional-info__author">{{latestPost?.author.name}}</span>
+        <div class="additional-info__title">
+          <span class="title--text">{{latestPost?.title}}</span>
+        </div>
+
+        <span class="additional-info__author">Posted by {{latestPost?.author.name}} on </span>
         <span class="additional-info__date">{{latestPost?.dateCreated | date:'LLL d' }}</span>
+        <div class="additional-info__specific">
+          <span class="specific--text">at {{latestPost?.dateCreated | date:'HH:mm' }}</span>
+        </div>
       </div>
     </div>
-    <div class="popular-posts__picker">
-      <h1>Popular</h1>
-    </div>
+  </section>
+
+  <section class="popular-posts"
+           [ngClass]=" (isPopularSelected)? 'open': 'hidden' ">
     <div class="popular-post"
-         *ngFor="let  popularPost of popularPosts">
+         *ngFor="let popularPost of popularPosts">
       <div class="popular-post__image"
-           [style.background-image]=popularPost.imageMainPath>
-      </div>
-      <!-- [ngStyle]="{'background-image': url(' + post?.imageMainPath + ')}" -->
-      <div class="popular-post__title">
-        <span class="white">{{popularPost?.title}}</span>
+           [ngStyle]="{'background-image': 'url(' + popularPost.imageMainPath + ')'}">
       </div>
       <div class="popular-post__additional-info">
-        Posted by
-        <span class="additional-info__author">{{popularPost?.author.name}}</span>
+        <div class="additional-info__title">
+          <span class="title--text">{{popularPost?.title}}</span>
+        </div>
+        <span class="additional-info__author">Posted by {{popularPost?.author.name}} on </span>
         <span class="additional-info__date">{{popularPost?.dateCreated | date:'LLL d' }}</span>
+        <div class="additional-info__specific">
+          <span class="specific--text">views: {{popularPost?.popularity}}</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="commented-posts"
+           [ngClass]=" (isCommentedSelected)? 'open': 'hidden' ">
+    <div class="commented-post"
+         *ngFor="let commentedPost of commentedPosts">
+      <div class="commented-post__image"
+           [ngStyle]="{'background-image': 'url(' + commentedPost.imageMainPath + ')'}">
+      </div>
+      <div class="commented-post__additional-info">
+        <div class="additional-info__title">
+          <span class="title--text">{{commentedPost?.title}}</span>
+        </div>
+        <span class="additional-info__author">Posted by {{commentedPost?.author.name}} on </span>
+        <span class="additional-info__date">{{commentedPost?.dateCreated | date:'LLL d' }}</span>
+        <div class="additional-info__specific">
+          <span class="specific--text">comments: {{commentedPost?.comments_count}}</span>
+        </div>
       </div>
     </div>
-
   </section>
 </div>

@@ -26,6 +26,8 @@ export class PostService {
   private latestPostsUpdated = new Subject<any>();
   private popularPosts: any[] = []; // only part of the data for each Post
   private popularPostsUpdated = new Subject<any>();
+  private commentedPosts: any[] = []; // only part of the data for each Post
+  private commentedPostsUpdated = new Subject<any>();
 
 
   constructor(private http: HttpClient) { }
@@ -137,6 +139,15 @@ export class PostService {
       });
   }
 
+  getCommentedPosts() {
+    const route = '/posts/commented';
+    return this.http.get<{ message: string, data: any[] }>(`${BACKEND_URL}` + route)
+      .subscribe((response) => {
+        this.commentedPosts = response.data;
+        this.commentedPostsUpdated.next(this.commentedPosts);
+      });
+  }
+
   // fake service
   addPost(data) {
     const route = '/posts';
@@ -165,5 +176,8 @@ export class PostService {
   }
   getPopularPostsUpdateListener() { // as we set postUpdate as private
     return this.popularPostsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
+  }
+  getCommentedPostsUpdateListener() { // as we set postUpdate as private
+    return this.commentedPostsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }
 }

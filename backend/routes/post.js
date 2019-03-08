@@ -8,26 +8,19 @@ const postController = require('../controllers/post');
 router.get('/',
   postController.getPosts);
 
-router.get('/totalCount',
-  postController.getPostsTotalCount);
+router.get('/totalCount', postController.getPostsTotalCount);
 
-router.get('/latest',
-  postController.getLatestPosts);
+router.get('/latest', postController.getLatestPosts);
 
-router.get('/popular',
-  postController.getPopularPosts);
+router.get('/popular', postController.getPopularPosts);
 
-router.get('/commented',
-  postController.getComentedPosts);
+router.get('/commented', postController.getComentedPosts);
 
-router.get('/:_id/details',
-  postController.getPost);
+router.get('/:_id/details', postController.getPost);
 
-router.get('/:_id/comments',
-  postController.getPostComments);
+router.get('/:_id/comments', postController.getPostComments);
 
-router.get('/:_id/related/',
-  postController.getRelatedPosts);
+router.get('/:_id/related/', postController.getRelatedPosts);
 
 router.post('/', postController.addPost);
 
