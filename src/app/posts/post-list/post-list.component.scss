@@ -5,7 +5,7 @@
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: minmax(1120px, 1fr) 100px;
-  margin-right: 10px;
+  margin-right: 20px;
   // grid-template-rows: minmax(740px, 1fr) 100px;
   // grid-column-gap: 20px;
   .posts {
@@ -132,6 +132,7 @@
     height: 100%;
     grid-template-columns: 1fr;
     grid-template-rows: repeat(auto-fill, minmax(600px, 1fr));
+    margin-right: 0px;
     .virtual-scroller {
       grid-column: 1/2;
       // grid-row: 2/3;
@@ -140,7 +141,7 @@
         grid-row: 1/2;
         display: grid;
         grid-template-rows: repeat(auto-fill, 360px);
-        grid-row-gap: 20px;
+        // grid-row-gap: 20px;
         app-post-item {
           min-width: 230px;
           max-height: 360px;

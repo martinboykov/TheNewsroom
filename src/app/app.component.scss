@@ -25,7 +25,7 @@
         grid-row: 2/3;
         margin-left: 5px;
       }
-      app-aside-right-tripple{
+      app-aside-right-tripple {
         grid-column: 2/3;
         grid-row: 2/3;
         margin-right: 5px;
@@ -50,26 +50,32 @@
       min-height: 100vh;
       max-width: $main-full-width;
       display: grid;
-      grid-template-rows: min-content 1fr 60px;
+      grid-template-rows: min-content min-content 1fr 60px;
       grid-template-columns: 1fr;
       // grid-template-rows: minmax(140px auto) 1fr 60px;
       // grid-template-rows: min-content 1fr 60px;
       app-header {
         grid-column: 1/2;
         grid-row: 1/2;
-        padding: 0 5px;
+        margin: 0 5px;
       }
       main {
         grid-column: 1/2;
+        grid-row: 3/4;
+        margin: 0 5px;
+      }
+
+      app-aside-right-tripple {
+        grid-column: 1/2;
         grid-row: 2/3;
-        padding: 0 5px;
+        margin: 0 5px 5px 5px;
       }
 
       app-footer {
         grid-column: 1/2;
-        grid-row: 3/4;
+        grid-row: 4/5;
         border: 1px solid gray;
-        padding: 0 5px;
+        margin: 0 5px;
       }
     }
   }

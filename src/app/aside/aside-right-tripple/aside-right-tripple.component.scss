@@ -1,48 +1,138 @@
 @import "./partials/variables";
 @import "./partials/mixins";
 
+$types: latest, popular, commented;
+
+.wrapper {
+  display: grid;
+  grid-template-rows: 60px 1fr;
+  min-width: 295px; // +5 border = 300px
+  // min-height: 490px;
+  // position: sticky;
+  // top: 0;
+  background: #e7e7e7;
+
+  .type-selector {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    background: #e7e7e7;
+    border-bottom: 1px dotted #969696;
+    @each $type in $types {
+      .#{$type} {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        background: #d6d6d6;
+        cursor: pointer;
+        .#{$type}__heading {
+          color: $red;
+          text-shadow: 1px 1px 0px white;
+        }
+      }
+      .#{$type}.active {
+        background: #e7e7e7;
+        .#{$type}__heading {
+          color: lighten(saturate($red, 100%), 10%);
+        }
+      }
+      .#{$type}:active {
+        // background: #e7e7e7;
+        position: relative;
+        top: 1px;
+        .#{$type}__heading {
+          // color: lighten(saturate($red, 100%), 20%);
+        }
+      }
+    }
+    .popular {
+      border-left: 1px dotted #969696;
+      border-right: 1px dotted #969696;
+    }
+    .commented {
+    }
+  }
+  @each $type in $types {
+    .#{$type}-posts {
+      background: #e7e7e7;
+      .#{$type}-post {
+        border-bottom: 1px dotted #969696;
+        .#{$type}-post__link {
+          height: 70px;
+          display: grid;
+          grid-template-columns: 70px 1fr;
+          align-items: center;
+          .#{$type}-post__image {
+            height: 57px;
+            width: 57px;
+            margin: 0 auto;
+            border: 3px solid #d6d6d6;
+            background-size: cover;
+            background-position: 50% 50%;
+          }
+
+          .#{$type}-post__additional-info {
+            font-size: 11px;
+            .additional-info__title {
+              color: $light-black;
+              font-size: 14px;
+              margin-bottom: 5px;
+              text-shadow: 1px 1px 0px white;
+            }
+            .additional-info__author,
+            .additional-info__date {
+              color: $light-grey;
+              font-family: $font-georgia;
+              font-style: italic;
+              text-shadow: 1px 1px 0px white;
+            }
+            .additional-info__specific {
+              margin-top: 5px;
+              .specific--text {
+                padding: 0 5px;
+                color: $light-black;
+                background: #d6d6d6;
+              }
+            }
+          }
+          .#{$type}-post__additional-info:hover,
+          .#{$type}-post__additional-info:active {
+            text-decoration: underline;
+          }
+        }
+      }
+      .#{$type}-post:active {
+        position: relative;
+        top: 1px;
+      }
+      .#{$type}-post:last-child {
+        border-bottom: none;
+      }
+
+    }
+  }
+}
 @media (min-width: $desctop) {
   // keep meia query <==> position sticky is not  working properly in Edge
   // ==> mobile nav is always below aside
-  $types: latest, popular, commented;
-
   .wrapper {
-    display: grid;
-    grid-template-rows: 60px 1fr;
-    width: 295px; // +5 border = 300px
-    min-height: 490px;
     position: sticky;
     top: 0;
-    background: #e7e7e7;
     @include gradient-border(false, true, 10px);
-    .type-selector {
-      display: grid;
-      grid-template-columns: repeat(3, auto);
-      background: #e7e7e7;
-      border-bottom: 1px dotted #969696;
+    type-selector {
       @each $type in $types {
         .#{$type} {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 5px;
-          background: #d6d6d6;
           cursor: pointer;
           .#{$type}__heading {
-            color: $red;
-            text-shadow: 1px 1px 0px white;
           }
         }
         .#{$type}.active {
-          background: #e7e7e7;
           .#{$type}__heading {
-            color: lighten(saturate($red, 100%), 10%);
           }
         }
         .#{$type}:active {
           // background: #e7e7e7;
-          position: relative;
-          top: 1px;
+
           .#{$type}__heading {
             // color: lighten(saturate($red, 100%), 20%);
           }
@@ -57,90 +147,115 @@
     }
     @each $type in $types {
       .#{$type}-posts {
-        background: #e7e7e7;
+        display: none;
         .#{$type}-post {
-          border-bottom: 1px dotted #969696;
           .#{$type}-post__link {
-            display: grid;
-            grid-template-columns: 70px 1fr;
-            height: 70px;
-            align-items: center;
+            // transition: all 0.3s, transform 0.3s;
             .#{$type}-post__image {
-              height: 57px;
-              width: 57px;
-              border: 3px solid #d6d6d6;
-              background-size: cover;
-              background-position: 50% 50%;
             }
-
             .#{$type}-post__additional-info {
-              font-size: 11px;
               .additional-info__title {
-                color: $light-black;
-                font-size: 14px;
-                margin-bottom: 5px;
-                text-shadow: 1px 1px 0px white;
               }
               .additional-info__author,
               .additional-info__date {
-                color: $light-grey;
-                font-family: $font-georgia;
-                font-style: italic;
-                text-shadow: 1px 1px 0px white;
               }
               .additional-info__specific {
-                margin-top: 5px;
                 .specific--text {
-                  padding: 0 5px;
-                  color: $light-black;
-                  background: #d6d6d6;
                 }
               }
             }
             .#{$type}-post__additional-info:hover,
             .#{$type}-post__additional-info:active {
-              text-decoration: underline;
             }
           }
         }
-        .#{$type}-post:active {
-          position: relative;
-          top: 1px;
-        }
+
         .#{$type}-post:last-child {
-          border-bottom: none;
         }
+      }
+      .#{$type}-posts.open {
+        display: block;
       }
     }
   }
 }
 @media (max-width: $mobile) {
   .wrapper {
-    min-width: 295; // +5 border = 300px
-    height: 600px;
-    background: transparent;
     z-index: 0;
-    .latest-posts {
-      background: #d6d6d6;
-      &__picker {
-      }
-      &__image {
-      }
-      &__title {
-      }
-      &__additional-info {
-        font-family: $font-georgia;
-        .additional-info__author {
+    .type-selector {
+      background: #e7e7e7;
+      @each $type in $types {
+        .#{$type} {
+          background: #d6d6d6;
+          cursor: pointer;
+          .#{$type}__heading {
+            text-shadow: 1px 1px 0px white;
+            height: 24px;
+            line-height: 24px;
+          }
         }
-        .additional-info__date {
+        .#{$type}.active {
+          background: #e7e7e7;
+          .#{$type}__heading {
+            color: lighten(saturate($red, 100%), 10%);
+          }
         }
+        .#{$type}:active {
+          // background: #e7e7e7;
+
+          .#{$type}__heading {
+            // color: lighten(saturate($red, 100%), 20%);
+          }
+        }
+      }
+      .popular {
+        border-left: 1px dotted #969696;
+        border-right: 1px dotted #969696;
+      }
+      .commented {
+      }
+    }
+    @each $type in $types {
+      .#{$type}-posts {
+       display: none;
+        .#{$type}-post {
+          .#{$type}-post__link {
+            // transition: all 0.3s, transform 0.3s;
+            .#{$type}-post__image {
+            }
+            .#{$type}-post__additional-info {
+              .additional-info__title {
+              }
+              .additional-info__author,
+              .additional-info__date {
+              }
+              .additional-info__specific {
+                .specific--text {
+                }
+              }
+            }
+            .#{$type}-post__additional-info:hover,
+            .#{$type}-post__additional-info:active {
+            }
+          }
+        }
+
+        .#{$type}-post:last-child {
+        }
+      }
+      .#{$type}-posts.open {
+        display: block;
       }
     }
   }
 }
 .open {
-  display: block;
+  // display: block;
+  opacity: 1;
+  height: 425px;
 }
 .hidden {
-  display: none;
+  // display: none;
+  opacity: 0;
+  height: 0;
 }

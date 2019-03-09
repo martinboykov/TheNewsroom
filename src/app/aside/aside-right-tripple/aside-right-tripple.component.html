@@ -1,24 +1,22 @@
-<div class="wrapper">
+<div class="wrapper"
+     appOutsideAside>
   <div class="type-selector">
     <div class="latest"
-         [ngClass]="{'active':isLatestSelected}"
-         (click)="onTypeSelected('latest')">
+         [appSelectType]="'.latest-posts'">
       <h1 class="latest__heading">latest</h1>
     </div>
     <div class="popular"
-         [ngClass]="{'active':isPopularSelected}"
-         (click)="onTypeSelected('popular')">
+         [appSelectType]="'.popular-posts'">
       <h1 class="popular__heading">Popular</h1>
     </div>
     <div class="commented"
-         [ngClass]="{'active':isCommentedSelected}"
-         (click)="onTypeSelected('commented')">
+         [appSelectType]="'.commented-posts'">
       <h1 class="commented__heading">Commented</h1>
     </div>
   </div>
 
   <section class="latest-posts"
-           [ngClass]=" (isLatestSelected)? 'open': 'hidden' ">
+           appInsideAside>
     <div class="latest-post"
          *ngFor="let latestPost of latestPosts">
       <a class="latest-post__link"
@@ -42,7 +40,7 @@
   </section>
 
   <section class="popular-posts"
-           [ngClass]=" (isPopularSelected)? 'open': 'hidden' ">
+           appInsideAside>
     <div class="popular-post"
          *ngFor="let popularPost of popularPosts">
       <a class="popular-post__link"
@@ -65,7 +63,7 @@
   </section>
 
   <section class="commented-posts"
-           [ngClass]=" (isCommentedSelected)? 'open': 'hidden' ">
+           appInsideAside>
     <div class="commented-post"
          *ngFor="let commentedPost of commentedPosts">
       <a class="commented-post__link"

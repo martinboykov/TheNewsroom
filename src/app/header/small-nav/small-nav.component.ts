@@ -13,6 +13,7 @@ export class SmallNavComponent implements OnInit {
   category;
   subcategory;
   name;
+  tag;
   _id;
   routes: any[] = [];
   // currentRoute: any;
@@ -56,17 +57,15 @@ export class SmallNavComponent implements OnInit {
             });
           }
         }
-        // this.routes.forEach((route) => {
-        //   console.log('ROUTE PARAMS = ' + route.name);
-        // });
-      });
 
-    // this.router.events.subscribe((val) => {
-    //   if (location.pathname != '') {
-    //     this.currentRoute = location.pathname;
-    //   } else {
-    //     this.currentRoute = 'Home'
-    //   }
-    // });
+        // on tag selected
+        if (this.routerParameters.has('tag')) {
+          this.tag = this.routerParameters.get('tag');
+          this.routes.push({
+            name: `${this.tag}`,
+            link: `tags/${this.tag}`
+          });
+        }
+      });
   }
 }

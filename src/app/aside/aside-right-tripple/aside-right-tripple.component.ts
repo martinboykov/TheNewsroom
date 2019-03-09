@@ -4,6 +4,8 @@ import { PostService } from 'src/app/posts/post.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { WindowRef } from 'src/app/shared/winref.service';
+import { Post } from 'src/app/posts/post.model';
 const APP_URL = environment.appUrl;
 @Component({
   selector: 'app-aside-right-tripple',
@@ -14,20 +16,24 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
   isLatestSelected: boolean;
   isPopularSelected: boolean;
   isCommentedSelected: boolean;
-  latestPosts: any[]; // strict Post model !?!
-  popularPosts: any[]; // strict Post model !?!
-  commentedPosts: any[]; // strict Post model !?!
+  latestPosts: Post[];
+  popularPosts: Post[];
+  commentedPosts: any[];
   private latestPostsSubscription: Subscription;
   private popularPostsSubscription: Subscription;
   private commentedPostsSubscription: Subscription;
+  // windowReference;
+  isMobileResolution: boolean;
+  private isMobileResolutionSubscription: Subscription;
 
   constructor(
     private postService: PostService,
     private helper: HelperService,
+    private windowRef: WindowRef,
     private router: Router) { }
 
   ngOnInit() {
-    this.isLatestSelected = true;
+
     this.postService.getlatestPosts();
     this.latestPostsSubscription = this.postService.getLatestPostsUpdateListener()
       .subscribe((posts: any[]) => {
@@ -44,6 +50,7 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
       .subscribe((posts: any[]) => {
         this.commentedPosts = posts;
       });
+
   }
   onPostSelected(post) {
     const postRoute = this.helper.createRoute(post);
@@ -51,21 +58,25 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
   }
 
   onTypeSelected(selector) {
-    if (selector === 'latest') {
-      this.isLatestSelected = true;
-      this.isPopularSelected = false;
-      this.isCommentedSelected = false;
-    }
-    if (selector === 'popular') {
-      this.isLatestSelected = false;
-      this.isPopularSelected = true;
-      this.isCommentedSelected = false;
-    }
-    if (selector === 'commented') {
-      this.isLatestSelected = false;
-      this.isPopularSelected = false;
-      this.isCommentedSelected = true;
-    }
+    // const isMobile = this.isMobileResolution;
+    // if (selector === 'latest') {
+    //   if (isMobile) { this.isLatestSelected = !this.isLatestSelected; }
+    //   if (!isMobile) { this.isLatestSelected = true; }
+    //   this.isPopularSelected = false;
+    //   this.isCommentedSelected = false;
+    // }
+    // if (selector === 'popular') {
+    //   this.isLatestSelected = false;
+    //   if (isMobile) { this.isPopularSelected = !this.isPopularSelected; }
+    //   if (!isMobile) { this.isPopularSelected = true; }
+    //   this.isCommentedSelected = false;
+    // }
+    // if (selector === 'commented') {
+    //   this.isLatestSelected = false;
+    //   this.isPopularSelected = false;
+    //   if (isMobile) { this.isCommentedSelected = !this.isCommentedSelected; }
+    //   if (!isMobile) { this.isCommentedSelected = true; }
+    // }
   }
 
 
@@ -73,5 +84,6 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
     this.latestPostsSubscription.unsubscribe();
     this.popularPostsSubscription.unsubscribe();
     this.commentedPostsSubscription.unsubscribe();
+    this.isMobileResolutionSubscription.unsubscribe();
   }
 }
