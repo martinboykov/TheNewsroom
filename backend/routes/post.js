@@ -10,6 +10,12 @@ router.get('/',
 
 router.get('/totalCount', postController.getPostsTotalCount);
 
+router.get('/search/:searchQuery',
+  postController.getSearchedPosts);
+
+  router.get('/search/:searchQuery/totalCount',
+  postController.getSearchedPostsTotalCount);
+
 router.get('/latest', postController.getLatestPosts);
 
 router.get('/popular', postController.getPopularPosts);

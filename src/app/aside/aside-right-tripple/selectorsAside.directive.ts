@@ -43,7 +43,7 @@ export class SelectorsAsideDirective implements OnInit, OnDestroy {
       this.renderer.addClass(this.latestTypeSelector, 'active');
       this.renderer.addClass(this.latestSection, 'open');
     }
-
+    this.windowRef.checkIfMobile();
     this.isMobileResolutionSubscription = this.windowRef.checkIfMobileUpdateListener()
       .subscribe((isMobile) => {
         this.isMobileResolution = isMobile;
@@ -71,19 +71,18 @@ export class SelectorsAsideDirective implements OnInit, OnDestroy {
     const allSections = this.wrapper.querySelectorAll('.latest-posts, .popular-posts, .commented-posts');
     const allSelectors = this.wrapper.querySelectorAll('.latest, .popular, .commented');
 
-
-    allSelectors.forEach((selector) => {
-      if (currentSelector === selector) {
-        if (selector.classList.contains('active')) {
-          this.renderer.removeClass(selector, 'active');
-        } else {
-          this.renderer.addClass(selector, 'active');
-        }
-      } else {
-        this.renderer.removeClass(selector, 'active');
-      }
-    });
     if (this.isMobileResolution) {
+      allSelectors.forEach((selector) => {
+        if (currentSelector === selector) {
+          if (selector.classList.contains('active')) {
+            this.renderer.removeClass(selector, 'active');
+          } else {
+            this.renderer.addClass(selector, 'active');
+          }
+        } else {
+          this.renderer.removeClass(selector, 'active');
+        }
+      });
       allSections.forEach((section) => {
         if (currentSection === section) {
           if (currentSection.classList.contains('open')) {
@@ -98,6 +97,17 @@ export class SelectorsAsideDirective implements OnInit, OnDestroy {
 
     }
     if (!this.isMobileResolution) {
+      allSelectors.forEach((selector) => {
+        if (currentSelector === selector) {
+          if (selector.classList.contains('active')) {
+            // do nothing
+          } else {
+            this.renderer.addClass(selector, 'active');
+          }
+        } else {
+          this.renderer.removeClass(selector, 'active');
+        }
+      });
       allSections.forEach((section) => {
         if (currentSection === section) {
           this.renderer.addClass(currentSection, 'open');

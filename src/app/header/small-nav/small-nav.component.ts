@@ -66,6 +66,15 @@ export class SmallNavComponent implements OnInit {
             link: `tags/${this.tag}`
           });
         }
+
+        // on search selected
+        if (this.routerParameters.has('search')) {
+          this.tag = this.routerParameters.get('tag');
+          this.routes.push({
+            name: `${this.tag}`,
+            link: `tags/${this.tag}`
+          });
+        }
       });
   }
 }

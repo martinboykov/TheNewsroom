@@ -13,7 +13,7 @@ function _window(): any {
 export class WindowRef {
   private isMobileResolution: boolean;
   private isMobileResolutionUpdated = new Subject<boolean>();
-
+  private subscribtionExists = false;
   get nativeWindow(): any {
     return _window();
   }
@@ -28,6 +28,9 @@ export class WindowRef {
   constructor() { }
 
   checkIfMobile() {
+    // if there a subscribtion somewhere active => continue without creating new one
+    if (this.subscribtionExists) { return; }
+    this.subscribtionExists = true;
     return fromEvent(this.nativeWindow, 'resize')
       .pipe(
         // throttleTime(100),

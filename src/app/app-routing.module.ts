@@ -7,7 +7,7 @@ import { PostListComponent } from './posts/post-list/post-list.component';
 const routes: Routes = [
   { path: '', component: PostListComponent },
   // { path: 'authors/author/:name/:_id/posts', component: PostListComponent }, // after have authorization
-  // { path: 'search/:params', component: PostListComponent },
+  { path: 'search/:searchQuery', component: PostListComponent },
   { path: 'tags/:tag', component: PostListComponent },
   { path: ':category', component: PostListComponent },
   { path: ':category/post/:_id/:title', component: PostDetailsComponent },

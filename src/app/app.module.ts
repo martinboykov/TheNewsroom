@@ -22,6 +22,7 @@ import { SmallNavComponent } from './header/small-nav/small-nav.component';
 import { ToggleNavigationDirective } from './header/toggleNavigation.directive';
 import { ToggleSubNavigationDirective } from './header/toggleSubNavigation.directive';
 import { MainNavigationDirective } from './header/mainNavigation.directive';
+import { SearchActivationDirective } from './header/searchActivation.directive';
 import { InsideAsideDirective } from './aside/aside-right-tripple/insideAside.directive';
 import { OutsideAsideDirective } from './aside/aside-right-tripple/outsideAside.directive';
 import { SelectorsAsideDirective } from './aside/aside-right-tripple/selectorsAside.directive';
@@ -42,6 +43,7 @@ import { TimeAgoPipe } from './shared/time-ago.pipe';
     ToggleNavigationDirective,
     ToggleSubNavigationDirective,
     MainNavigationDirective,
+    SearchActivationDirective,
     InsideAsideDirective,
     OutsideAsideDirective,
     SelectorsAsideDirective,

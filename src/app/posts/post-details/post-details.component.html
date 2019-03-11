@@ -223,7 +223,7 @@
               <span *ngIf="contentMaxLengthError && content.touched"
                     class="help-block">*Comment is too long</span>
             </div>
-            <button class="form__submit-button w3-button w3-black w3-round-small"
+            <button class="form__submit-button"
                     [disabled]="!commentForm.valid"
                     (click)="scrollToAnkor(ankor)"
                     type="submit">Submit</button>

@@ -41,6 +41,67 @@ const getPostsTotalCount = async (req, res, next) => {
   });
 };
 
+const getSearchedPosts = async (req, res, next) => {
+  const searchString = req.params.searchQuery;
+  const pageSize = parseInt(req.query.pageSize, 10) || 10;
+  const currentPage = parseInt(req.query.page, 10) || 1;
+  const postQuery = Post.find({
+    $text: {
+      $search: searchString,
+    },
+  });
+  if (pageSize && currentPage) {
+    postQuery
+      .skip(pageSize * (currentPage - 1))
+      .limit(pageSize);
+  }
+  const posts = await postQuery
+    .select(
+      '_id title content category subcategory dateCreated author imageMainPath')
+    .sort({ 'dateCreated': -1 });
+  posts.map((post) => {
+    let content = post.content;
+    // for eventual HTML post document
+    // --------------------------------
+    // const el = document.createElement('html');
+    // el.innerHTML = content;
+    // el.querySelector('.first-paragraph'); // Live NodeList of your anchor elements
+
+    content = content.substring(0, 300); // for now...
+    post.content = content;
+    return post;
+  });
+  res.status(200).json({
+    message: 'Posts fetched successfully',
+    data: posts,
+  });
+};
+
+
+const getSearchedPostsTotalCount = async (req, res, next) => {
+  const searchString = req.params.searchQuery;
+  const postsAggregate = await Post.aggregate(
+    [
+      { $match: { $text: { $search: searchString } } },
+      {
+        $count: 'document_count',
+      },
+    ]
+  );
+  if (!postsAggregate[0]) {
+    return res.status(200).json({
+      message: 'There are no posts with this searchquery',
+      data: 0,
+    });
+  }
+  const postCount = postsAggregate[0].document_count;
+
+  return res.status(200).json({
+    message: 'Total searched posts count fetched successfully',
+    data: postCount,
+  });
+};
+
 const getPost = async (req, res, next) => {
   const _id = req.params._id;
   const pageSize = parseInt(req.query.pageSize, 10);
@@ -64,7 +125,6 @@ const getPost = async (req, res, next) => {
       post: postWithLastComments,
       totalCommentsCount: totalCommentsCount,
     },
-
   });
 };
 
@@ -194,6 +254,8 @@ const getComentedPosts = async (req, res, next) => {
 module.exports = {
   getPosts,
   getPostsTotalCount,
+  getSearchedPosts,
+  getSearchedPostsTotalCount,
   getPost,
   getPostComments,
   getRelatedPosts,
