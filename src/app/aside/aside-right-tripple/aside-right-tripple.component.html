@@ -26,9 +26,8 @@
         </div>
         <div class="latest-post__additional-info">
           <div class="additional-info__title">
-            <span class="title--text">{{latestPost?.title}}</span>
+            {{latestPost?.title}}
           </div>
-
           <span class="additional-info__author">Posted by {{latestPost?.author.name}} on </span>
           <span class="additional-info__date">{{latestPost?.dateCreated | date:'LLL d' }}</span>
           <div class="additional-info__specific">

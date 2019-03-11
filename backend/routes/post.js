@@ -24,11 +24,11 @@ router.get('/:_id/related/', postController.getRelatedPosts);
 
 router.post('/', postController.addPost);
 
-router.put('/:_id/comments/', postController.addComment);
-
 router.put('/:_id', postController.updatePost);
 
 router.put('/:_id/popularity', postController.popularityIncrease);
+
+router.put('/:_id/comments/', postController.addComment);
 
 router.delete('/:_id', postController.deletePost);
 

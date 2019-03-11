@@ -6,7 +6,7 @@ $types: latest, popular, commented;
 .wrapper {
   display: grid;
   grid-template-rows: 60px 1fr;
-  min-width: 295px; // +5 border = 300px
+  min-width: 295px; // +5 margin-right = 300px
   // min-height: 490px;
   // position: sticky;
   // top: 0;
@@ -15,7 +15,7 @@ $types: latest, popular, commented;
   .type-selector {
     display: grid;
     grid-template-columns: repeat(3, auto);
-    background: #e7e7e7;
+    // background: #e7e7e7;
     border-bottom: 1px dotted #969696;
     @each $type in $types {
       .#{$type} {
@@ -70,10 +70,16 @@ $types: latest, popular, commented;
             background-size: cover;
             background-position: 50% 50%;
           }
-
           .#{$type}-post__additional-info {
             font-size: 11px;
+            padding-right: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             .additional-info__title {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
               color: $light-black;
               font-size: 14px;
               margin-bottom: 5px;
@@ -108,7 +114,6 @@ $types: latest, popular, commented;
       .#{$type}-post:last-child {
         border-bottom: none;
       }
-
     }
   }
 }
@@ -181,29 +186,39 @@ $types: latest, popular, commented;
 }
 @media (max-width: $mobile) {
   .wrapper {
+    display: grid;
+    grid-template-rows: 40px 1fr;
     z-index: 0;
     .type-selector {
-      background: #e7e7e7;
+      background: white;
+      border-bottom: 1px dotted #969696;
+      //  height: 30px;
+      // background: #e7e7e7;
       @each $type in $types {
         .#{$type} {
-          background: #d6d6d6;
+          background: white;
+          // background: #d6d6d6;
           cursor: pointer;
           .#{$type}__heading {
             text-shadow: 1px 1px 0px white;
-            height: 24px;
-            line-height: 24px;
+            font-size: 24px;
           }
         }
         .#{$type}.active {
-          background: #e7e7e7;
+          background: white;
           .#{$type}__heading {
+            text-decoration: underline;
             color: lighten(saturate($red, 100%), 10%);
           }
         }
         .#{$type}:active {
           // background: #e7e7e7;
+          position: relative;
+          top: 0px;
 
           .#{$type}__heading {
+            position: relative;
+            top: 1px;
             // color: lighten(saturate($red, 100%), 20%);
           }
         }
@@ -217,7 +232,8 @@ $types: latest, popular, commented;
     }
     @each $type in $types {
       .#{$type}-posts {
-       display: none;
+        display: none;
+        background: white;
         .#{$type}-post {
           .#{$type}-post__link {
             // transition: all 0.3s, transform 0.3s;

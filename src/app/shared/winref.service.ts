@@ -30,8 +30,8 @@ export class WindowRef {
   checkIfMobile() {
     return fromEvent(this.nativeWindow, 'resize')
       .pipe(
-        throttleTime(100),
-        distinctUntilChanged(),
+        // throttleTime(100),
+        // distinctUntilChanged(),
       )
       .subscribe((event) => {
         console.log(this.nativeWindow.innerWidth);
