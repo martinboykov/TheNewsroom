@@ -69,9 +69,10 @@
         top: 1px;
       }
       &:disabled {
+        top: 0px;
         svg {
           path#one {
-            fill: lighten(saturate($gold, 100%), 10%);
+            fill: $light-grey;
           }
         }
       }

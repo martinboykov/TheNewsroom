@@ -16,7 +16,6 @@ import { PostDetailsComponent } from './posts/post-details/post-details.componen
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { PostItemComponent } from './posts/post-item/post-item.component';
 import { MainNavComponent } from './header/main-nav/main-nav.component';
-import { SearchComponent } from './header/search/search.component';
 import { SmallNavComponent } from './header/small-nav/small-nav.component';
 
 import { ToggleNavigationDirective } from './header/toggleNavigation.directive';
@@ -37,7 +36,6 @@ import { TimeAgoPipe } from './shared/time-ago.pipe';
     PostDetailsComponent,
     PostListComponent,
     MainNavComponent,
-    SearchComponent,
     SmallNavComponent,
     PostItemComponent,
     ToggleNavigationDirective,

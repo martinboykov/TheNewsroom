@@ -89,7 +89,6 @@ export class PostListComponent implements OnInit, OnDestroy {
 
     this.totalPostsSubscription = this.postService.getTotalPostsUpdateListener()
       .subscribe((totalCount: number) => {
-        console.log(totalCount);
         this.paginator.totalItems = totalCount;
         this.isPaginationRequired = this.showIfPaginationRequired(this.paginator.itemsPerPage, totalCount);
       });
