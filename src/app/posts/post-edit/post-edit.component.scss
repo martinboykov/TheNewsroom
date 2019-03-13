@@ -1,8 +1,148 @@
 @import "./partials/variables";
 @import "./partials/mixins";
 
+.wrapper {
+  width: inherit;
+  // margin-right: 20px;
+  .form {
+    width: inherit;
+    &__image-picker {
+      background: transparent;
+      padding: 5px 0;
+      .image-picker__button {
+        box-shadow: inset 0px 1px 0px 0px #ffffff;
+        background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+        border: none;
+        display: inline-block;
+        cursor: pointer;
+        color: $black;
+        font-family: $font-mp;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 6px 24px;
+        text-decoration: none;
+        text-shadow: 0px 1px 0px #ffffff;
+        outline: 0;
+        &:active {
+          position: relative;
+          top: 1px;
+        }
+      }
+    }
+    &__image-preview {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 43px 48px;
+      align-items: start;
+      justify-items: end;
+      height: 180px;
+      width: 180px;
+      margin-bottom: 5px;
+      box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 1) inset;
+      background-size: cover;
+      background-position: 50% 50%;
+      border: 5px solid #efefef;
+      img {
+        height: 170px;
+        width: 100%;
+        object-fit: scale-down;
+        //   height: 180px;
+        // width: 180px;
+      }
+    }
+    &__title {
+      min-height: 30px;
+      padding: 5px;
+      border: 1px solid $light-grey;
+      margin-bottom: 5px;
+    }
+    .jodit-editor {
+      margin-bottom: 5px;
+      display: table;
+      table-layout: fixed;
+      width: 100%;
+      word-wrap: break-word;
+    }
+    &__submit-button,
+    &__submit-button:disabled:hover {
+      box-shadow: inset 0px 1px 0px 0px #ffffff;
+      background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+      border: none;
+      display: inline-block;
+      cursor: default;
+      color: $black;
+      font-family: $font-mp;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 6px 24px;
+      text-decoration: none;
+      text-shadow: 0px 1px 0px #ffffff;
+      outline: 0;
+    }
+    &__submit-button {
+      cursor: pointer;
+      &:hover,
+      &:active {
+        color: $black;
+        // outline: 1px solid $light-grey;
+      }
+      &:hover {
+        background: linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+      }
+      &:active {
+        position: relative;
+        top: 1px;
+      }
+    }
+    &__submit-button:disabled {
+      color: lighten($color: $black, $amount: 30);
+      position: relative;
+      top: 0px;
+    }
+    &__submit-button:disabled:hover {
+      color: lighten($color: $black, $amount: 30);
+    }
+  }
+}
 @media (min-width: $desctop) {
   .wrapper {
     // margin-right: 20px;
+    .form {
+      &__image-picker {
+        .image-picker__button {
+          &:active {
+          }
+        }
+      }
+      &__image-preview {
+        img {
+        }
+      }
+      &__title {
+        min-width: $desctop - 10px;
+      }
+    }
+  }
+}
+@media (max-width: $mobile) {
+  .wrapper {
+    // margin-right: 20px;
+    .form {
+      &__image-picker {
+        .image-picker__button {
+          &:active {
+          }
+        }
+      }
+      &__image-preview {
+        img {
+        }
+      }
+      &__title {
+        width: 100%;
+      }
+    }
   }
 }

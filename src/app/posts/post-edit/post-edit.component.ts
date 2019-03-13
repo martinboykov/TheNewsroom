@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Post } from './../post.model';
 import { PostService } from '../post.service';
-// import { mimeType } from './mime-type.validator';
+import { mimeType } from './mime-type.validator';
 
 @Component({
   selector: 'app-post-edit',
@@ -12,12 +12,13 @@ import { PostService } from '../post.service';
 })
 export class PostEditComponent implements OnInit {
   postForm: FormGroup;
-   mode = 'create';
-   _id: string;
-   imagePreview: any;
+  mode = 'create';
+  _id: string;
+  imagePreview: any;
   public post: Post;
   jodiConfig = {
     // defaultMode: '3',
+    height: 450,
     autofocus: true,
     enter: 'DIV',
     // uploader: {
@@ -27,7 +28,7 @@ export class PostEditComponent implements OnInit {
     buttons: `source,
      |,bold,strikethrough,underline,italic,
      |,superscript,subscript,|,ul,ol,|,outdent,indent,
-     |,font,fontsize,brush,paragraph,|,image,table,link,
+     |,font,fontsize,brush,paragraph,|,table,link,
      |,align,undo,redo,\n,cut,hr,eraser,copyformat,
      |,symbol,fullsize,selectall,print`
   };
@@ -39,16 +40,18 @@ export class PostEditComponent implements OnInit {
 
   ngOnInit() {
     this.postForm = new FormGroup({
-      title: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
-      content: new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(250)]),
-      image: new FormControl('', [Validators.required]),
-      // image: new FormControl('', { validators: [Validators.required], asyncValidators: [mimeType] }),
+      title: new FormControl('', [Validators.required, Validators.minLength(20), Validators.maxLength(200)]),
+      content: new FormControl(null, [Validators.required, Validators.minLength(200), Validators.maxLength(4000)]),
+      // image: new FormControl('', [Validators.required]),
+      image: new FormControl('', { validators: [Validators.required], asyncValidators: [mimeType] }),
     });
     // get mode(create/edit) and Post ID
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('_id')) {
         this.mode = 'edit';
         this._id = paramMap.get('_id');
+        console.log('mode: EDIT');
+
         // this.postService.getPost(this._id)
         //   .subscribe(
         //     (postData) => {
@@ -69,6 +72,7 @@ export class PostEditComponent implements OnInit {
         //       this.postForm.controls.image.setValue(postData.post.imagePath);
         //     });
       } else {
+        console.log('mode: CREATE');
         this.mode = 'create';
         this._id = null;
       }
@@ -143,8 +147,11 @@ export class PostEditComponent implements OnInit {
     // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
     const reader = new FileReader();
     reader.onload = () => {
+
       // get the img src="imagePreview"
       this.imagePreview = reader.result;
+      console.log(this.imagePreview);
+
     }
     reader.readAsDataURL(file);
   }
@@ -165,7 +172,7 @@ export class PostEditComponent implements OnInit {
       // this.postForm.reset();
     }
     if (this.mode === 'edit') {
-    // ....
+      // ....
     }
 
   }
@@ -176,8 +183,9 @@ export class PostEditComponent implements OnInit {
       el.querySelector('.jodit_statusbar_item.jodit_statusbar_item-right').firstChild.textContent;
     console.log(letterCounter);
 
-    const htmlContent = event.args[0]
-    // console.log(htmlContent);
+    const htmlContent = event.args[0].target.innerText;
+    this.content.setValue(htmlContent);
+    console.log(htmlContent);
   }
 }
 

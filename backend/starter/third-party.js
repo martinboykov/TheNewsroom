@@ -19,5 +19,14 @@ module.exports = ((app) => {
 
   if (process.env.NODE_ENV === 'development') {
     // ..
+    app.use(fakeUser);
   }
 });
+
+function fakeUser(req, res, next) {
+  req.user = {
+    name: 'Dummy name',
+    _id: '111111111111111111111111',
+  };
+  return next();
+}

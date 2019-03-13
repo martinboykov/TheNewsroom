@@ -12,8 +12,8 @@ const Fawn = require('Fawn');
 const addPost = async (req, res, next) => {
   // const user = req.user; // T0D0: TO BE SWITCHED LATER (AFTER Authentication/Authorization is complete)
   const user = {
-    name: 'Dummy name',
-    _id: '111111111111111111111111',
+    name: req.user.name,
+    _id: req.user._id,
   }; // just for endpoint testing
   const data = req.body;
   const { error } = validatePost(data);

@@ -8,7 +8,7 @@ const postSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    minlength: 1,
+    minlength: 20,
     maxlength: 200,
     trim: true,
   },
@@ -95,7 +95,7 @@ function validatePost(post) {
   const schema = Joi.object({
     title: Joi
       .string()
-      .min(1)
+      .min(20)
       .max(200)
       .required(),
     content: Joi

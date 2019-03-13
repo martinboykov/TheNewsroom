@@ -1,36 +1,47 @@
 <div class="wrapper">
-  <form [formGroup]="postForm"
+  <form class="form"
+        [formGroup]="postForm"
         (ngSubmit)="onSavePost()"
         *ngIf="!isLoading">
     <!-- image selection -->
-    <div class="image-picker">
-      <button (click)="filePicker.click()"
+    <div class="form__image-picker">
+      <button class="image-picker__button"
+              (click)="filePicker.click()"
               type="button">Pick Image
       </button>
-      <input type="file"
+      <input style="display: none"
+             type="file"
              (change)="onImagePicked($event)"
              #filePicker>
     </div>
-    <div class="image-preview"
+    <div class="form__image-preview"
          *ngIf="imagePreview !== '' && imagePreview">
       <img [src]="imagePreview"
            [alt]="postForm.value.title">
     </div>
 
-    <input formControlName="title"
+    <input class="form__title"
+           formControlName="title"
            type="text"
-           placeholder="Post Title">
+           placeholder="Post Title...">
 
+    <div class="jodit-editor">
+      <jodit-editor [config]="jodiConfig"
+                    (onKeydown)="handleEvent($event)"
+                    (onBlur)="handleEvent($event)"></jodit-editor>
+    </div>
 
-    <!-- <jodit-editor [config]=jodiConfig -->
-      <jodit-editor [config]=jodiConfig
-      (onKeydown)="handleEvent($event)"></jodit-editor>
+    <input style="display: none"
+           formControlName="content"
+           type="text">
 
-    <button [disabled]="!postForm.valid"
+    <button class="form__submit-button"
+            [disabled]="!postForm.valid"
             color="primary"
             type="submit">Save Post</button>
   </form>
-  <div class="dev-check">
+  <div class="dev-check"
+       style="max-width: 500px;overflow-wrap: break-word;">
     <p>Form Status: {{ postForm.status }}</p>
     <p>Form Values: {{ postForm.value | json}}</p>
     <p>Errors:</p>

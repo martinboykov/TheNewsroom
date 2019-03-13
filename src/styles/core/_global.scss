@@ -33,6 +33,10 @@ body {
   height: 100%;
   background: #1d1c1c;
 }
+div{
+  color: $grey;
+  font-family: $font-default;
+}
 
 img {
   max-width: 100%;
