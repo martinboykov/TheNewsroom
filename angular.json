@@ -27,14 +27,17 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles/main.scss"
+              "src/styles/main.scss",
+              "node_modules/jodit/build/jodit.min.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "src/styles"
               ]
             },
-            "scripts": []
+            "scripts": [
+              "node_modules/jodit/build/jodit.min.js"
+            ]
           },
           "configurations": {
             "production": {

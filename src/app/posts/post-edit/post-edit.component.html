@@ -1,5 +1,49 @@
 <div class="wrapper">
-  <jodit-editor [config]=jodiConfig
-                (onKeydown)="handleEvent($event)"></jodit-editor>
+  <form [formGroup]="postForm"
+        (ngSubmit)="onSavePost()"
+        *ngIf="!isLoading">
+    <!-- image selection -->
+    <div class="image-picker">
+      <button (click)="filePicker.click()"
+              type="button">Pick Image
+      </button>
+      <input type="file"
+             (change)="onImagePicked($event)"
+             #filePicker>
+    </div>
+    <div class="image-preview"
+         *ngIf="imagePreview !== '' && imagePreview">
+      <img [src]="imagePreview"
+           [alt]="postForm.value.title">
+    </div>
 
+    <input formControlName="title"
+           type="text"
+           placeholder="Post Title">
+
+
+    <!-- <jodit-editor [config]=jodiConfig -->
+      <jodit-editor [config]=jodiConfig
+      (onKeydown)="handleEvent($event)"></jodit-editor>
+
+    <button [disabled]="!postForm.valid"
+            color="primary"
+            type="submit">Save Post</button>
+  </form>
+  <div class="dev-check">
+    <p>Form Status: {{ postForm.status }}</p>
+    <p>Form Values: {{ postForm.value | json}}</p>
+    <p>Errors:</p>
+    <ul>
+      <li>
+        <p>Title Errors: {{ title.errors | json}}</p>
+      </li>
+      <li>
+        <p>Content Errors: {{ content.errors | json}}</p>
+      </li>
+      <li>
+        <p>Image Errors: {{ image.errors | json}}</p>
+      </li>
+    </ul>
+  </div>
 </div>

@@ -155,14 +155,31 @@ export class PostService {
       .subscribe(() => { });
   }
 
-  // fake service
-  addPost(data) {
-    const route = '/posts';
-    this.http
-      .post<{ message: string, post: Post }>(
-        BACKEND_URL + route,
-        data)
-      .subscribe(() => { });
+  addPost(post) {
+    console.log(post)
+    // const postData = new FormData(); // as json cant include File Type data we switch to Formdata, which accepts text values and BLOB values
+    // postData.append('title', title);
+    // postData.append('content', content);
+    // postData.append('image', image, title); // 'image is same as in the backend -> upload.single('image')
+    // this.http
+    //   .post<{ message: string, post: Post }>(
+    //     BACKEND_URL,
+    //     postData)
+    //   .subscribe((responseData) => {
+    //     console.log(responseData);
+    //     const post: Post = {
+    //       id: responseData.post.id,
+    //       title: responseData.post.title,
+    //       content: responseData.post.content,
+    //       imagePath: responseData.post.imagePath,
+    //       creator: responseData.post.creator,
+    //     }
+
+    //     // method 1 Pesimistic updating: only after success
+    //     this.posts.push(post);
+    //     this.postUpdated.next([...this.posts]);
+    //     this.router.navigate(['/']);
+    //   });
   }
 
   // getPostUpdateListener() { // as we set postUpdate as private
