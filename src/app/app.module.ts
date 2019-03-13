@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
+
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
@@ -26,7 +27,9 @@ import { InsideAsideDirective } from './aside/aside-right-tripple/insideAside.di
 import { OutsideAsideDirective } from './aside/aside-right-tripple/outsideAside.directive';
 import { SelectorsAsideDirective } from './aside/aside-right-tripple/selectorsAside.directive';
 
+
 import { TimeAgoPipe } from './shared/time-ago.pipe';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,6 +49,7 @@ import { TimeAgoPipe } from './shared/time-ago.pipe';
     OutsideAsideDirective,
     SelectorsAsideDirective,
     TimeAgoPipe,
+
   ],
   imports: [
     BrowserModule,
@@ -54,6 +58,7 @@ import { TimeAgoPipe } from './shared/time-ago.pipe';
     AppRoutingModule,
     NgxPaginationModule,
     InfiniteScrollModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

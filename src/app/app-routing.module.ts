@@ -7,12 +7,14 @@ import { PostListComponent } from './posts/post-list/post-list.component';
 const routes: Routes = [
   { path: '', component: PostListComponent },
   // { path: 'authors/author/:name/:_id/posts', component: PostListComponent }, // after have authorization
-  { path: 'search/:searchQuery', component: PostListComponent },
   { path: 'tags/:tag', component: PostListComponent },
+  { path: 'search/:searchQuery', component: PostListComponent },
+  { path: 'edit', loadChildren: './posts/post-edit/post-edit.module#PostEditModule' },
   { path: ':category', component: PostListComponent },
   { path: ':category/post/:_id/:title', component: PostDetailsComponent },
   { path: ':category/:subcategory', component: PostListComponent },
   { path: ':category/:subcategory/post/:_id/:title', component: PostDetailsComponent },
+
 ];
 
 @NgModule({

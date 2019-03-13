@@ -120,6 +120,35 @@
       }
     }
   }
+  .edit {
+    align-self: center;
+    &__link {
+      height: 100%;
+      display: flex;
+      svg {
+        path {
+          fill: $gold;
+        }
+      }
+    }
+  }
+  .edit:hover,
+  .edit:active {
+    .edit__link{
+      svg {
+        path {
+          fill: darken(saturate($gold, 100%), 10%);
+        }
+      }
+    }
+  }
+  .edit:active {
+    .edit__link{
+      position: relative;
+      top: 1px;
+    }
+
+  }
 }
 @media (min-width: $desctop) {
   .main-header {
@@ -157,19 +186,37 @@
     //   // display: none; // for revision later
 
     // }
-    .search {
+    .functionalities {
       grid-column: 2/3;
       grid-row: 1/2;
       justify-self: end;
       height: 100%;
       height: inherit;
       align-content: center;
-      display: grid;
-      .search__form.desctop {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      .search {
+        display: grid;
+        .search__form.desctop {
+        }
       }
-    }
-    .search__form.mobile {
-      display: none;
+      .search__form.mobile {
+        display: none;
+      }
+
+      .edit {
+        align-self: center;
+        &__link {
+          height: 100%;
+          display: flex;
+          svg {
+            path {
+              fill: $gold;
+            }
+          }
+        }
+      }
     }
 
     app-small-nav {
@@ -214,20 +261,25 @@
     //   justify-self: end;
     //   height: 100%;
     // }
-    .search {
+    .functionalities {
       grid-column: 2/4;
       grid-row: 2/3;
       justify-self: end;
       height: 100%;
       height: inherit;
       align-content: center;
-      display: grid;
-
-      .search__form.desktop {
-        display: none;
+      display: flex;
+      flex-flow: row nowrap;
+      .search {
+        display: grid;
+        .search__form.desktop {
+          display: none;
+        }
+      }
+      .edit {
+        justify-self: end;
       }
     }
-
     app-small-nav {
       grid-column: 1/4;
       grid-row: 3/4;

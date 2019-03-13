@@ -124,7 +124,7 @@ $types: latest, popular, commented;
     position: sticky;
     top: 0;
     @include gradient-border(false, true, 10px);
-    type-selector {
+    .type-selector {
       @each $type in $types {
         .#{$type} {
           cursor: pointer;
@@ -192,7 +192,6 @@ $types: latest, popular, commented;
     .type-selector {
       background: white;
       border-bottom: 1px dotted #969696;
-      //  height: 30px;
       // background: #e7e7e7;
       @each $type in $types {
         .#{$type} {
