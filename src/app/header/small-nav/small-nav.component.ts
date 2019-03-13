@@ -1,7 +1,8 @@
 import { HeaderService } from './../header.service';
-import { ParamMap } from '@angular/router';
+import { ParamMap, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-small-nav',
   templateUrl: './small-nav.component.html',
@@ -18,7 +19,10 @@ export class SmallNavComponent implements OnInit {
   routes: any[] = [];
   // currentRoute: any;
 
-  constructor(private headerService: HeaderService) { }
+  constructor(private headerService: HeaderService,
+    private router: Router,
+    private location: Location,
+  ) { }
 
   ngOnInit() {
     this.routerParametersSubscription = this.headerService.getRouterParametersUpdateListener()
@@ -76,5 +80,17 @@ export class SmallNavComponent implements OnInit {
           });
         }
       });
+    this.router.events.subscribe(() => {
+      this.routes = [];
+      if (this.location.path().indexOf('edit') >= 0) {
+        this.routes.push({
+          name: `edit`,
+          link: `edit`
+        });
+      } else {
+        // donothing
+      }
+    });
   }
+
 }

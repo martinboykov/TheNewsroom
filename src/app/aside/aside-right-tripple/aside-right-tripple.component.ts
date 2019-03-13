@@ -2,10 +2,12 @@ import { HelperService } from './../../shared/helper.service';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { PostService } from 'src/app/posts/post.service';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { WindowRef } from 'src/app/shared/winref.service';
 import { Post } from 'src/app/posts/post.model';
+import { Location } from '@angular/common';
+
 const APP_URL = environment.appUrl;
 @Component({
   selector: 'app-aside-right-tripple',
@@ -23,16 +25,31 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
   private popularPostsSubscription: Subscription;
   private commentedPostsSubscription: Subscription;
   // windowReference;
-  isMobileResolution: boolean;
   private isMobileResolutionSubscription: Subscription;
+  public isMobileResolution: boolean;
+  public isAsideRequired: boolean;
 
   constructor(
     private postService: PostService,
     private helper: HelperService,
     private windowRef: WindowRef,
-    private router: Router) { }
+    private router: Router,
+    public route: ActivatedRoute,
+    private location: Location) {
+
+  }
+
 
   ngOnInit() {
+    this.isAsideRequired = true;
+    this.router.events.subscribe(() => {
+      if (this.location.path().indexOf('edit') >= 0) {
+        this.isAsideRequired = false;
+      } else {
+        this.isAsideRequired = true;
+      }
+    });
+
 
     this.postService.getlatestPosts();
     this.latestPostsSubscription = this.postService.getLatestPostsUpdateListener()
@@ -56,29 +73,6 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
     const postRoute = this.helper.createRoute(post);
     this.router.navigateByUrl(postRoute);
   }
-
-  onTypeSelected(selector) {
-    // const isMobile = this.isMobileResolution;
-    // if (selector === 'latest') {
-    //   if (isMobile) { this.isLatestSelected = !this.isLatestSelected; }
-    //   if (!isMobile) { this.isLatestSelected = true; }
-    //   this.isPopularSelected = false;
-    //   this.isCommentedSelected = false;
-    // }
-    // if (selector === 'popular') {
-    //   this.isLatestSelected = false;
-    //   if (isMobile) { this.isPopularSelected = !this.isPopularSelected; }
-    //   if (!isMobile) { this.isPopularSelected = true; }
-    //   this.isCommentedSelected = false;
-    // }
-    // if (selector === 'commented') {
-    //   this.isLatestSelected = false;
-    //   this.isPopularSelected = false;
-    //   if (isMobile) { this.isCommentedSelected = !this.isCommentedSelected; }
-    //   if (!isMobile) { this.isCommentedSelected = true; }
-    // }
-  }
-
 
   ngOnDestroy() {
     this.latestPostsSubscription.unsubscribe();

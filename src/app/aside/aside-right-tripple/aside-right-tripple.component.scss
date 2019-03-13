@@ -123,6 +123,8 @@ $types: latest, popular, commented;
   .wrapper {
     position: sticky;
     top: 0;
+    width: 300px;
+    margin: 0 5px 20px 15px;
     @include gradient-border(false, true, 10px);
     .type-selector {
       @each $type in $types {
@@ -189,6 +191,7 @@ $types: latest, popular, commented;
     display: grid;
     grid-template-rows: 40px 1fr;
     z-index: 0;
+    margin: 0 5px 5px 5px;
     .type-selector {
       background: white;
       border-bottom: 1px dotted #969696;
