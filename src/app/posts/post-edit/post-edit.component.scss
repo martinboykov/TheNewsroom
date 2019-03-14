@@ -1,5 +1,6 @@
 @import "./partials/variables";
 @import "./partials/mixins";
+@import "./vendor/ng-select/default.theme";
 
 .wrapper {
   width: inherit;
@@ -58,18 +59,26 @@
       border: 1px solid $light-grey;
       margin-bottom: 5px;
     }
+    .form__title{
+      ::placeholder{
+        color: green ;
+      }
+    }
     .jodit-editor {
       margin-bottom: 5px;
       display: table;
       table-layout: fixed;
       width: 100%;
       word-wrap: break-word;
+      .jodit_wysiwyg{
+        color: #333333;
+      }
     }
 
     &__categorie {
       border-radius: none;
       display: inline-block;
-      margin-bottom: 0 10px 5px 0;
+      margin: 0 10px 5px 0;
       width: 200px;
     }
     &__subcategorie {
@@ -82,6 +91,15 @@
     &__tags {
       border-radius: none;
       margin-bottom: 5px;
+    }
+    .form__error-messages {
+      .error-block {
+        display: flex;
+        align-items: flex-start;
+        height: 20px;
+        font-size: 11px;
+        color: $red;
+      }
     }
     &__submit-button,
     &__submit-button:disabled:hover {
@@ -101,6 +119,7 @@
       outline: 0;
     }
     &__submit-button {
+      margin-bottom: 50px;
       cursor: pointer;
       &:hover,
       &:active {

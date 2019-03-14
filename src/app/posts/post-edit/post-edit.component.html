@@ -18,7 +18,12 @@
       <img [src]="imagePreview"
            [alt]="postForm.value.title">
     </div>
-
+    <!-- image error message -->
+    <div class="form__error-messages">
+      <div *ngIf="imageErrorInvalidMeme"
+      class="error-block">*Please provide valid image file</div>
+    </div>
+    <!-- categorie -->
     <ng-select class="form__categorie"
                [items]="categories"
                formControlName="categorie"
@@ -27,6 +32,12 @@
                bindValue="name"
                placeholder="Choose Category...">
     </ng-select>
+    <!-- categorie error message -->
+    <div class="form__error-messages">
+      <div *ngIf="categorieErrorRequired && categorie.touched"
+            class="error-block">*Please provide a categorie</div>
+    </div>
+    <!-- subcategorie -->
     <ng-select class="form__subcategorie"
                [items]="subcategories"
                formControlName="subcategorie"
@@ -35,7 +46,7 @@
                bindValue="name"
                placeholder="Choose Subcategory...">
     </ng-select>
-
+    <!-- tags -->
     <ng-select class="form__tags"
                #select
                [items]="tagsArray"
@@ -55,45 +66,54 @@
         <b>create new</b>: {{search}}
       </ng-template>
     </ng-select>
+    <div class="form__error-messages">
+      <div *ngIf="tagsErrorRequired && tags.touched"
+            class="error-block">*Please provide tag(s)</div>
+      <div *ngIf="tagsErrorLength && title.touched"
+            class="error-block">*Tag must be between 2 and 25 characters</div>
+    </div>
 
-    <input class="form__title"
+    <!-- title -->
+    <input class="form__title ng-select"
            formControlName="title"
            type="text"
            placeholder="Post Title...">
+    <!-- title error message -->
+    <div class="form__error-messages">
+      <div *ngIf="titleErrorRequired && title.touched"
+            class="error-block">*Please provide a title</div>
+      <div *ngIf="titleErrorLengthMin && title.touched"
+            class="error-block">*Title is too short</div>
+      <div *ngIf="titleErrorLengthMax && title.touched"
+            class="error-block">*Title is too long</div>
+    </div>
 
     <div class="jodit-editor">
       <jodit-editor [config]="jodiConfig"
-                    (onKeydown)="contentHandeln($event)"
-                    (onBlur)="contentHandeln($event)"></jodit-editor>
+                    (onKeydown)="contentHandler($event)"
+                    (onBlur)="contentHandler($event)"></jodit-editor>
     </div>
 
     <input style="display: none"
            formControlName="content"
            type="text">
 
-
-
-
-
-
-    <!-- <input #tag
-           (keyup.enter)="addTag(tag)"
-           type="text"
-           class="ng-select-container">
-    <ul class="list-group">
-      <li *ngFor="let tag of tags.controls"
-          (click)="removeTag(tag)"
-          class="list-group-item">
-        {{tag.value}}
-      </li>
-    </ul> -->
+    <div class="form__error-messages">
+      <div *ngIf="contentErrorRequired && postForm.touched && postForm.dirty"
+            class="error-block">*Please provide a content</div>
+      <div *ngIf="contentErrorLengthMin"
+            class="error-block">*Content is too short</div>
+      <div *ngIf="contentErrorLengthMax"
+            class="error-block">*Content is too long</div>
+    </div>
 
     <button class="form__submit-button"
             [disabled]="!postForm.valid"
             color="primary"
             type="submit">Save Post</button>
   </form>
-  <div class="dev-check"
+
+  <!-- <div class="dev-check"
        style="max-width: 500px;overflow-wrap: break-word;">
     <p>Form Status: {{ postForm.status }}</p>
     <p>Form Values: {{ postForm.value | json}}</p>
@@ -119,4 +139,4 @@
       </li>
     </ul>
   </div>
-</div>
+</div> -->

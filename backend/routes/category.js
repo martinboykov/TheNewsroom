@@ -8,9 +8,6 @@ const categoryController = require('../controllers/category');
 router.get('/',
  categoryController.getCategories);
 
-router.get('/:_id/subcategories',
-  categoryController.getCategorySubcategories);
-
 router.get('/:name/posts',
   categoryController.getCategoryPosts);
 

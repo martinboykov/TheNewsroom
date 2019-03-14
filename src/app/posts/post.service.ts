@@ -13,7 +13,7 @@ const BACKEND_URL = environment.apiUrl;
 })
 export class PostService {
   private post: Post; // only part of the data for each Post
-  private posts: any[] = []; // only part of the data for each Post
+  private posts: Post[] = []; // only part of the data for each Post
 
   // for post-list
   private totalPostsCount: number;
@@ -196,6 +196,7 @@ export class PostService {
         })
       );
   }
+
   getPostsUpdateListener() { // as we set postUpdate as private
     return this.postsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }

@@ -10,9 +10,9 @@ export interface Post {
     _id: string,
   };
 
-  dateCreated: Date; // !? or string
+  dateCreated: Date;
 
-  imageMainPath: string;
+  imageMainPath?: string;
 
   category: {
     name: string,
