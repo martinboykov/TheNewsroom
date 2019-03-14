@@ -10,7 +10,7 @@ const tagSchema = new mongoose.Schema({
     required: true,
     unique: true,
     lowercase: true,
-    minlength: 1,
+    minlength: 2,
     maxlength: 25,
     trim: true,
   },
@@ -31,7 +31,7 @@ function validateTag(tag) {
     name: Joi
       .string()
       .lowercase()
-      .min(1)
+      .min(2)
       .max(25)
       .required(),
   });

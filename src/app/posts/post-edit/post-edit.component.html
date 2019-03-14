@@ -1,8 +1,7 @@
 <div class="wrapper">
   <form class="form"
         [formGroup]="postForm"
-        (ngSubmit)="onSavePost()"
-        *ngIf="!isLoading">
+        (ngSubmit)="onSavePost()">
     <!-- image selection -->
     <div class="form__image-picker">
       <button class="image-picker__button"
@@ -20,6 +19,43 @@
            [alt]="postForm.value.title">
     </div>
 
+    <ng-select class="form__categorie"
+               [items]="categories"
+               formControlName="categorie"
+               (change)="onCategorieSelected()"
+               bindLabel="name"
+               bindValue="name"
+               placeholder="Choose Category...">
+    </ng-select>
+    <ng-select class="form__subcategorie"
+               [items]="subcategories"
+               formControlName="subcategorie"
+               (open)="onSubcategorieOpen()"
+               bindLabel="name"
+               bindValue="name"
+               placeholder="Choose Subcategory...">
+    </ng-select>
+
+    <ng-select class="form__tags"
+               #select
+               [items]="tagsArray"
+               [addTag]="addTagPromise"
+               [hideSelected]="false"
+               [clearable]="false"
+               multiple="true"
+               bindLabel="name"
+               maxSelectedItems="10"
+               (remove)="onRemove($event)"
+               (add)="onAdd($event)"
+               (change)="onChange(select)"
+               [loading]="loading"
+               placeholder="Add Tag...">
+      <ng-template ng-tag-tmp
+                   let-search="searchTerm">
+        <b>create new</b>: {{search}}
+      </ng-template>
+    </ng-select>
+
     <input class="form__title"
            formControlName="title"
            type="text"
@@ -27,13 +63,30 @@
 
     <div class="jodit-editor">
       <jodit-editor [config]="jodiConfig"
-                    (onKeydown)="handleEvent($event)"
-                    (onBlur)="handleEvent($event)"></jodit-editor>
+                    (onKeydown)="contentHandeln($event)"
+                    (onBlur)="contentHandeln($event)"></jodit-editor>
     </div>
 
     <input style="display: none"
            formControlName="content"
            type="text">
+
+
+
+
+
+
+    <!-- <input #tag
+           (keyup.enter)="addTag(tag)"
+           type="text"
+           class="ng-select-container">
+    <ul class="list-group">
+      <li *ngFor="let tag of tags.controls"
+          (click)="removeTag(tag)"
+          class="list-group-item">
+        {{tag.value}}
+      </li>
+    </ul> -->
 
     <button class="form__submit-button"
             [disabled]="!postForm.valid"
@@ -47,13 +100,22 @@
     <p>Errors:</p>
     <ul>
       <li>
+        <p>Image Errors: {{ image.errors | json}}</p>
+      </li>
+      <li>
         <p>Title Errors: {{ title.errors | json}}</p>
       </li>
       <li>
         <p>Content Errors: {{ content.errors | json}}</p>
       </li>
       <li>
-        <p>Image Errors: {{ image.errors | json}}</p>
+        <p>Categorie Errors: {{ categorie.errors | json}}</p>
+      </li>
+      <li>
+        <p>Subcategorie Errors: {{ subcategorie.errors | json}}</p>
+      </li>
+      <li>
+        <p>Tags Errors: {{ tags.errors | json}}</p>
       </li>
     </ul>
   </div>

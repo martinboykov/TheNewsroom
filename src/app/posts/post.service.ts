@@ -185,6 +185,17 @@ export class PostService {
   // getPostUpdateListener() { // as we set postUpdate as private
   //   return this.postUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   // }
+
+  getTagNames() {
+    const route = `/tags?namesOnly=true`;
+    return this.http
+      .get<{ message: string, data: string[] }>(BACKEND_URL + route)
+      .pipe(
+        map((response) => {
+          return response.data;
+        })
+      );
+  }
   getPostsUpdateListener() { // as we set postUpdate as private
     return this.postsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }

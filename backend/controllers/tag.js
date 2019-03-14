@@ -3,10 +3,14 @@ const { Post } = require('../models/post');
 
 // GET
 const getTags = async (req, res, next) => {
-  const tags = await Tag.find();
+  const query = req.query.namesOnly;
+  let tagQuery;
+  if (query === 'true') tagQuery = Tag.find().distinct('name');
+  if (query !== 'true') tagQuery = Tag.find();
+  const tags = await tagQuery;
   res.status(200).json({
     message: 'Tags fetched successfully',
-    tags: tags,
+    data: tags,
   });
 };
 

@@ -123,8 +123,8 @@ function validatePost(post) {
       .items(Joi
         .string()
         .lowercase()
-        .min(1)
-        .max(200)
+        .min(2)
+        .max(25)
         .required())
       .required(),
     ],
