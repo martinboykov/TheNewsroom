@@ -72,7 +72,8 @@ $ng-select-marked: lighten($ng-select-highlight, 48);
         padding-left: 0;
       }
       .ng-placeholder {
-        color: lighten($ng-select-primary-text, 40);
+        // color: lighten($ng-select-primary-text, 40);
+        color: rgb(122, 117, 117);
       }
     }
   }
@@ -81,7 +82,7 @@ $ng-select-marked: lighten($ng-select-highlight, 48);
 
     .ng-select-container {
       // height: 36px;
-      height: 30px;  // custom
+      height: 30px; // custom
       .ng-value-container {
         .ng-input {
           top: 5px;

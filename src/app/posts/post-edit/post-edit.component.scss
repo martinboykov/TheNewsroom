@@ -3,7 +3,7 @@
 @import "./vendor/ng-select/default.theme";
 
 .wrapper {
-  width: inherit;
+  // width: inherit;
   // margin-right: 20px;
   .form {
     width: inherit;
@@ -58,10 +58,11 @@
       padding: 5px;
       border: 1px solid $light-grey;
       margin-bottom: 5px;
+     color: $text-edit-mode;
     }
-    .form__title{
-      ::placeholder{
-        color: green ;
+    .form__title {
+      ::placeholder {
+        color: green;
       }
     }
     .jodit-editor {
@@ -70,7 +71,7 @@
       table-layout: fixed;
       width: 100%;
       word-wrap: break-word;
-      .jodit_wysiwyg{
+      .jodit_wysiwyg {
         color: #333333;
       }
     }
@@ -146,7 +147,8 @@
 }
 @media (min-width: $desctop) {
   .wrapper {
-    // margin-right: 20px;
+    margin-top: 20px;
+    min-height: 500px;
     .form {
       &__image-picker {
         .image-picker__button {
@@ -165,7 +167,7 @@
 }
 @media (max-width: $mobile) {
   .wrapper {
-    // margin-right: 20px;
+    margin-top: 20px;
     .form {
       &__image-picker {
         .image-picker__button {
