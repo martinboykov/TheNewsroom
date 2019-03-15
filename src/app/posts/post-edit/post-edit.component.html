@@ -5,6 +5,7 @@
     <!-- image selection -->
     <div class="form__image-picker">
       <button class="image-picker__button"
+              (click)="onImagePickerClicked()"
               (click)="filePicker.click()"
               type="button">Pick Image
       </button>
@@ -20,8 +21,10 @@
     </div>
     <!-- image error message -->
     <div class="form__error-messages">
-      <div *ngIf="imageErrorInvalidMeme"
-      class="error-block">*Please provide valid image file</div>
+      <div *ngIf="imageErrorRequired  && image.touched"
+           class="error-block">*Please provide valid image file</div>
+      <div *ngIf="imageErrorInvalidMeme  && image.touched"
+           class="error-block">*Please provide valid image file</div>
     </div>
     <!-- categorie -->
     <ng-select class="form__categorie"
@@ -35,7 +38,7 @@
     <!-- categorie error message -->
     <div class="form__error-messages">
       <div *ngIf="categorieErrorRequired && categorie.touched"
-            class="error-block">*Please provide a categorie</div>
+           class="error-block">*Please provide a categorie</div>
     </div>
     <!-- subcategorie -->
     <ng-select class="form__subcategorie"
@@ -59,6 +62,7 @@
                (remove)="onRemove($event)"
                (add)="onAdd($event)"
                (change)="onChange(select)"
+               (open)="onOpen()"
                [loading]="loading"
                placeholder="Add Tag...">
       <ng-template ng-tag-tmp
@@ -68,9 +72,9 @@
     </ng-select>
     <div class="form__error-messages">
       <div *ngIf="tagsErrorRequired && tags.touched"
-            class="error-block">*Please provide tag(s)</div>
-      <div *ngIf="tagsErrorLength && title.touched"
-            class="error-block">*Tag must be between 2 and 25 characters</div>
+           class="error-block">*Please provide a tag</div>
+      <div *ngIf="tagsErrorLength"
+           class="error-block">*Tag must be between 2 and 25 characters</div>
     </div>
 
     <!-- title -->
@@ -81,30 +85,30 @@
     <!-- title error message -->
     <div class="form__error-messages">
       <div *ngIf="titleErrorRequired && title.touched"
-            class="error-block">*Please provide a title</div>
+           class="error-block">*Please provide a title</div>
       <div *ngIf="titleErrorLengthMin && title.touched"
-            class="error-block">*Title is too short</div>
+           class="error-block">*Title is too short</div>
       <div *ngIf="titleErrorLengthMax && title.touched"
-            class="error-block">*Title is too long</div>
+           class="error-block">*Title is too long</div>
     </div>
 
+    <!-- content -->
     <div class="jodit-editor">
       <jodit-editor [config]="jodiConfig"
                     (onKeydown)="contentHandler($event)"
                     (onBlur)="contentHandler($event)"></jodit-editor>
+      <input style="display: none"
+             formControlName="content"
+             type="text">
     </div>
-
-    <input style="display: none"
-           formControlName="content"
-           type="text">
-
+    <!-- content error message -->
     <div class="form__error-messages">
-      <div *ngIf="contentErrorRequired && postForm.touched && postForm.dirty"
-            class="error-block">*Please provide a content</div>
-      <div *ngIf="contentErrorLengthMin"
-            class="error-block">*Content is too short</div>
-      <div *ngIf="contentErrorLengthMax"
-            class="error-block">*Content is too long</div>
+      <div *ngIf="contentErrorRequired && content.touched"
+           class="error-block">*Please provide a content</div>
+      <div *ngIf="contentErrorLengthMin && content.touched"
+           class="error-block">*Content is too short</div>
+      <div *ngIf="contentErrorLengthMax && content.touched"
+           class="error-block">*Content is too long</div>
     </div>
 
     <button class="form__submit-button"

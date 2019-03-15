@@ -5,7 +5,8 @@ import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { Post } from './../post.model';
 import { PostService } from '../post.service';
 import { mimeType } from './mime-type.validator';
-import { Subscription } from 'rxjs';
+import { Subscription, from, of, timer } from 'rxjs';
+import { tap, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-post-edit',
@@ -56,7 +57,7 @@ export class PostEditComponent implements OnInit, OnDestroy {
       content: new FormControl(null, [Validators.required, Validators.minLength(200), Validators.maxLength(10000)]),
       categorie: new FormControl(null, [Validators.required]),
       subcategorie: new FormControl(null, []),
-      tags: new FormArray([], [Validators.required, this.tagsValidator.bind(this)]),
+      tags: new FormArray([], [this.tagsValidatorRequired, this.tagsValidatorLength.bind(this)]),
     });
 
     // get mode(create/edit) and Post ID
@@ -106,6 +107,7 @@ export class PostEditComponent implements OnInit, OnDestroy {
   get content() { return this.postForm.get('content'); }
   get image() { return this.postForm.get('image'); }
 
+  // hide code...
   get titleErrorRequired() {
     // const activated = this.username.errors.required;
     if (this.title.errors) {
@@ -180,21 +182,10 @@ export class PostEditComponent implements OnInit, OnDestroy {
       return null;
     }
   }
-  get subcategorieErrorRequired() {
-    // const activated = this.username.errors.required;
-    if (this.subcategorie.errors) {
-      // console.log(this.title.errors);
-      if (this.subcategorie.errors.required) {
-        return true;
-      }
-    } else {
-      return null;
-    }
-  }
   get tagsErrorRequired() {
     if (this.tags.errors) {
       // console.log(this.content.errors);
-      if (this.tags.errors.required) {
+      if (this.tags.errors.requiredError) {
         return true;
       }
     } else {
@@ -211,7 +202,15 @@ export class PostEditComponent implements OnInit, OnDestroy {
       return null;
     }
   }
-
+  get imageErrorRequired() {
+    if (this.image.errors) {
+      if (this.image.errors.required) {
+        return true;
+      }
+    } else {
+      return null;
+    }
+  }
   get imageErrorInvalidMeme() {
     if (this.image.errors) {
       if (this.image.errors.invalidMimeType) {
@@ -250,6 +249,13 @@ export class PostEditComponent implements OnInit, OnDestroy {
 
   // Image
   // ----------------------------------
+  onImagePickerClicked() {
+    return timer(5000).subscribe(() => {
+      if (!this.image.value) {
+        this.image.markAsTouched();
+      }
+    });
+  }
   onImagePicked(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];
     // console.log(file.type);
@@ -267,11 +273,13 @@ export class PostEditComponent implements OnInit, OnDestroy {
       this.imagePreview = reader.result;
     }
     reader.readAsDataURL(file);
+
   }
 
   // Content
   // ----------------------------------
   contentHandler(event) {
+    this.content.markAsTouched();
     const el: HTMLElement = event.editor.statusbar.container;
     const letterCounter =
       el.querySelector('.jodit_statusbar_item.jodit_statusbar_item-right').firstChild.textContent;
@@ -310,17 +318,19 @@ export class PostEditComponent implements OnInit, OnDestroy {
     const index = this.tags.value.indexOf(tag.label);
     this.tags.removeAt(index);
   }
+  onOpen() {
+    // manually mark as touched, as otherwise it doesnt get fired
+    (this.tags as FormArray).markAsTouched();
+  }
 
   // time laps simulator
   addTagPromise(name) {
-    return new Promise((resolve) => {
-      this.loading = true;
-      setTimeout(() => {
-        // how is the new tag added to tags array
-        resolve(name);
-        this.loading = false;
-      }, 1000);
-    });
+    return from([name])
+      .pipe(
+        delay(1000),
+        tap(() => this.loading = false),
+      )
+      .toPromise();
   }
 
   // ng-select internal
@@ -334,23 +344,29 @@ export class PostEditComponent implements OnInit, OnDestroy {
     // console.log(select);
     // console.log(select.itemsList.selectedItems.splice(0,1));
   }
+
+  // there must be at least one tag
+  private tagsValidatorRequired(controls: AbstractControl[]): { [key: string]: boolean } {
+    let requiredErrorIndicator = false;
+    if (controls['value'].length === 0) {
+      requiredErrorIndicator = true;
+    }
+    return requiredErrorIndicator ? { requiredError: true } : null;
+  }
   // tags must be between 2 and 25 characters each
-  tagsValidator(controls: AbstractControl[]): { [key: string]: boolean } {
-    let lengthErrorIndicator = true;
+  private tagsValidatorLength(controls: AbstractControl[]): { [key: string]: boolean } {
+    let lengthErrorIndicator = false;
     if (controls.length > 0) {
       controls['value'].forEach((tag) => {
         if (tag.length < 2 || tag.length > 25) {
-          lengthErrorIndicator = false;
+          lengthErrorIndicator = true;
         }
       });
-      return lengthErrorIndicator ? null : { lengthError: true };
+      return lengthErrorIndicator ? { lengthError: true } : null;
     } else {
       return null;
     }
   }
-
-
-
 
   ngOnDestroy() {
     this.categoriesSubscription.unsubscribe(); // prevent memory leaks
