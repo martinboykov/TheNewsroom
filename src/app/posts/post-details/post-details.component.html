@@ -100,8 +100,9 @@
                   class="digit">{{paginator.totalItems}}</span> comments
           </h3>
         </div>
-        <div class="content">
-          <p>{{post?.content}}</p>
+        <div class="content"
+             [innerHtml]="postContent">
+          <!-- <p>{{post?.content}}</p> -->
         </div>
         <section class="related-posts-section mobile">
           <span class="related-posts-section__title black">Related Posts</span>

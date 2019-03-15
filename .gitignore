@@ -53,3 +53,6 @@ Thumbs.db
 
 # development files
 /development files
+
+# Google Cloud Service Account
+/backend/TheNewsroom-dc506f317f19.json

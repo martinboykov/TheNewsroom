@@ -21,9 +21,10 @@
           <h3 class="item-bottom__upper--author black">posted by {{post.author.name}}</h3>
         </div>
         <div class="item-bottom__lower">
-          <span class="item-bottom__lower--text">
-            {{post.content}}
-          </span>
+          <div class="item-bottom__lower--text"
+               [innerHTML]="postContent">
+            <!-- {{post.content}} -->
+          </div>
 
         </div>
       </div>

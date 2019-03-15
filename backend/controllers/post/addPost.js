@@ -15,12 +15,21 @@ const addPost = async (req, res, next) => {
     name: req.user.name,
     _id: req.user._id,
   }; // just for endpoint testing
-  const data = req.body;
-  const { error } = validatePost(data);
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-    // return res.status(400).json({ message: 'Invalid request data' });
+
+  // Was an image uploaded? If so, we'll use its public URL
+  // in cloud storage.
+  if (req.file && req.file.cloudStoragePublicUrl) {
+    req.body.imageMainPath = req.file.cloudStoragePublicUrl;
   }
+
+  const data = req.body;
+  const parsedTags = JSON.parse(data.tags);
+  data.tags = parsedTags;
+  // const { error } = validatePost(data);
+  // if (error) {
+  //   return res.status(400).json({ message: error.details[0].message });
+  //   // return res.status(400).json({ message: 'Invalid request data' });
+  // }
 
   const post = new Post({
     title: data.title,
@@ -29,7 +38,7 @@ const addPost = async (req, res, next) => {
       name: user.name,
       _id: user._id,
     },
-    imageMainPath: data.imageMainPath,
+    imageMainPath: req.file.cloudStoragePublicUrl, // req.file.cloudStoragePublicUrl
   });
 
   const task = new Fawn.Task(); // eslint-disable-line new-cap
@@ -95,7 +104,7 @@ const addPost = async (req, res, next) => {
           res.status(200).json({
             message:
               'Post and Tag(s) added successfully. Category and Subcategory updated succesfully', // eslint-disable-line max-len
-            data: result[result.length - 1],
+            data: result[result.length - 1], // Fawn task run returns array
           });
         })
         .catch((err) => {

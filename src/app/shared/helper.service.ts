@@ -14,11 +14,17 @@ export class HelperService {
     let postRoute;
     if (post.category) {
       category = post.category.name;
-      title = post.title.replace(/\s+/g, '-');
+      title = post.title.replace(/[^a-z0-9\s-]/ig, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .toLowerCase();
       postRoute = `/${category}/post/${post._id}/${title}`;
       if (post.subcategory) {
         subcategory = post.subcategory.name;
-        title = post.title.replace(/\s+/g, '-');
+        title = post.title.replace(/[^a-z0-9\s-]/ig, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .toLowerCase();
         postRoute = `/${category}/${subcategory}/post/${post._id}/${title}`;
       }
     }

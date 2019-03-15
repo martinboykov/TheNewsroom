@@ -53,7 +53,7 @@ export class PostEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.postForm = new FormGroup({
       image: new FormControl('', { validators: [Validators.required], asyncValidators: [mimeType] }),
-      title: new FormControl('', [Validators.required, Validators.minLength(20), Validators.maxLength(200)]),
+      title: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]),
       content: new FormControl(null, [Validators.required, Validators.minLength(200), Validators.maxLength(10000)]),
       categorie: new FormControl(null, [Validators.required]),
       subcategorie: new FormControl(null, []),
@@ -236,11 +236,11 @@ export class PostEditComponent implements OnInit, OnDestroy {
         content,
         categorie,
         tags,
-        image
+        image,
       };
       if (subcategorie) { Object.assign(post, { subcategorie }); }
       this.postService.addPost(post);
-      // this.postForm.reset();
+      this.postForm.reset();
     }
     if (this.mode === 'edit') {
       // ....
@@ -358,6 +358,7 @@ export class PostEditComponent implements OnInit, OnDestroy {
     let lengthErrorIndicator = false;
     if (controls.length > 0) {
       controls['value'].forEach((tag) => {
+        if (!tag) { return null; }
         if (tag.length < 2 || tag.length > 25) {
           lengthErrorIndicator = true;
         }

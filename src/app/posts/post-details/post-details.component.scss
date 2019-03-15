@@ -43,6 +43,8 @@
 
           box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 1) inset;
           background-size: cover;
+          // background-size: contain;
+          // background-repeat: no-repeat;
           background-position: 50% 50%;
           border: 5px solid #efefef;
           &__category {
@@ -183,7 +185,7 @@
             margin-bottom: 10px;
             overflow-wrap: break-word;
           }
-          &__title{
+          &__title {
             // line-height: 30px;
           }
           &__author {
@@ -191,6 +193,7 @@
           }
         }
         .content {
+          margin: 10px 0px;
         }
         .related-posts-section.mobile {
           display: none;
@@ -613,7 +616,7 @@
             }
           }
           .content {
-            margin: 0 15px;
+            margin: 10px 15px;
           }
           .related-posts-section.mobile {
             display: block;
@@ -775,5 +778,3 @@
     // }
   }
 }
-
-

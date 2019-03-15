@@ -5,9 +5,8 @@ import { Comment } from './../comment.model';
 import { PostService } from './../post.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { HeaderService } from './../../header/header.service';
-import { Component, OnInit, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-
 
 import { environment } from '../../../environments/environment';
 import { concatMap } from 'rxjs/operators';
@@ -22,7 +21,6 @@ const APP_URL = environment.appUrl;
   styleUrls: ['./post-details.component.scss']
 })
 export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy {
-
   // remove once users are incorporated
   fakeAuthor = {
     name: 'fakeName',
@@ -33,6 +31,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   currentUrl: string; // for sharing the post
   post: Post; // strict Post model !?!
 
+  postContent: string;
   mainImage: string;
   relatedPosts: any[];
 
@@ -67,7 +66,8 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     private helper: HelperService,
     private windowRef: WindowRef,
     private scrollService: ScrollToService,
-    private changeDetectorRef: ChangeDetectorRef) {
+    private changeDetectorRef: ChangeDetectorRef,
+  ) {
   }
 
   ngOnInit() {
@@ -92,6 +92,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
         concatMap((response) => {
           this.post = response.post;
           this.comments = [...this.post.comments];
+          this.postContent = this.post.content;
           this.paginator.totalItems = response.totalCommentsCount;
           this.isPaginationRequired = this.showIfPaginationRequired(this.paginator.itemsPerPage, this.paginator.totalItems);
           this.mainImage = `url(${this.post.imageMainPath})`;
@@ -190,6 +191,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     // to prevent error ExpressionChangedAfterItHasBeenCheckedError
     // https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
     this.changeDetectorRef.detectChanges();
+
   }
 
   ngOnDestroy() {

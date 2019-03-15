@@ -10,11 +10,14 @@ import { Component, OnInit, Input } from '@angular/core';
 export class PostItemComponent implements OnInit {
   @Input() post: any;
   postLink;
-  constructor(private helper: HelperService, private router: Router) { }
+  postContent;
+  constructor(private helper: HelperService, private router: Router,
+  ) { }
 
   ngOnInit() {
     const post = this.post;
-    this.postLink = this.helper.createRoute(post)
+    this.postContent = post.content;
+    this.postLink = this.helper.createRoute(post);
   }
   onPostSelected() {
     this.router.navigateByUrl(this.postLink);

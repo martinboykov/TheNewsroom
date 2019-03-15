@@ -8,7 +8,7 @@ const postSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    minlength: 20,
+    minlength: 10,
     maxlength: 200,
     trim: true,
   },
@@ -35,8 +35,8 @@ const postSchema = new mongoose.Schema({
   },
   imageMainPath: { // to be checked later : multer?
     type: String,
-    minlength: 1,
-    maxlength: 1000,
+    // minlength: 1,
+    // maxlength: 1000,
     required: true,
   },
   category: { // One-to-Many with Denornmalization: faster queries (population)
@@ -95,7 +95,7 @@ function validatePost(post) {
   const schema = Joi.object({
     title: Joi
       .string()
-      .min(20)
+      .min(10)
       .max(200)
       .required(),
     content: Joi
@@ -106,8 +106,8 @@ function validatePost(post) {
     imageMainPath: Joi // to be checked later : mulgter?
       .string()
       .lowercase()
-      .min(1)
-      .max(1000)
+      // .min(1)
+      // .max(1000)
       .required(),
     categoryName: Joi
       .string()

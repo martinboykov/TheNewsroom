@@ -5,6 +5,8 @@ const router = express.Router();
 
 const postController = require('../controllers/post');
 
+const images = require('../middleware/image');
+
 router.get('/',
   postController.getPosts);
 
@@ -13,7 +15,7 @@ router.get('/totalCount', postController.getPostsTotalCount);
 router.get('/search/:searchQuery',
   postController.getSearchedPosts);
 
-  router.get('/search/:searchQuery/totalCount',
+router.get('/search/:searchQuery/totalCount',
   postController.getSearchedPostsTotalCount);
 
 router.get('/latest', postController.getLatestPosts);
@@ -28,7 +30,10 @@ router.get('/:_id/comments', postController.getPostComments);
 
 router.get('/:_id/related/', postController.getRelatedPosts);
 
-router.post('/', postController.addPost);
+router.post('/',
+  images.multer.single('image'),
+  images.sendUploadToGCS,
+  postController.addPost);
 
 router.put('/:_id', postController.updatePost);
 

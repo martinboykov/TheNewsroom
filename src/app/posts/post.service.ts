@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Post } from './post.model';
 import { Comment } from './comment.model';
 import { Subject } from 'rxjs';
@@ -30,7 +31,10 @@ export class PostService {
   private commentedPostsUpdated = new Subject<any>();
 
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    ) { }
 
   getPosts(url: String, commentsPerPage: number, currentPage: number) {
     const queryParams = `?pageSize=${commentsPerPage}&page=${currentPage}`;
@@ -156,30 +160,34 @@ export class PostService {
   }
 
   addPost(post) {
-    console.log(post)
-    // const postData = new FormData(); // as json cant include File Type data we switch to Formdata, which accepts text values and BLOB values
-    // postData.append('title', title);
-    // postData.append('content', content);
-    // postData.append('image', image, title); // 'image is same as in the backend -> upload.single('image')
-    // this.http
-    //   .post<{ message: string, post: Post }>(
-    //     BACKEND_URL,
-    //     postData)
-    //   .subscribe((responseData) => {
-    //     console.log(responseData);
-    //     const post: Post = {
-    //       id: responseData.post.id,
-    //       title: responseData.post.title,
-    //       content: responseData.post.content,
-    //       imagePath: responseData.post.imagePath,
-    //       creator: responseData.post.creator,
-    //     }
+    const route = `/posts`;
+    const postData = new FormData(); // as json cant include File Type data we switch to Formdata, which accepts text values and BLOB values
+    postData.append('title', post.title);
+    postData.append('content', post.content);
+    postData.append('categoryName', post.categorie);
+    if (post.subcategory) { postData.append('subcategoryName', post.subcategory); }
+    postData.append('tags', JSON.stringify(post.tags));
+    postData.append('image', post.image); // 'image is same as in the backend -> upload.single('image')
+    this.http
+      .post<{ message: string, post: any }>(
+        BACKEND_URL + route,
+        postData)
+      .subscribe((response) => {
+        // console.log(response);
+        const newPost = response.post;
+        // const post: Post = {
+        //   _id: responseData.post.id,
+        //   title: responseData.post.title,
+        //   content: responseData.post.content,
+        //   imageMainPath: responseData.post.imagePath,
+        //   author: responseData.post.creator,
+        // }
 
-    //     // method 1 Pesimistic updating: only after success
-    //     this.posts.push(post);
-    //     this.postUpdated.next([...this.posts]);
-    //     this.router.navigate(['/']);
-    //   });
+        // method 1 Pesimistic updating: only after success
+        this.posts.push(newPost);
+        this.postsUpdated.next([...this.posts]);
+        this.router.navigate(['/']);
+      });
   }
 
   // getPostUpdateListener() { // as we set postUpdate as private
