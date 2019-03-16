@@ -159,7 +159,7 @@ export class PostService {
       .subscribe(() => { });
   }
 
-  addPost(post) {
+  editPost(post) {
     const route = `/posts`;
     const postData = new FormData(); // as json cant include File Type data we switch to Formdata, which accepts text values and BLOB values
     postData.append('title', post.title);
@@ -167,7 +167,7 @@ export class PostService {
     postData.append('categoryName', post.categorie);
     if (post.subcategorie) { postData.append('subcategoryName', post.subcategorie); }
     postData.append('tags', JSON.stringify(post.tags));
-    postData.append('image', post.image); // 'image is same as in the backend -> upload.single('image')
+    postData.append('image', post.image); // 'image is same as in the backend ->  "multer" -> upload.single('image')
 
     this.http
       .post<{ message: string, post: any }>(
@@ -176,24 +176,18 @@ export class PostService {
       .subscribe((response) => {
         // console.log(response);
         const newPost = response.post;
-        // const post: Post = {
-        //   _id: responseData.post.id,
-        //   title: responseData.post.title,
-        //   content: responseData.post.content,
-        //   imageMainPath: responseData.post.imagePath,
-        //   author: responseData.post.creator,
-        // }
-
-        // method 1 Pesimistic updating: only after success
         this.posts.push(newPost);
         this.postsUpdated.next([...this.posts]);
         this.router.navigate(['/']);
       });
   }
 
-  // getPostUpdateListener() { // as we set postUpdate as private
-  //   return this.postUpdated.asObservable(); // returns object to which we can listen, but we cant emit
-  // }
+  deletePost(postId) {
+    const route = `/posts/`;
+    return this.http
+      .delete<{ message: string, post: any }>(BACKEND_URL + route + postId)
+      .subscribe((response) => console.log(response.message));
+  }
 
   getTagNames() {
     const route = `/tags?namesOnly=true`;

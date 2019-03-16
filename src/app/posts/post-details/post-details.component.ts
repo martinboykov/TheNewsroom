@@ -148,6 +148,13 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     this.router.navigateByUrl(`tags/${tagName}`);
   }
 
+  onEdit() {
+    this.router.navigateByUrl(`edit/${this.post._id}`);
+  }
+  onDelete() {
+    this.postService.deletePost(this.post._id);
+    this.router.navigateByUrl(`/`);
+  }
 
   // add comment to Post
   onAddComment() {

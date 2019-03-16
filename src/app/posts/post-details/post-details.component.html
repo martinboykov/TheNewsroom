@@ -119,7 +119,18 @@
           </ul>
         </section>
       </section>
+      <div class="post__modification">
+        <button class="modification__button--edit button"
+                (click)="onEdit()">
+                EDIT
+        </button>
+        <button class="modification__button--delete button"
+                (click)="onDelete()">
+                DELETE
+        </button>
+      </div>
     </div>
+
     <div class="bottom"
          #ankor>
       <section class="comments">
@@ -216,15 +227,16 @@
                       formControlName="content"
                       placeholder="Post Comment"
                       rows="6"></textarea>
-            <div class="form__error-messages">
-              <span *ngIf="contentErrorRequired && content.touched"
-                    class="help-block">*Please enter text</span>
-              <span *ngIf="contentMinLengthError && content.touched"
-                    class="help-block">*Comment is too short</span>
-              <span *ngIf="contentMaxLengthError && content.touched"
-                    class="help-block">*Comment is too long</span>
+            <div class="form__error-messages"
+                 *ngIf="contentErrorRequired || contentMinLengthError || contentMaxLengthError">
+              <div *ngIf="contentErrorRequired && content.touched"
+                   class="message--text">*Please enter text</div>
+              <div *ngIf="contentMinLengthError && content.touched"
+                   class="message--text">*Comment is too short</div>
+              <div *ngIf="contentMaxLengthError && content.touched"
+                   class="message--text">*Comment is too long</div>
             </div>
-            <button class="form__submit-button"
+            <button class="form__submit-button button"
                     [disabled]="!commentForm.valid"
                     (click)="scrollToAnkor(ankor)"
                     type="submit">Submit</button>

@@ -242,7 +242,7 @@ export class PostEditComponent implements OnInit, OnDestroy {
       post.subcategorie = subcategorie;
       if (subcategorie) { post.subcategorie = subcategorie; }
 
-      this.postService.addPost(post);
+      this.postService.editPost(post);
       this.postForm.reset();
     }
     if (this.mode === 'edit') {
