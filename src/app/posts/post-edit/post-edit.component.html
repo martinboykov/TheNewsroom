@@ -51,7 +51,7 @@
     </ng-select>
     <!-- tags -->
     <ng-select class="form__tags"
-               #select
+               #selectTags
                [items]="tagsArray"
                [addTag]="addTagPromise"
                [hideSelected]="false"
@@ -61,7 +61,7 @@
                maxSelectedItems="10"
                (remove)="onRemove($event)"
                (add)="onAdd($event)"
-               (change)="onChange(select)"
+               (change)="onChange(selectTags)"
                (open)="onOpen()"
                [loading]="loading"
                placeholder="Add Tag...">

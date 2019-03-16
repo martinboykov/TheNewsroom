@@ -8,18 +8,36 @@ const { Tag } = require('../../models/tag');
 
 const Fawn = require('Fawn');
 
+const deleteImg = require('../../middleware/image').deleteImg;
+
 // PUT
 const updatePost = async (req, res, next) => {
   // const user = req.user; // T0D0: TO BE SWITCHED LATER (AFTER Authentication/Authorization is complete)
+  // ...
 
   // check if the author is the current user
+  // ....
 
   const data = req.body;
+
+
+  // set tags
+  const parsedTags = JSON.parse(data.tags); // as they are in from formData format
+  data.tags = parsedTags;
+
+  // set image path
+  if (req.file && req.file.cloudStoragePublicUrl) {
+    req.body.imageMainPath = req.file.cloudStoragePublicUrl;
+  }
+
+  console.log(req.body);
   const { error } = validatePost(data);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
     // return res.status(400).json({ message: 'Invalid request data' });
   }
+
+  console.log('PASSING VALIDATION');
 
   const postOld = await Post.findOne({ _id: req.params._id });
   // if such doesnt exists => error
@@ -32,15 +50,18 @@ const updatePost = async (req, res, next) => {
   postUpdated.title = data.title;
   postUpdated.content = data.content;
 
-  // Add comment
-
-
   // Start the transaction
   const task = new Fawn.Task(); // eslint-disable-line new-cap
 
   // IF IMAGEPATH IS CHANGED
-  // task.update(..)
-  postUpdated.imageMainPath = data.imageMainPath;
+  let filename;
+  if (req.file) { // if we change the img
+    postUpdated.imageMainPath = req.file.cloudStoragePublicUrl;
+    filename = postOld.imageMainPath.split('https://storage.googleapis.com/thenewsroom-images-storage-bucket/')[1];
+    // image is deleted only if the entire postis updated succesfully (look below after Promise.all(...))
+  } else { // if img stays the same
+    // no changes required
+  }
 
   // IF CATEGORY CHANGED/UNCHANGED
   let categoryPromise;
@@ -66,6 +87,7 @@ const updatePost = async (req, res, next) => {
         postUpdated.category = { name: category.name, _id: category._id };
       });
   }
+  console.log('PASSING CATEGORY');
 
   // IF SUBCATEGORY CHANGED/UNCHANGED
   let oldSubcategory;
@@ -128,12 +150,14 @@ const updatePost = async (req, res, next) => {
         }
       }
     });
+    console.log('PASSING SUBCATEGORY');
+
   // TAG UPDATE
   if (data.tags.length === 0) {
     return res.status(404).json({ message: 'No tags found' });
   }
 
-  const newtags = new Set(data.tags);
+  const newtags = new Set(parsedTags);
   const oldTags = new Set(postOld.tags.map((t) => t.name));
 
   // 1. dIfferent tags in the newTags from oldTags
@@ -198,6 +222,7 @@ const updatePost = async (req, res, next) => {
     ...promisesDifferentTags,
     ...promisesRemovedTags,
   ];
+  console.log('PASSING TAGS');
 
   return Promise.all(allPromises)
     .then(() => {
@@ -205,6 +230,8 @@ const updatePost = async (req, res, next) => {
         .options({ viaSave: true });
       return task.run({ useMongoose: true })
         .then((result) => {
+          // if image is changed and everything is updated succesfully -> delete old image from cloud
+          if (filename) deleteImg(filename);
           res.status(200).json({
             message:
               'Post and (Tag(s)) added successfully. Category, Subcategory and Tags updated succesfully', // eslint-disable-line max-len
@@ -217,7 +244,8 @@ const updatePost = async (req, res, next) => {
     })
     .catch((err) => {
       return res.status(400).json({
-        message: 'Invalid request data.',
+        message: 'Invalid request data.' + err,
+
       });
     });
 };

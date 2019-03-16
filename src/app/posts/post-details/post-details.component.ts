@@ -152,8 +152,8 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     this.router.navigateByUrl(`edit/${this.post._id}`);
   }
   onDelete() {
-    this.postService.deletePost(this.post._id);
-    this.router.navigateByUrl(`/`);
+    this.postService.deletePost(this.post);
+
   }
 
   // add comment to Post

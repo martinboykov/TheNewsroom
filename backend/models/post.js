@@ -103,7 +103,7 @@ function validatePost(post) {
       .min(200)
       .max(10000)
       .required(),
-    imageMainPath: Joi // to be checked later : mulgter?
+    imageMainPath: Joi
       .string()
       .lowercase()
       // .min(1)

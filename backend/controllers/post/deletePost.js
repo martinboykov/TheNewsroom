@@ -8,6 +8,8 @@ const { Tag } = require('../../models/tag');
 
 const Fawn = require('Fawn');
 
+const deleteImg = require('../../middleware/image').deleteImg;
+
 // DELETE
 const deletePost = async (req, res, next) => {
   const post = await Post.findOne({ _id: req.params._id });
@@ -65,6 +67,9 @@ const deletePost = async (req, res, next) => {
       task.remove(post);
       return task.run({ useMongoose: true })
         .then((result) => {
+          const filename = post.imageMainPath.split('https://storage.googleapis.com/thenewsroom-images-storage-bucket/')[1];
+          // if post is deleted succesfully from db -> delete the image from cloud
+          deleteImg(filename);
           res.status(200).json({
             message:
               'Post (and Tag/s) deleted successfully. Category and Subcategory updated succesfully', // eslint-disable-line max-len

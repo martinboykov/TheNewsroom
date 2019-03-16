@@ -1,3 +1,4 @@
+import { HelperService } from './../shared/helper.service';
 import { Router } from '@angular/router';
 import { Post } from './post.model';
 import { Comment } from './comment.model';
@@ -34,6 +35,7 @@ export class PostService {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private helper: HelperService,
   ) { }
 
 
@@ -166,40 +168,69 @@ export class PostService {
       .subscribe(() => { });
   }
 
-  editPost(post) {
-    const route = `/posts`;
+  editPost(post, mode: string) {
+
     const postData = new FormData(); // as json cant include File Type data we switch to Formdata, which accepts text values and BLOB values
     postData.append('title', post.title);
     postData.append('content', post.content);
-    postData.append('categoryName', post.categorie);
-    if (post.subcategorie) { postData.append('subcategoryName', post.subcategorie); }
+    postData.append('categoryName', post.category);
+    if (post.subcategorie) { postData.append('subcategoryName', post.subcategory); }
     postData.append('tags', JSON.stringify(post.tags));
-    postData.append('image', post.image); // 'image is same as in the backend ->  "multer" -> upload.single('image')
-
-    this.http
-      .post<{ message: string, post: any }>(
-        BACKEND_URL + route,
-        postData)
-      .subscribe((response) => {
-        // console.log(response);
-        const newPost = response.post;
-        this.posts.push(newPost);
-        this.postsUpdated.next([...this.posts]);
-        this.router.navigate(['/']);
-      });
+    postData.append('imageMainPath', post.image); // 'imageMainPath is same as in the backend ->  "multer" -> upload.single('image')
+    if (mode === 'create') {
+      const route = `/posts`;
+      this.http
+        .post<{ message: string, post: any }>(
+          BACKEND_URL + route,
+          postData)
+        .subscribe((response) => {
+          // console.log(response);
+          const newPost = response.post;
+          this.posts.push(newPost);
+          this.postsUpdated.next([...this.posts]);
+          this.router.navigate(['/']);
+        });
+    }
+    if (mode === 'update') {
+      const route = `/posts/${post._id}`;
+      this.http
+        .put<{ message: string, post: any }>(
+          BACKEND_URL + route,
+          postData)
+        .subscribe((response) => {
+          // console.log(response);
+          const newPost = response.post;
+          this.posts.push(newPost);
+          this.postsUpdated.next([...this.posts]);
+          const postLink = this.helper.createRoute(post);
+          this.router.navigateByUrl(postLink);
+        });
+    }
   }
 
-  deletePost(postId) {
+  deletePost(post) {
     const route = `/posts/`;
     return this.http
-      .delete<{ message: string, post: any }>(BACKEND_URL + route + postId)
-      .subscribe((response) => console.log(response.message));
+      .delete<{ message: string, post: any }>(BACKEND_URL + route + post._id)
+      .subscribe(() => {
+        this.router.navigateByUrl('/');
+      });
   }
 
   getTagNames() {
     const route = `/tags?namesOnly=true`;
     return this.http
       .get<{ message: string, data: string[] }>(BACKEND_URL + route)
+      .pipe(
+        map((response) => {
+          return response.data;
+        })
+      );
+  }
+
+  getCategories() {
+    return this.http
+      .get<{ message: string, data: any }>(BACKEND_URL + '/categories')
       .pipe(
         map((response) => {
           return response.data;

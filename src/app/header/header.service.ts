@@ -4,6 +4,7 @@ import { Router, ParamMap } from '@angular/router';
 import { Subject } from 'rxjs';
 
 import { environment } from '../../environments/environment';
+import { map } from 'rxjs/operators';
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({
@@ -26,6 +27,7 @@ export class HeaderService {
         this.categoriesUpdated.next([...this.categories]);
       });
   }
+
   getCategoriesUpdateListener() { // as we set postUpdate as private
     return this.categoriesUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }

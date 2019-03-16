@@ -5,8 +5,8 @@ import { Component, OnInit, OnDestroy, Renderer2, ViewChild, AfterViewInit, Afte
 import { Post } from './../post.model';
 import { PostService } from '../post.service';
 import { mimeType } from './mime-type.validator';
-import { Subscription, from, timer } from 'rxjs';
-import { tap, delay } from 'rxjs/operators';
+import { Subscription, from, timer, forkJoin } from 'rxjs';
+import { tap, delay, concatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-post-edit',
@@ -15,14 +15,15 @@ import { tap, delay } from 'rxjs/operators';
 })
 export class PostEditComponent implements OnInit, AfterViewInit, AfterContentInit, OnDestroy {
   @ViewChild('jodit') jodit;
-  mode = 'create';
+  @ViewChild('selectTags') selectTags;
+  mode;
   postId: string;
   postForm: FormGroup;
   imagePreview: any;
   post: Post;
   categories: any[] = []; // the data is not strict category !?!?, but with populate subcategories name
   subcategories: any[] = []; // the data is not strict category !?!?, but with populate subcategories name
-  categorieselected;
+  categoryselected;
   contentTextOnly = '';
   tagsArray: any[] = [];
   loading: boolean;
@@ -73,46 +74,95 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
         this.tagsValidatorLength.bind(this)]),
     });
 
-    // get mode(create/edit) and Post ID
+    // get mode(create/update) and Post ID
     this.postId = this.route.snapshot.params._id;
-    if (this.postId) {
-      this.mode = 'edit';
-      this.postService.getPost(this.postId)
-        .subscribe((postData) => {
-          this.post = postData.post;
-          this.postForm.controls.image.setValue(this.post.imageMainPath);
-          this.postForm.controls.title.setValue(this.post.title);
-          this.postForm.controls.content.setValue(this.post.content);
-          this.postForm.controls.category.setValue(this.post.category.name);
-          if (this.post.subcategory) {
+    console.log(this.postId);
 
+    if (this.postId) {
+      this.mode = 'update';
+      // 1. (async) get post
+      this.postService.getPost(this.postId)
+        .pipe(
+          // delay(5000),
+          concatMap((postData) => {
+            // .subscribe((postData) => {
+            this.post = postData.post;
+            this.postForm.controls.image.setValue(this.post.imageMainPath);
+            this.postForm.controls.title.setValue(this.post.title);
+            this.postForm.controls.content.setValue(this.post.content);
+            this.postForm.controls.category.setValue(this.post.category.name);
+
+            // 2. (async) get Tags -> to fill the ng-select tags options
+            return this.postService.getTagNames();
+          })
+        )
+        .pipe(
+          concatMap((tags) => {
+            this.tagsArray = [...tags];
+
+            // 3. (async) get Categories -> to fill the ng-select categories options
+            // and set the post category
+            return this.postService.getCategories();
+          })
+        )
+        .subscribe((categories) => {
+          this.categories = [...categories];
+          let currentCategory;
+          currentCategory = this.categories.filter((category) => {
+            if (category.name === this.post.category.name) {
+              return category;
+            }
+          })[0];
+
+          // 3.1. (sync) get Subcategories -> to fill the ng-select subcategories options (if such exists)
+          if (currentCategory.subcategories) {
+            this.subcategories = currentCategory.subcategories.reduce((accumulator, currentValue) => {
+              accumulator.push(currentValue.name);
+              return accumulator;
+            }, []);
+          }
+          // 3.2. (sync) set ng-select subcategory input field (if such exists)
+          if (this.post.subcategory) {
             this.postForm.controls.subcategory.setValue(this.post.subcategory.name);
           }
-          // this.postForm.controls.tags.setValue(this.post.tags);
+
+          // 3.3. (sync) set up ng-select tags input field
+          // 3.3.1. First add the post tags to the FormArray
+          // when we set current post tags to ng-select =>
+          // => FormArray is set automatically as well
+
+          // const tagsFormControlArray = this.post.tags.reduce((accumulator, currentValue) => {
+          //   accumulator.push(new FormControl(currentValue.name));
+          //   return accumulator;
+          // }, []);
+          // tagsFormControlArray.forEach((tagFormControl) => {
+          //   (<FormArray>this.postForm.controls.tags).push((tagFormControl));
+          // });
+
+          // 3.3.2. ... continues below at ngAfterViewInit ...
+          // hack -> waiting to be sure that view with ng-select tags is initiated
+          // timer(1000).subscribe(() => {
+          this.post.tags.forEach((tag) => {
+            const item = this.selectTags.itemsList.findByLabel(tag.name);
+            console.log(item);
+            if (item) {
+              this.selectTags.select(item);
+            }
+            // });
+          });
         });
     } else {
       this.mode = 'create';
       this.postId = null;
+      this.categoriesSubscription = this.postService.getCategories()
+        .subscribe((categories: any[]) => {
+          this.categories = [...categories];
+        });
+      this.postService.getTagNames()
+        .subscribe((tags) => {
+          this.tagsArray = [...tags];
+        });
     }
-    this.headerService.getCategories();
-    this.categoriesSubscription = this.headerService.getCategoriesUpdateListener()
-      .subscribe((categories: any[]) => {
-        this.categories = [...categories];
-        // if (this.mode === 'edit') {
-        //   if (this.post.subcategory) {
-        //     this.subcategories = this.categories.map((categorie) => {
-        //       if(categorie.name === this.post.category){
-        //         return categorie.subcategories;
-        //       }
-        //     })
-        //   }
-        // }
-      });
-    this.postService.getTagNames()
-      .subscribe((tags) => {
-        this.tagsArray = [...tags];
-      });
-
   }
   ngAfterContentInit() {
   }
@@ -138,9 +188,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     }
   }
   get titleErrorLengthMin() {
-    // const activated = this.username.errors.required;
     if (this.title.errors) {
-      // console.log(this.title.errors);
       if (this.title.errors.minlength) {
         return true;
       }
@@ -149,9 +197,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     }
   }
   get titleErrorLengthMax() {
-    // const activated = this.username.errors.required;
     if (this.title.errors) {
-      // console.log(this.title.errors);
       if (this.title.errors.maxlength) {
         return true;
       }
@@ -161,7 +207,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   }
   get contentErrorRequired() {
     if (this.content.errors) {
-      // console.log(this.content.errors);
       if (this.content.errors.required) {
         return true;
       }
@@ -171,7 +216,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   }
   get contentErrorLengthMin() {
     if (this.content.errors) {
-      // console.log(this.content.errors);
       if (this.content.errors.lengthErrorMin) {
         return true;
       }
@@ -181,7 +225,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   }
   get contentErrorLengthMax() {
     if (this.content.errors) {
-      // console.log(this.content.errors);
       if (this.content.errors.lengthErrorMax) {
         return true;
       }
@@ -190,9 +233,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     }
   }
   get categoryErrorRequired() {
-    // const activated = this.username.errors.required;
     if (this.category.errors) {
-      // console.log(this.title.errors);
       if (this.category.errors.required) {
         return true;
       }
@@ -202,7 +243,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   }
   get tagsErrorRequired() {
     if (this.tags.errors) {
-      // console.log(this.content.errors);
       if (this.tags.errors.requiredError) {
         return true;
       }
@@ -212,7 +252,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   }
   get tagsErrorLength() {
     if (this.tags.errors) {
-      // console.log(this.content.errors);
       if (this.tags.errors.lengthError) {
         return true;
       }
@@ -242,37 +281,40 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   onSavePost() {
     if (this.postForm.invalid) { return; }
     // const userId = this.authService.getUserId();
-    if (this.mode === 'create') {
-      const title = this.postForm.value.title;
-      const content = this.postForm.value.content;
-      const category = this.postForm.value.category;
-      const subcategory = this.postForm.value.subcategory;
-      const image = this.postForm.value.image;
-      const tags = this.postForm.value.tags;
-      let post;
-      post = {
-        title,
-        content,
-        category,
-        tags,
-        image,
-      };
-      post.subcategory = subcategory;
-      if (subcategory) { post.subcategory = subcategory; }
+    let post;
+    let _id;
+    if (this.mode === 'update') {
+    _id = this.post._id;
+    }
+    const title = this.postForm.value.title;
+    const content = this.postForm.value.content;
+    const category = this.postForm.value.category;
+    const subcategory = this.postForm.value.subcategory;
+    const image = this.postForm.value.image;
+    const tags = this.postForm.value.tags;
+    post = {
+      title,
+      content,
+      category,
+      tags,
+      image,
+    };
+    // post.subcategory = subcategory;
+    if (subcategory) { post.subcategory = subcategory; }
+    if (_id) { post._id = _id; }
 
-      this.postService.editPost(post);
-      console.log(post);
-      this.postForm.reset();
-    }
-    if (this.mode === 'edit') {
-      // ....
-    }
+    this.postService.editPost(post, this.mode);
+    this.postForm.reset();
+    // }
+    // if (this.mode === 'update') {
+    //   // ....
+    // }
   }
 
   // Image
   // ----------------------------------
   onImagePickerClicked() {
-    return timer(5000).subscribe(() => {
+    return timer(2000).subscribe(() => {
       if (!this.image.value) {
         this.image.markAsTouched();
       }
@@ -315,15 +357,15 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   // Categories
   // ----------------------------------
   onCategorySelected() {
-    this.categorieselected = this.categories.find((x) => x.name === this.category.value);
+    this.categoryselected = this.categories.find((x) => x.name === this.category.value);
     this.subcategory.setValue(null);
   }
 
   // Subcategories
   // ----------------------------------
   onSubcategoryOpen() {
-    if (this.categorieselected) {
-      this.subcategories = [...this.categorieselected.subcategories];
+    if (this.categoryselected) {
+      this.subcategories = [...this.categoryselected.subcategories];
     }
   }
 
@@ -364,7 +406,9 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   // gives entire ng-select object (for debugging etc...)
   onChange(select) {
     // console.log(select);
-    // console.log(select.itemsList.selectedItems.splice(0,1));
+    // console.log(select.itemsList.selectedItems);
+    // console.log(this.selectTags);
+
   }
 
   // content length must be between 200 and 100000
@@ -374,7 +418,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     controlHtmlContent.innerHTML = control.value;
     let text = controlHtmlContent.innerText || controlHtmlContent.textContent;
     text = text.replace(/\s+/g, '').trim();
-    console.log(text.length);
     if (text.length < 200) {
       lengthErrorIndicator = true;
     }
@@ -387,7 +430,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     controlHtmlContent.innerHTML = control.value;
     let text = controlHtmlContent.innerText || controlHtmlContent.textContent;
     text = text.replace(/\s+/g, '').trim();
-    console.log(text.length);
     if (text.length > 10000) {
       lengthErrorIndicator = true;
     }
@@ -418,7 +460,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   }
 
   ngOnDestroy() {
-    this.categoriesSubscription.unsubscribe(); // prevent memory leaks
   }
 
 }

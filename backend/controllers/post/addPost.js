@@ -8,6 +8,8 @@ const { Tag } = require('../../models/tag');
 
 const Fawn = require('Fawn');
 
+const deleteImg = require('../../middleware/image').deleteImg;
+
 const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 const window = (new JSDOM('')).window;
@@ -27,10 +29,16 @@ const addPost = async (req, res, next) => {
   }
 
   const data = req.body;
+  console.log(data);
+
   const parsedTags = JSON.parse(data.tags);
   data.tags = parsedTags;
   const { error } = validatePost(data);
   if (error) {
+    const filename = post.imageMainPath.split('https://storage.googleapis.com/thenewsroom-images-storage-bucket/')[1];
+
+    // image may already been uploaded to cloud -> need to delete on error
+    deleteImg(filename);
     return res.status(400).json({ message: error.details[0].message });
     // return res.status(400).json({ message: 'Invalid request data' });
   }

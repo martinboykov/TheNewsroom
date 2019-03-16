@@ -31,11 +31,14 @@ router.get('/:_id/comments', postController.getPostComments);
 router.get('/:_id/related/', postController.getRelatedPosts);
 
 router.post('/',
-  images.multer.single('image'),
+  images.multer.single('imageMainPath'),
   images.sendUploadToGCS,
   postController.addPost);
 
-router.put('/:_id', postController.updatePost);
+router.put('/:_id',
+  images.multer.single('imageMainPath'),
+  images.sendUploadToGCS,
+  postController.updatePost);
 
 router.put('/:_id/popularity', postController.popularityIncrease);
 
