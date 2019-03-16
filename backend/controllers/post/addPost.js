@@ -8,6 +8,10 @@ const { Tag } = require('../../models/tag');
 
 const Fawn = require('Fawn');
 
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+const window = (new JSDOM('')).window;
+const DOMPurify = createDOMPurify(window);
 // POST
 const addPost = async (req, res, next) => {
   // const user = req.user; // T0D0: TO BE SWITCHED LATER (AFTER Authentication/Authorization is complete)
@@ -25,15 +29,15 @@ const addPost = async (req, res, next) => {
   const data = req.body;
   const parsedTags = JSON.parse(data.tags);
   data.tags = parsedTags;
-  // const { error } = validatePost(data);
-  // if (error) {
-  //   return res.status(400).json({ message: error.details[0].message });
-  //   // return res.status(400).json({ message: 'Invalid request data' });
-  // }
+  const { error } = validatePost(data);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+    // return res.status(400).json({ message: 'Invalid request data' });
+  }
 
   const post = new Post({
-    title: data.title,
-    content: data.content,
+    title: DOMPurify.sanitize(data.title),
+    content: DOMPurify.sanitize(data.content),
     author: {
       name: user.name,
       _id: user._id,
@@ -44,8 +48,9 @@ const addPost = async (req, res, next) => {
   const task = new Fawn.Task(); // eslint-disable-line new-cap
 
   // category update/ add to post
+  const categoryName = DOMPurify.sanitize(data.categoryName);
   const categoryPromise = Category
-    .findOne({ name: data.categoryName })
+    .findOne({ name: categoryName })
     .then((category) => {
       post.category = { name: category.name, _id: category._id };
       task.update('categories', {
@@ -56,8 +61,9 @@ const addPost = async (req, res, next) => {
   // subcategory update/ add to post
   let subcategoryPromise;
   if (data.subcategoryName) {
+    const subcategoryName = DOMPurify.sanitize(data.subcategoryName);
     subcategoryPromise = Subcategory
-      .findOne({ name: data.subcategoryName })
+      .findOne({ name: subcategoryName })
       .then((subcategory) => {
         task.update('subcategories', {
           _id: subcategory._id,
@@ -70,7 +76,8 @@ const addPost = async (req, res, next) => {
   // tag update/ add to post
   const tags = [...new Set(data.tags)];
   const tagsPromises = [];
-  for (const tagName of tags) {
+  for (const tagNameUnsanitized of tags) {
+    const tagName = DOMPurify.sanitize(tagNameUnsanitized);
     const tagExistedPromise = Tag
       .findOne({ name: tagName })
       .then((tagExisted) => {
