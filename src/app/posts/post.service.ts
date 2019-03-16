@@ -34,7 +34,7 @@ export class PostService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    ) { }
+  ) { }
 
   getPosts(url: String, commentsPerPage: number, currentPage: number) {
     const queryParams = `?pageSize=${commentsPerPage}&page=${currentPage}`;
@@ -165,9 +165,10 @@ export class PostService {
     postData.append('title', post.title);
     postData.append('content', post.content);
     postData.append('categoryName', post.categorie);
-    if (post.subcategory) { postData.append('subcategoryName', post.subcategory); }
+    if (post.subcategorie) { postData.append('subcategoryName', post.subcategorie); }
     postData.append('tags', JSON.stringify(post.tags));
     postData.append('image', post.image); // 'image is same as in the backend -> upload.single('image')
+
     this.http
       .post<{ message: string, post: any }>(
         BACKEND_URL + route,

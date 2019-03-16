@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 import { HelperService } from './../../shared/helper.service';
 import { WindowRef } from './../../shared/winref.service';
 import { Post } from './../post.model';
@@ -31,7 +32,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   currentUrl: string; // for sharing the post
   post: Post; // strict Post model !?!
 
-  postContent: string;
+  postContent;
   mainImage: string;
   relatedPosts: any[];
 
@@ -67,6 +68,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     private windowRef: WindowRef,
     private scrollService: ScrollToService,
     private changeDetectorRef: ChangeDetectorRef,
+    private sanitizer: DomSanitizer,
   ) {
   }
 
@@ -92,7 +94,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
         concatMap((response) => {
           this.post = response.post;
           this.comments = [...this.post.comments];
-          this.postContent = this.post.content;
+          this.postContent = this.sanitizer.bypassSecurityTrustHtml(this.post.content);
           this.paginator.totalItems = response.totalCommentsCount;
           this.isPaginationRequired = this.showIfPaginationRequired(this.paginator.itemsPerPage, this.paginator.totalItems);
           this.mainImage = `url(${this.post.imageMainPath})`;

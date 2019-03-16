@@ -231,14 +231,17 @@ export class PostEditComponent implements OnInit, OnDestroy {
       const subcategorie = this.postForm.value.subcategorie;
       const image = this.postForm.value.image;
       const tags = this.postForm.value.tags;
-      const post = {
+      let post;
+      post = {
         title,
         content,
         categorie,
         tags,
         image,
       };
-      if (subcategorie) { Object.assign(post, { subcategorie }); }
+      post.subcategorie = subcategorie;
+      if (subcategorie) { post.subcategorie = subcategorie; }
+
       this.postService.addPost(post);
       this.postForm.reset();
     }
