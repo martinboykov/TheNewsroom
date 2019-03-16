@@ -26,25 +26,25 @@
       <div *ngIf="imageErrorInvalidMeme  && image.touched"
            class="error-block">*Please provide valid image file</div>
     </div>
-    <!-- categorie -->
-    <ng-select class="form__categorie"
+    <!-- category -->
+    <ng-select class="form__category"
                [items]="categories"
-               formControlName="categorie"
-               (change)="onCategorieSelected()"
+               formControlName="category"
+               (change)="onCategorySelected()"
                bindLabel="name"
                bindValue="name"
                placeholder="Choose Category...">
     </ng-select>
-    <!-- categorie error message -->
+    <!-- category error message -->
     <div class="form__error-messages">
-      <div *ngIf="categorieErrorRequired && categorie.touched"
-           class="error-block">*Please provide a categorie</div>
+      <div *ngIf="categoryErrorRequired && category.touched"
+           class="error-block">*Please provide a category</div>
     </div>
-    <!-- subcategorie -->
-    <ng-select class="form__subcategorie"
+    <!-- subcategory -->
+    <ng-select class="form__subcategory"
                [items]="subcategories"
-               formControlName="subcategorie"
-               (open)="onSubcategorieOpen()"
+               formControlName="subcategory"
+               (open)="onSubcategoryOpen()"
                bindLabel="name"
                bindValue="name"
                placeholder="Choose Subcategory...">
@@ -94,12 +94,14 @@
 
     <!-- content -->
     <div class="jodit-editor">
-      <jodit-editor [config]="jodiConfig"
+      <jodit-editor #jodit
+                    formControlName="content"
+                    [config]="jodiConfig"
                     (onKeydown)="contentHandler($event)"
                     (onBlur)="contentHandler($event)"></jodit-editor>
-      <input style="display: none"
+      <!-- <input style="display: none"
              formControlName="content"
-             type="text">
+             type="text"> -->
     </div>
     <!-- content error message -->
     <div class="form__error-messages">
@@ -117,7 +119,7 @@
             type="submit">Save Post</button>
   </form>
 
-  <!-- <div class="dev-check"
+  <div class="dev-check"
        style="max-width: 500px;overflow-wrap: break-word;">
     <p>Form Status: {{ postForm.status }}</p>
     <p>Form Values: {{ postForm.value | json}}</p>
@@ -133,14 +135,14 @@
         <p>Content Errors: {{ content.errors | json}}</p>
       </li>
       <li>
-        <p>Categorie Errors: {{ categorie.errors | json}}</p>
+        <p>Category Errors: {{ category.errors | json}}</p>
       </li>
       <li>
-        <p>Subcategorie Errors: {{ subcategorie.errors | json}}</p>
+        <p>Subcategory Errors: {{ subcategory.errors | json}}</p>
       </li>
       <li>
         <p>Tags Errors: {{ tags.errors | json}}</p>
       </li>
     </ul>
   </div>
-</div> -->
+</div>

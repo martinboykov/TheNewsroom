@@ -203,6 +203,8 @@
         grid-column: 2/3;
         grid-row: 2/3;
         padding: 10px 0;
+        margin-right: 30px;
+        border-top: 1px dotted $light-grey;
         .modification__button--edit,
         .modification__button--edit:disabled:hover {
           background: linear-gradient(to bottom, $gold 5%, darken($gold, 20%) 100%);
@@ -645,7 +647,7 @@
             display: block;
             padding-top: 10px;
             border-top: 1px dotted rgba(0, 0, 0, 0.35);
-            border-bottom: 1px dotted rgba(0, 0, 0, 0.35);
+            // border-bottom: 1px dotted rgba(0, 0, 0, 0.35);
             .related-posts-section__title {
               font-family: $font-mp;
               font-size: 13px;
@@ -696,7 +698,7 @@
         .post__modification {
           grid-column: 1/2;
           grid-row: 3/4;
-          margin: 0px 5px 5px 5px;
+          margin: 0px 5px;
         }
       }
 

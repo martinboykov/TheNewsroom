@@ -36,8 +36,12 @@ export class PostService {
     private router: Router,
   ) { }
 
+
+
   getPosts(url: String, commentsPerPage: number, currentPage: number) {
-    const queryParams = `?pageSize=${commentsPerPage}&page=${currentPage}`;
+    const pageSize = commentsPerPage;
+    const page = currentPage;
+    const queryParams = `?pageSize=${pageSize}&page=${page}`;
     // console.log(BACKEND_URL + url + queryParams);
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams)
@@ -61,14 +65,6 @@ export class PostService {
         this.postsUpdated.next([...this.posts]);
       });
   }
-
-  getPostComments(url: String, commentsPerPage: number, currentPage: number) {
-    const queryParams = `?pageSize=${commentsPerPage}&page=${currentPage}`;
-    // console.log(BACKEND_URL + url + queryParams);
-    return this.http
-      .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams);
-  }
-
   getTotalPostsCount(subRoute: string) {
     const route = subRoute + `/totalCount`;
     return this.http.get<{ message: string, data: number }>(`${BACKEND_URL}` + route)
@@ -78,9 +74,11 @@ export class PostService {
       });
   }
 
-  getPost(id: string, commentsPerPage: number, currentPage: number) {
+  getPost(id: string, commentsPerPage?: number, currentPage?: number) {
     const _id = id;
-    const queryParams = `?pageSize=${commentsPerPage}&page=${currentPage}`;
+    const pageSize = commentsPerPage || 10;
+    const page = currentPage || 1;
+    const queryParams = `?pageSize=${pageSize}&page=${page}`;
     const route = `/posts/${_id}/details/${queryParams}`;
     return this.http
       .get<{ message: string, data: { post: Post, totalCommentsCount: number } }>(BACKEND_URL + route)
@@ -93,6 +91,15 @@ export class PostService {
     //   const post = response.data;
     //   this.postUpdated.next(post);
     // });
+  }
+
+  getPostComments(url: String, commentsPerPage: number, currentPage: number) {
+    const pageSize = commentsPerPage;
+    const page = currentPage;
+    const queryParams = `?pageSize=${pageSize}&page=${page}`;
+    // console.log(BACKEND_URL + url + queryParams);
+    return this.http
+      .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams);
   }
 
   // dafaultPaginater argument is added, so the Application can adopt pagesize as needed

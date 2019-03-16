@@ -1,11 +1,11 @@
 import { HeaderService } from './../../header/header.service';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { FormGroup, FormControl, Validators, FormArray, FormBuilder, AbstractControl } from '@angular/forms';
-import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { ActivatedRoute, } from '@angular/router';
+import { FormGroup, FormControl, Validators, FormArray, AbstractControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy, Renderer2, ViewChild, AfterViewInit, AfterContentInit } from '@angular/core';
 import { Post } from './../post.model';
 import { PostService } from '../post.service';
 import { mimeType } from './mime-type.validator';
-import { Subscription, from, of, timer } from 'rxjs';
+import { Subscription, from, timer } from 'rxjs';
 import { tap, delay } from 'rxjs/operators';
 
 @Component({
@@ -13,9 +13,10 @@ import { tap, delay } from 'rxjs/operators';
   templateUrl: './post-edit.component.html',
   styleUrls: ['./post-edit.component.scss']
 })
-export class PostEditComponent implements OnInit, OnDestroy {
+export class PostEditComponent implements OnInit, AfterViewInit, AfterContentInit, OnDestroy {
+  @ViewChild('jodit') jodit;
   mode = 'create';
-  _id: string;
+  postId: string;
   postForm: FormGroup;
   imagePreview: any;
   post: Post;
@@ -52,62 +53,79 @@ export class PostEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.postForm = new FormGroup({
-      image: new FormControl('', { validators: [Validators.required], asyncValidators: [mimeType] }),
-      title: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]),
-      content: new FormControl(null, [Validators.required, Validators.minLength(200), Validators.maxLength(10000)]),
-      categorie: new FormControl(null, [Validators.required]),
-      subcategorie: new FormControl(null, []),
-      tags: new FormArray([], [this.tagsValidatorRequired, this.tagsValidatorLength.bind(this)]),
+      image: new FormControl('', {
+        validators: [Validators.required],
+        asyncValidators: [mimeType]
+      }),
+      title: new FormControl('', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(200)]),
+      content: new FormControl(null, [
+        Validators.required,
+        this.contentValidatorLengthMin.bind(this),
+        this.contentValidatorLengthMax.bind(this)]),
+      category: new FormControl(null, [
+        Validators.required]),
+      subcategory: new FormControl(null, []),
+      tags: new FormArray([], [
+        this.tagsValidatorRequired,
+        this.tagsValidatorLength.bind(this)]),
     });
 
     // get mode(create/edit) and Post ID
-    this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      if (paramMap.has('_id')) {
-        this.mode = 'edit';
-        this._id = paramMap.get('_id');
-        // this.postService.getPost(this._id)
-        //   .subscribe(
-        //     (postData) => {
-        //       this.post = {
-        //         id: postData.post._id,
-        //         title: postData.post.title,
-        //         content: postData.post.content,
-        //         imagePath: postData.post.imagePath,
-        //         creator: postData.post.creator,
-        //       }
-        //       // this.postForm.setValue({
-        //       //   title: postData.post.title,
-        //       //   content: postData.post.content,
-        //       //   imagePath: postData.post.imagePath,
-        //       // });
-        //       this.postForm.controls.title.setValue(postData.post.title);
-        //       this.postForm.controls.content.setValue(postData.post.content);
-        //       this.postForm.controls.image.setValue(postData.post.imagePath);
-        //     });
-      } else {
-        this.mode = 'create';
-        this._id = null;
-      }
-    });
+    this.postId = this.route.snapshot.params._id;
+    if (this.postId) {
+      this.mode = 'edit';
+      this.postService.getPost(this.postId)
+        .subscribe((postData) => {
+          this.post = postData.post;
+          this.postForm.controls.image.setValue(this.post.imageMainPath);
+          this.postForm.controls.title.setValue(this.post.title);
+          this.postForm.controls.content.setValue(this.post.content);
+          this.postForm.controls.category.setValue(this.post.category.name);
+          if (this.post.subcategory) {
+
+            this.postForm.controls.subcategory.setValue(this.post.subcategory.name);
+          }
+          // this.postForm.controls.tags.setValue(this.post.tags);
+        });
+    } else {
+      this.mode = 'create';
+      this.postId = null;
+    }
     this.headerService.getCategories();
     this.categoriesSubscription = this.headerService.getCategoriesUpdateListener()
       .subscribe((categories: any[]) => {
-        this.categories = categories;
+        this.categories = [...categories];
+        // if (this.mode === 'edit') {
+        //   if (this.post.subcategory) {
+        //     this.subcategories = this.categories.map((categorie) => {
+        //       if(categorie.name === this.post.category){
+        //         return categorie.subcategories;
+        //       }
+        //     })
+        //   }
+        // }
       });
     this.postService.getTagNames()
       .subscribe((tags) => {
         this.tagsArray = [...tags];
       });
+
+  }
+  ngAfterContentInit() {
+  }
+  ngAfterViewInit() {
   }
 
   get title() { return this.postForm.get('title'); }
-  get categorie() { return this.postForm.get('categorie'); }
-  get subcategorie() { return this.postForm.get('subcategorie'); }
+  get category() { return this.postForm.get('category'); }
+  get subcategory() { return this.postForm.get('subcategory'); }
   get tags() { return this.postForm.get('tags') as FormArray; }
   get content() { return this.postForm.get('content'); }
   get image() { return this.postForm.get('image'); }
 
-  // hide code...
   get titleErrorRequired() {
     // const activated = this.username.errors.required;
     if (this.title.errors) {
@@ -154,7 +172,7 @@ export class PostEditComponent implements OnInit, OnDestroy {
   get contentErrorLengthMin() {
     if (this.content.errors) {
       // console.log(this.content.errors);
-      if (this.content.errors.minlength) {
+      if (this.content.errors.lengthErrorMin) {
         return true;
       }
     } else {
@@ -164,18 +182,18 @@ export class PostEditComponent implements OnInit, OnDestroy {
   get contentErrorLengthMax() {
     if (this.content.errors) {
       // console.log(this.content.errors);
-      if (this.content.errors.maxlength) {
+      if (this.content.errors.lengthErrorMax) {
         return true;
       }
     } else {
       return null;
     }
   }
-  get categorieErrorRequired() {
+  get categoryErrorRequired() {
     // const activated = this.username.errors.required;
-    if (this.categorie.errors) {
+    if (this.category.errors) {
       // console.log(this.title.errors);
-      if (this.categorie.errors.required) {
+      if (this.category.errors.required) {
         return true;
       }
     } else {
@@ -226,23 +244,24 @@ export class PostEditComponent implements OnInit, OnDestroy {
     // const userId = this.authService.getUserId();
     if (this.mode === 'create') {
       const title = this.postForm.value.title;
-      const content = this.contentTextOnly;
-      const categorie = this.postForm.value.categorie;
-      const subcategorie = this.postForm.value.subcategorie;
+      const content = this.postForm.value.content;
+      const category = this.postForm.value.category;
+      const subcategory = this.postForm.value.subcategory;
       const image = this.postForm.value.image;
       const tags = this.postForm.value.tags;
       let post;
       post = {
         title,
         content,
-        categorie,
+        category,
         tags,
         image,
       };
-      post.subcategorie = subcategorie;
-      if (subcategorie) { post.subcategorie = subcategorie; }
+      post.subcategory = subcategory;
+      if (subcategory) { post.subcategory = subcategory; }
 
       this.postService.editPost(post);
+      console.log(post);
       this.postForm.reset();
     }
     if (this.mode === 'edit') {
@@ -282,27 +301,27 @@ export class PostEditComponent implements OnInit, OnDestroy {
   // Content
   // ----------------------------------
   contentHandler(event) {
-    this.content.markAsTouched();
-    const el: HTMLElement = event.editor.statusbar.container;
-    const letterCounter =
-      el.querySelector('.jodit_statusbar_item.jodit_statusbar_item-right').firstChild.textContent;
+    // this.content.markAsTouched();
+    // const el: HTMLElement = event.editor.statusbar.container;
+    // const letterCounter =
+    //   el.querySelector('.jodit_statusbar_item.jodit_statusbar_item-right').firstChild.textContent;
 
-    this.contentTextOnly = event.args[0].target.innerHTML;
-    const htmlContent = event.args[0].target.innerText;
-    this.content.setValue(htmlContent);
+    // this.contentTextOnly = event.args[0].target.innerHTML;
+    // const htmlContent = event.args[0].target.innerText;
+    // this.content.setValue(htmlContent);
   }
 
 
   // Categories
   // ----------------------------------
-  onCategorieSelected() {
-    this.categorieselected = this.categories.find((x) => x.name === this.categorie.value);
-    this.subcategorie.setValue(null);
+  onCategorySelected() {
+    this.categorieselected = this.categories.find((x) => x.name === this.category.value);
+    this.subcategory.setValue(null);
   }
 
   // Subcategories
   // ----------------------------------
-  onSubcategorieOpen() {
+  onSubcategoryOpen() {
     if (this.categorieselected) {
       this.subcategories = [...this.categorieselected.subcategories];
     }
@@ -348,6 +367,32 @@ export class PostEditComponent implements OnInit, OnDestroy {
     // console.log(select.itemsList.selectedItems.splice(0,1));
   }
 
+  // content length must be between 200 and 100000
+  public contentValidatorLengthMin(control: AbstractControl): { [key: string]: boolean } {
+    let lengthErrorIndicator = false;
+    const controlHtmlContent = this.renderer.createElement('DIV');
+    controlHtmlContent.innerHTML = control.value;
+    let text = controlHtmlContent.innerText || controlHtmlContent.textContent;
+    text = text.replace(/\s+/g, '').trim();
+    console.log(text.length);
+    if (text.length < 200) {
+      lengthErrorIndicator = true;
+    }
+    return lengthErrorIndicator ? { lengthErrorMin: true } : null;
+  }
+  // content length must be between 200 and 100000
+  public contentValidatorLengthMax(control: AbstractControl): { [key: string]: boolean } {
+    let lengthErrorIndicator = false;
+    const controlHtmlContent = this.renderer.createElement('DIV');
+    controlHtmlContent.innerHTML = control.value;
+    let text = controlHtmlContent.innerText || controlHtmlContent.textContent;
+    text = text.replace(/\s+/g, '').trim();
+    console.log(text.length);
+    if (text.length > 10000) {
+      lengthErrorIndicator = true;
+    }
+    return lengthErrorIndicator ? { lengthErrorMax: true } : null;
+  }
   // there must be at least one tag
   private tagsValidatorRequired(controls: AbstractControl[]): { [key: string]: boolean } {
     let requiredErrorIndicator = false;
