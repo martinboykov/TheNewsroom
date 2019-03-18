@@ -8,7 +8,7 @@ const Fawn = require('Fawn');
 
 // GET
 const getSubcategories = async (req, res, next) => {
-  const subcategories = await Subcategory.find();
+  const subcategories = await Subcategory.find({ isVisible: true });
   res.status(200).json({
     message: 'Subcategories fetched successfully',
     data: subcategories,
@@ -66,7 +66,7 @@ const addSubcategory = async (req, res, next) => {
     return res.status(400).json({ message: 'No such category.' });
   }
 
-  const { error } = validateSubcategory({ name: req.body.name });
+  const { error } = validateSubcategory(req.body);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
@@ -80,7 +80,8 @@ const addSubcategory = async (req, res, next) => {
     name: req.body.name,
     categoryId: category._id,
   });
-
+  if (req.body.order) newSubcategory.order = req.body.order;
+  if (req.body.isVisible) newSubcategory.isVisible = req.body.isVisible;
   const task = new Fawn.Task(); // eslint-disable-line new-cap
   task.save('subcategories', newSubcategory);
   category.subcategories.push(newSubcategory._id);

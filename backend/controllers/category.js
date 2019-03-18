@@ -3,12 +3,44 @@ const { Post } = require('../models/post');
 
 const Fawn = require('Fawn');
 
+function compare(a, b) {
+  if (a.order > b.order) {
+    return 1;
+  }
+  if (a.order < b.order) {
+    return -1;
+  }
+  return 0;
+}
+
 // GET
 const getCategories = async (req, res, next) => {
+  const categories = await Category.find({ isVisible: true })
+    .select('name subcategories order isVisible')
+    .sort({ 'order': 1, 'name': 1 })
+    .populate('subcategories', 'name order isVisible');
+  categories.forEach((category) => {
+    const sortedSubcategories = category.subcategories
+      .filter((x) => x.isVisible === true);
+      sortedSubcategories.sort(compare);
+    category.subcategories = sortedSubcategories;
+  });
+  res.status(200).json({
+    message: 'Categories fetched successfully',
+    data: categories,
+  });
+};
+
+const getCategoriesFull = async (req, res, next) => {
   const categories = await Category.find()
-    .select('name subcategories ')
-    .populate('subcategories', 'name');
-  // .populate('posts', 'title');
+    .select('name subcategories order isVisible')
+    .sort({ 'order': 1, 'name': 1 })
+    .populate('subcategories', 'name order isVisible');
+  categories.forEach((category) => {
+    const sortedSubcategories = category.subcategories;
+      sortedSubcategories.sort(compare);
+    category.subcategories = sortedSubcategories;
+  });
   res.status(200).json({
     message: 'Categories fetched successfully',
     data: categories,
@@ -76,6 +108,8 @@ const addCategory = async (req, res, next) => {
   const category = new Category({
     name: req.body.name,
   });
+  if (req.body.order) category.order = req.body.order;
+  if (req.body.isVisible) category.isVisible = req.body.isVisible;
 
   await category.save();
   return res.status(201).json({
@@ -151,6 +185,7 @@ const deleteCategory = async (req, res, next) => {
 
 module.exports = {
   getCategories,
+  getCategoriesFull,
   getCategoryPosts,
   getCategoryPostsTotalCount,
   addCategory,

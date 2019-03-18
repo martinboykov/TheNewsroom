@@ -87,9 +87,14 @@ export class SmallNavComponent implements OnInit {
           name: `edit`,
           link: `edit`
         });
-      } else {
-        // donothing
       }
+      if (this.location.path().indexOf('admin') >= 0) {
+        this.routes.push({
+          name: `admin`,
+          link: `admin`
+        });
+      }
+
     });
   }
 

@@ -1,0 +1,58 @@
+<div class="wrapper">
+  <div class="category">
+
+    <ng-select class="category--dropdown"
+               [items]="categories"
+               bindLabel="name"
+               placeholder="Choose Category..."
+               (change)="onCategorySelected()"
+               [(ngModel)]="selectedCategory">
+    </ng-select>
+    <div class="category--selected"
+         *ngIf="selectedCategory">
+      <span class="label">
+        Selected Category:</span>
+      <a class="category__link link"
+         routerLink="/category/{{selectedCategory?.name}}"
+         [style.color]="selectedCategory.isVisible === true ? '#2c2c2c' : '#a1a1a1'">
+        <span class="name">{{selectedCategory?.name}}</span>
+        <span class="order">order: {{selectedCategory?.order}} | isVisible: {{selectedCategory?.isVisible}}</span>
+      </a>
+      <br />
+      <span>Subategory list:</span>
+      <ul class="subcategory__list">
+        <li class="subcategory__item"
+            *ngFor="let subcategory of selectedCategory?.subcategories">
+          <a class="item__link link"
+             *ngIf="selectedCategory?.subcategories"
+             routerLink="/subcategory/{{subcategory.name}}"
+             [style.color]="subcategory.isVisible === true ? '#2c2c2c' : '#a1a1a1'">
+            <span class="name">{{subcategory?.name}}</span>
+            <span class="order">order: {{subcategory?.order}} | isVisible: {{subcategory?.isVisible}} </span>
+          </a>
+
+        </li>
+      </ul>
+      <div class="no-subcategory link"
+           *ngIf="noSubcategories">
+        There are no subcategories...
+      </div>
+      <div class="new-subcategory">
+        <button class="new-subcategory__button button"
+                (click)="addSubcategroy(selectedCategory)"
+                type="button">Add Subcategory
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="new-category">
+    <button class="new-category button"
+            (click)="addCategroy()"
+            type="button">Add Category
+    </button>
+  </div>
+
+
+</div>

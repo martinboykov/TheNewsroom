@@ -23,6 +23,14 @@ const categorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, // One-to-Many: may need frequent change
     ref: 'Post',
   }],
+  order: {
+    type: Number,
+    default: 999,
+  },
+  isVisible: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 categorySchema.index({ name: 1 }); // schema level
@@ -35,6 +43,10 @@ function validateCategory(category) {
       .min(1)
       .max(20)
       .required(),
+    order: Joi
+      .number(),
+    isVisible: Joi
+      .boolean(),
   });
 
   return Joi.validate(category, schema);

@@ -1,11 +1,12 @@
-import { HeaderService } from './../../header/header.service';
+import { CategoryService } from './../../admin/category.service';
+// import { HeaderService } from './../../header/header.service';
 import { ActivatedRoute, } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { Component, OnInit, OnDestroy, Renderer2, ViewChild, AfterViewInit, AfterContentInit } from '@angular/core';
 import { Post } from './../post.model';
 import { PostService } from '../post.service';
 import { mimeType } from './mime-type.validator';
-import { Subscription, from, timer, forkJoin } from 'rxjs';
+import { Subscription, from, timer } from 'rxjs';
 import { tap, delay, concatMap } from 'rxjs/operators';
 
 @Component({
@@ -47,7 +48,8 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
   constructor(
     private postService: PostService,
-    private headerService: HeaderService,
+    // private headerService: HeaderService,
+    private categoryService: CategoryService,
     public route: ActivatedRoute,
     private renderer: Renderer2,
   ) { }
@@ -100,7 +102,8 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
             // 3. (async) get Categories -> to fill the ng-select categories options
             // and set the post category
-            return this.postService.getCategories();
+            this.categoryService.getCategories();
+            return this.categoryService.getCategoriesUpdateListener();
           })
         )
         .subscribe((categories) => {
@@ -137,7 +140,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     } else {
       this.mode = 'create';
       this.postId = null;
-      this.categoriesSubscription = this.postService.getCategories()
+      this.categoriesSubscription = this.categoryService.getCategoriesUpdateListener()
         .subscribe((categories: any[]) => {
           this.categories = [...categories];
         });
@@ -267,7 +270,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     let post;
     let _id;
     if (this.mode === 'update') {
-    _id = this.post._id;
+      _id = this.post._id;
     }
     const title = this.postForm.value.title;
     const content = this.postForm.value.content;

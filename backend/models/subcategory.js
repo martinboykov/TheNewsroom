@@ -10,7 +10,7 @@ const subcategorySchema = new mongoose.Schema({
     required: true,
     unique: true,
     minlength: 1,
-    maxlength: 30,
+    maxlength: 20,
     lowercase: true,
     trim: true,
   },
@@ -23,6 +23,14 @@ const subcategorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, // One-to-Many: may need frequent change
     ref: 'Post',
   }],
+  order: {
+    type: Number,
+    default: 999,
+  },
+  isVisible: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 subcategorySchema.index({ name: 1 }); // schema level
@@ -33,8 +41,18 @@ function validateSubcategory(subcategory) {
       .string()
       .lowercase()
       .min(1)
-      .max(30)
+      .max(20)
       .required(),
+    categoryName: Joi
+      .string()
+      .lowercase()
+      .min(1)
+      .max(20)
+      .required(),
+    order: Joi
+      .number(),
+    isVisible: Joi
+      .boolean(),
   });
   return Joi.validate(subcategory, schema);
 }

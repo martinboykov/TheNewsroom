@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'tags/:tag', component: PostListComponent },
   { path: 'search/:searchQuery', component: PostListComponent },
   { path: 'edit', loadChildren: './posts/post-edit/post-edit.module#PostEditModule' },
+  { path: 'admin', loadChildren: './admin/admin.module#AdminModule' },
   { path: ':category', component: PostListComponent },
   { path: ':category/post/:_id/:title', component: PostDetailsComponent },
   { path: ':category/:subcategory', component: PostListComponent },

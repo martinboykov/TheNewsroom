@@ -1,0 +1,128 @@
+@import "./partials/variables";
+@import "./partials/mixins";
+
+.wrapper {
+  .category {
+    padding: 10px;
+    border: 1px solid $gold;
+    border-radius: 5px;
+    margin: 30px 0px;
+
+    .category--dropdown {
+      padding: 0;
+    }
+    .category--selected {
+      .label {
+        display: inline-block;
+        margin-top: 25px;
+      }
+      .category__link {
+      }
+      .subcategory__list {
+        .subcategory__item {
+          .item__link {
+          }
+        }
+      }
+      .no-subcategory {
+        margin-bottom: 10px;
+      }
+      .no-subcategory.link:hover,
+      .no-subcategory.link:active {
+        border: none;
+      }
+      .no-subcategory.link:active {
+        position: relative;
+        top: 0px;
+      }
+      .new-subcategory {
+        margin-bottom: 30px;
+      }
+    }
+  }
+  .new-category {
+    margin-left: 5px;
+  }
+}
+
+.link {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 30px;
+  background: white;
+  margin: 10px 0;
+  padding: 0 7px;
+  text-decoration: none;
+  color: $black;
+  .name,
+  .order,
+  .visibility {
+  }
+  .name {
+    font-weight: bold;
+  }
+  .order {
+  }
+  .visibility {
+  }
+}
+.link:hover,
+.link:active {
+  border: 1px solid $black;
+}
+.link:active {
+  position: relative;
+  top: 1px;
+}
+
+.button {
+  box-shadow: inset 0px 1px 0px 0px #ffffff;
+  background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+  border: none;
+  display: inline-block;
+  cursor: default;
+  color: $black;
+  font-family: $font-mp;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  width: 160px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #ffffff;
+  outline: 0;
+  &:hover,
+  &:active {
+    color: $black;
+    // outline: 1px solid $light-grey;
+  }
+  &:hover {
+    background: linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+  }
+  &:active {
+    position: relative;
+    top: 1px;
+  }
+}
+
+@media (min-width: $desctop) {
+  .wrapper {
+    .category {
+      width: 200px;
+    }
+    .category--selected {
+      .category__link {
+        width: 350px;
+      }
+      .subcategory__list {
+        .subcategory__item {
+          .item__link {
+            width: 350px;
+          }
+        }
+      }
+    }
+  }
+}

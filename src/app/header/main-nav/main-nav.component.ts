@@ -1,4 +1,5 @@
-import { HeaderService } from '../header.service';
+import { CategoryService } from './../../admin/category.service';
+// import { HeaderService } from '../header.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
@@ -10,12 +11,12 @@ import { Subscription } from 'rxjs';
 export class MainNavComponent implements OnInit, OnDestroy {
   categories: any[] = []; // the data is not strict category !?!?, but with populate subcategories name
   private categoriesSubscription: Subscription;
-  constructor(private headerService: HeaderService) { }
+  constructor(private categoryService: CategoryService) { }
 
 
   ngOnInit(): void {
-    this.headerService.getCategories();
-    this.categoriesSubscription = this.headerService.getCategoriesUpdateListener()
+    this.categoryService.getCategories();
+    this.categoriesSubscription = this.categoryService.getCategoriesUpdateListener()
       .subscribe((categories: any[]) => {
         this.categories = categories;
       });
