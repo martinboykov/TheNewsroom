@@ -125,21 +125,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
           }
 
           // 3.3. (sync) set up ng-select tags input field
-          // 3.3.1. First add the post tags to the FormArray
-          // when we set current post tags to ng-select =>
-          // => FormArray is set automatically as well
-
-          // const tagsFormControlArray = this.post.tags.reduce((accumulator, currentValue) => {
-          //   accumulator.push(new FormControl(currentValue.name));
-          //   return accumulator;
-          // }, []);
-          // tagsFormControlArray.forEach((tagFormControl) => {
-          //   (<FormArray>this.postForm.controls.tags).push((tagFormControl));
-          // });
-
-          // 3.3.2. ... continues below at ngAfterViewInit ...
-          // hack -> waiting to be sure that view with ng-select tags is initiated
-          // timer(1000).subscribe(() => {
           this.post.tags.forEach((tag) => {
             const item = this.selectTags.itemsList.findByLabel(tag.name);
             console.log(item);
@@ -333,7 +318,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     reader.onload = () => {
       // get the img src="imagePreview"
       this.imagePreview = reader.result;
-    }
+    };
     reader.readAsDataURL(file);
 
   }
@@ -342,13 +327,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   // ----------------------------------
   contentHandler(event) {
     // this.content.markAsTouched();
-    // const el: HTMLElement = event.editor.statusbar.container;
-    // const letterCounter =
-    //   el.querySelector('.jodit_statusbar_item.jodit_statusbar_item-right').firstChild.textContent;
-
-    // this.contentTextOnly = event.args[0].target.innerHTML;
-    // const htmlContent = event.args[0].target.innerText;
-    // this.content.setValue(htmlContent);
   }
 
 
@@ -387,6 +365,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
   // time laps simulator
   addTagPromise(name) {
+    this.loading = true;
     return from([name])
       .pipe(
         delay(1000),

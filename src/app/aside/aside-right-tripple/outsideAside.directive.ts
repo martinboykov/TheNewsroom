@@ -14,7 +14,8 @@ export class OutsideAsideDirective implements OnInit {
   @HostListener('document:click', ['$event.target'])
   public onClick(targetElement) {
     const wrapper = this.el.nativeElement;
-    const posts = wrapper.querySelectorAll("[class*='posts']");
+    const posts = wrapper.querySelectorAll('[class*=\'posts\']');
+    const str = 'adada';
     const selectors = wrapper.querySelectorAll('.latest, .popular, .commented');
     const clickedInside = this.el.nativeElement.contains(targetElement);
     if (!clickedInside && this.windowRef.isMobile) {
