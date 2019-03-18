@@ -16,7 +16,7 @@ const postSchema = new mongoose.Schema({
     type: String, // T0D0: TO BE CHECKED LATER (HTML editor or not)
     required: true,
     minlength: 200,
-    maxlength: 10000,
+    maxlength: 20000, // 10k text and 10k inline styles
   },
   author: { // One-to-Many with Denornmalization: stays the same almost always
     name: {
@@ -101,7 +101,7 @@ function validatePost(post) {
     content: Joi
       .string()
       .min(200)
-      .max(10000)
+      .max(20000)
       .required(),
     imageMainPath: Joi
       .string()

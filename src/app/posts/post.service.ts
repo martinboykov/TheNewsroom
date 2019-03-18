@@ -169,12 +169,11 @@ export class PostService {
   }
 
   editPost(post, mode: string) {
-
     const postData = new FormData(); // as json cant include File Type data we switch to Formdata, which accepts text values and BLOB values
     postData.append('title', post.title);
     postData.append('content', post.content);
     postData.append('categoryName', post.category);
-    if (post.subcategorie) { postData.append('subcategoryName', post.subcategory); }
+    if (post.subcategory) { postData.append('subcategoryName', post.subcategory); }
     postData.append('tags', JSON.stringify(post.tags));
     postData.append('imageMainPath', post.image); // 'imageMainPath is same as in the backend ->  "multer" -> upload.single('image')
     if (mode === 'create') {
@@ -188,21 +187,23 @@ export class PostService {
           const newPost = response.post;
           this.posts.push(newPost);
           this.postsUpdated.next([...this.posts]);
+          this.getlatestPosts();
           this.router.navigate(['/']);
         });
     }
     if (mode === 'update') {
       const route = `/posts/${post._id}`;
       this.http
-        .put<{ message: string, post: any }>(
+        .put<{ message: string, data: Post }>(
           BACKEND_URL + route,
           postData)
         .subscribe((response) => {
-          // console.log(response);
-          const newPost = response.post;
+          console.log(response);
+          const newPost = response.data;
           this.posts.push(newPost);
           this.postsUpdated.next([...this.posts]);
-          const postLink = this.helper.createRoute(post);
+
+          const postLink = this.helper.createRoute(newPost);
           this.router.navigateByUrl(postLink);
         });
     }
@@ -213,6 +214,9 @@ export class PostService {
     return this.http
       .delete<{ message: string, post: any }>(BACKEND_URL + route + post._id)
       .subscribe(() => {
+        this.getlatestPosts();
+        this.getPopularPosts();
+        this.getCommentedPosts();
         this.router.navigateByUrl('/');
       });
   }

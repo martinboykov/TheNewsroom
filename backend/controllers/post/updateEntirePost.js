@@ -10,6 +10,11 @@ const Fawn = require('Fawn');
 
 const deleteImg = require('../../middleware/image').deleteImg;
 
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+const window = (new JSDOM('')).window;
+const DOMPurify = createDOMPurify(window);
+
 // PUT
 const updatePost = async (req, res, next) => {
   // const user = req.user; // T0D0: TO BE SWITCHED LATER (AFTER Authentication/Authorization is complete)
@@ -47,8 +52,8 @@ const updatePost = async (req, res, next) => {
   // doc = model.toObject();
   // model = model.constructor;
 
-  postUpdated.title = data.title;
-  postUpdated.content = data.content;
+  postUpdated.title = DOMPurify.sanitize(data.title);
+  postUpdated.content = DOMPurify.sanitize(data.content);
 
   // Start the transaction
   const task = new Fawn.Task(); // eslint-disable-line new-cap
@@ -172,7 +177,7 @@ const updatePost = async (req, res, next) => {
         .then((differentTagExists) => {
           if (!differentTagExists) {
             const differentTag = new Tag({
-              name: tagName,
+              name: DOMPurify.sanitize(tagName), // sanitizes the new tagName entry
               posts: [postUpdated._id],
             });
             task.save(differentTag);

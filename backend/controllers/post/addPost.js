@@ -56,7 +56,7 @@ const addPost = async (req, res, next) => {
   const task = new Fawn.Task(); // eslint-disable-line new-cap
 
   // category update/ add to post
-  const categoryName = DOMPurify.sanitize(data.categoryName);
+  const categoryName = data.categoryName;
   const categoryPromise = Category
     .findOne({ name: categoryName })
     .then((category) => {

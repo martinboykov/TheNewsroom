@@ -56,8 +56,9 @@ const getTagPosts = async (req, res, next) => {
 const getTagPostsTotalCount = async (req, res, next) => {
   const tagPosts = await Tag
     .findOne({ name: req.params.name });
+  if (!tagPosts) return res.status(400).json({ message: 'No such Tag.' });
   const totalCount = tagPosts.posts.length;
-  res.status(200).json({
+  return res.status(200).json({
     message: 'Total posts count fetched successfully',
     data: totalCount,
   });

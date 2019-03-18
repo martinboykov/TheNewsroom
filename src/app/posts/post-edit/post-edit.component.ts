@@ -76,8 +76,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
     // get mode(create/update) and Post ID
     this.postId = this.route.snapshot.params._id;
-    console.log(this.postId);
-
     if (this.postId) {
       this.mode = 'update';
       // 1. (async) get post
