@@ -11,6 +11,9 @@ router.get('/',
 router.get('/full',
  categoryController.getCategoriesFull);
 
+ router.get('/:name',
+ categoryController.getCategory);
+
 router.get('/:name/posts',
   categoryController.getCategoryPosts);
 
@@ -21,7 +24,7 @@ router.get(
 
 router.post('/', categoryController.addCategory);
 
-router.put('/:_id', categoryController.renameCategory);
+router.put('/:_id', categoryController.updateCategory);
 
 router.delete('/:_id', categoryController.deleteCategory);
 

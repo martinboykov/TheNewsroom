@@ -9,7 +9,7 @@ const subcategorySchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    minlength: 1,
+    minlength: 2,
     maxlength: 20,
     lowercase: true,
     trim: true,
@@ -25,7 +25,7 @@ const subcategorySchema = new mongoose.Schema({
   }],
   order: {
     type: Number,
-    default: 999,
+    default: 99,
   },
   isVisible: {
     type: Boolean,
@@ -40,17 +40,18 @@ function validateSubcategory(subcategory) {
     name: Joi
       .string()
       .lowercase()
-      .min(1)
+      .min(2)
       .max(20)
       .required(),
     categoryName: Joi
       .string()
       .lowercase()
-      .min(1)
-      .max(20)
-      .required(),
+      .min(2)
+      .max(20),
     order: Joi
-      .number(),
+      .number()
+      .min(1)
+      .max(99),
     isVisible: Joi
       .boolean(),
   });

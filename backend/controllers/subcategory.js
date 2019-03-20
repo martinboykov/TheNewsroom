@@ -6,7 +6,38 @@ const { Subcategory, validateSubcategory } = require('../models/subcategory');
 
 const Fawn = require('Fawn');
 
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+const window = (new JSDOM('')).window;
+const DOMPurify = createDOMPurify(window);
+
 // GET
+const getSubcategory = async (req, res, next) => {
+  const name = req.params.name;
+  const subcategory = await Subcategory.findOne({ name: name })
+    .select('-posts');
+  if (!subcategory) {
+    return res.status(400).json({ message: 'No such subcategory.' });
+  }
+  return res.status(200).json({
+    message: 'Subcategory fetched successfully',
+    data: subcategory,
+  });
+};
+const getSubcategoryPostIds = async (req, res, next) => {
+  const name = req.params.name;
+  const subcategory = await Subcategory.findOne({ name: name })
+    .select('posts')
+    .populate('posts', ' category.name subcategory.name title');
+  if (!subcategory) {
+    return res.status(400).json({ message: 'No such subcategory.' });
+  }
+  return res.status(200).json({
+    message: 'Subcategory fetched successfully',
+    data: subcategory,
+  });
+};
+
 const getSubcategories = async (req, res, next) => {
   const subcategories = await Subcategory.find({ isVisible: true });
   res.status(200).json({
@@ -61,7 +92,10 @@ const getSubcategoryPostsTotalCount = async (req, res, next) => {
 
 // POST
 const addSubcategory = async (req, res, next) => {
-  const category = await Category.findOne({ name: req.body.categoryName });
+  const category = await Category.findOne(
+    {
+      name: DOMPurify.sanitize(req.body.categoryName),
+    });
   if (!category) {
     return res.status(400).json({ message: 'No such category.' });
   }
@@ -71,17 +105,23 @@ const addSubcategory = async (req, res, next) => {
     return res.status(400).json({ message: error.details[0].message });
   }
 
-  const ifExists = await Subcategory.findOne({ name: req.body.name });
+  const ifExists = await Subcategory.findOne({
+    name: DOMPurify.sanitize(req.body.name),
+  });
   if (ifExists) {
     return res.status(400).json({ message: 'Subcategory already exists.' });
   }
 
   const newSubcategory = new Subcategory({ // mongo driver adds _id behind the scene,  before it is saved to MongoDB
-    name: req.body.name,
+    name: DOMPurify.sanitize(req.body.name),
     categoryId: category._id,
   });
-  if (req.body.order) newSubcategory.order = req.body.order;
-  if (req.body.isVisible) newSubcategory.isVisible = req.body.isVisible;
+  if (req.body.order) {
+    newSubcategory.order = parseInt(DOMPurify.sanitize(req.body.order), 10);
+  }
+  if (req.body.isVisible) {
+    newSubcategory.isVisible = req.body.isVisible;
+  }
   const task = new Fawn.Task(); // eslint-disable-line new-cap
   task.save('subcategories', newSubcategory);
   category.subcategories.push(newSubcategory._id);
@@ -107,39 +147,45 @@ const addSubcategory = async (req, res, next) => {
 };
 
 // PUT
-const renameSubcategory = async (req, res, next) => {
+const updateSubcategory = async (req, res, next) => {
   // const subcategoryId = mongoose.Types.ObjectId(`${req.params._id}`); // eslint-disable-line new-cap
   const subcategory = await Subcategory.findOne({ _id: req.params._id });
   if (!subcategory) {
     return res.status(400).json({ message: 'No such subcategory.' });
   }
 
-  const { error } = validateSubcategory({ name: req.body.newName });
+  const { error } = validateSubcategory(req.body);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
 
-  if (subcategory.name === req.body.newName) {
-    return res.status(400).json({
-      message: 'Same subcategory name. Must provide different name.',
-    });
-  }
-  const ifExists = await Subcategory.findOne({ name: req.body.newName });
-  if (ifExists) {
+  const ifExists = await Subcategory.findOne({
+    name: DOMPurify.sanitize(req.body.name),
+  });
+  if (ifExists && subcategory.name !== req.body.name) {
     return res.status(400).json({ message: 'Duplicate subcategory name.' });
   }
 
   const task = new Fawn.Task(); // eslint-disable-line new-cap
-  subcategory.name = req.body.newName;
+  subcategory.name = DOMPurify.sanitize(req.body.name);
+  const updatedSubcategory = req.body;
   task.update('subcategories', {
     _id: subcategory._id,
   }, {
-      $set: { name: req.body.newName },
+      $set: {
+        name: DOMPurify.sanitize(updatedSubcategory.name),
+        order:
+          DOMPurify.sanitize(updatedSubcategory.order)
+          || subcategory.order,
+        isVisible:
+          DOMPurify.sanitize(updatedSubcategory.isVisible)
+          || subcategory.isVisible,
+      },
     });
   task.update('posts', {
     'subcategory._id': subcategory._id,
   }, {
-      $set: { 'subcategory.name': req.body.newName },
+      $set: { 'subcategory.name': DOMPurify.sanitize(updatedSubcategory.name) },
     }).options({ multi: true });
   return task.run({ useMongoose: true })
     .then((result) => {
@@ -184,10 +230,12 @@ const deleteSubcategory = async (req, res, next) => {
 };
 
 module.exports = {
+  getSubcategory,
+  getSubcategoryPostIds,
   getSubcategories,
   getSubcategoryPosts,
   getSubcategoryPostsTotalCount,
   addSubcategory,
-  renameSubcategory,
+  updateSubcategory,
   deleteSubcategory,
 };

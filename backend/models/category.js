@@ -9,7 +9,7 @@ const categorySchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    minlength: 1,
+    minlength: 2,
     maxlength: 20,
     lowercase: true,
     trim: true,
@@ -25,7 +25,9 @@ const categorySchema = new mongoose.Schema({
   }],
   order: {
     type: Number,
-    default: 999,
+    min: 1,
+    max: 99,
+    default: 99,
   },
   isVisible: {
     type: Boolean,
@@ -40,11 +42,13 @@ function validateCategory(category) {
     name: Joi
       .string()
       .lowercase()
-      .min(1)
+      .min(2)
       .max(20)
       .required(),
     order: Joi
-      .number(),
+      .number()
+      .min(1)
+      .max(99),
     isVisible: Joi
       .boolean(),
   });

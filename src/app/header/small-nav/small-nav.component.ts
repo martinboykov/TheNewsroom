@@ -94,7 +94,46 @@ export class SmallNavComponent implements OnInit {
           link: `admin`
         });
       }
-
+      if (this.location.path().indexOf('category-update') >= 0 &&
+        this.location.path().indexOf('subcategory-update') < 0) {
+        const index = this.location.path().indexOf('category-update');
+        this.category = this.location.path().substring(index).replace('category-update/', '');
+        this.routes.push({
+          name: `category-update: ${this.category}`,
+          link: `admin/category/${this.category}`
+        });
+      }
+      if (this.location.path().indexOf('subcategory-update') >= 0) {
+        const index = this.location.path().indexOf('subcategory-update');
+        this.subcategory = this.location.path().substring(index).replace('subcategory-update/', '');
+        this.routes.push({
+          name: `subcategory-update: ${this.subcategory}`,
+          link: `admin/subcategory/${this.subcategory}`
+        });
+      }
+      if (this.location.path().indexOf('category-new') >= 0 &&
+        this.location.path().indexOf('subcategory-new') < 0) {
+        const index = this.location.path().indexOf('category-new');
+        this.category = this.location.path().substring(index).replace('category-new/', '');
+        this.routes.push({
+          name: `category-new`,
+          link: `admin/category/${this.category}`
+        });
+      }
+      if (this.location.path().indexOf('subcategory-new') >= 0) {
+        const indexSubcategory = this.location.path().indexOf('subcategory-new') - 1;
+        const indexAdmin = this.location.path().indexOf('admin') + 6;
+        this.subcategory = this.location.path().substring(indexSubcategory).replace('subcategory-new/', '');
+        this.category = this.location.path().substring(indexAdmin, indexSubcategory);
+        this.routes.push({
+          name: `${this.category}`,
+          link: `admin/category/${this.category}`
+        });
+        this.routes.push({
+          name: `subcategory-new`,
+          link: `admin/${this.category}/subcategory-new`
+        });
+      }
     });
   }
 

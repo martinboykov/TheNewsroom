@@ -1,4 +1,10 @@
+import { HelperService } from './../../shared/helper.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { SubcategoryService } from '../subcategory.service';
+import { Subcategory } from '../subcategory.model';
 
 @Component({
   selector: 'app-subcategory-edit',
@@ -6,10 +12,152 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./subcategory-edit.component.scss']
 })
 export class SubcategoryEditComponent implements OnInit {
-
-  constructor() { }
+  mode: string;
+  subcategoryForm: FormGroup;
+  subcategory: Subcategory;
+  categoryName: string;
+  subcategoryName: string;
+  subcategoryPostsTotalCount: number;
+  subcategoryPosts: [];
+  constructor(
+    private router: Router,
+    private location: Location,
+    private subcategoryService: SubcategoryService,
+    public route: ActivatedRoute,
+    private helper: HelperService,
+  ) { }
 
   ngOnInit() {
+    this.subcategoryForm = new FormGroup({
+      name: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(20)]),
+      order: new FormControl(99, [
+        Validators.min(1),
+        Validators.max(99)]),
+      isVisible: new FormControl(true),
+    });
+    this.subcategoryName = this.route.snapshot.params.subcategoryName;
+    this.categoryName = this.route.snapshot.params.categoryName;
+    console.log(this.categoryName);
+
+    if (this.subcategoryName) {
+      console.log(this.subcategoryName);
+      this.mode = 'update';
+      this.subcategoryService.getSubcategory(this.subcategoryName)
+        .subscribe((response) => {
+
+          this.subcategory = response.data;
+          console.log(this.subcategory);
+
+          this.subcategoryForm.controls.name.setValue(this.subcategory.name);
+          this.subcategoryForm.controls.order.setValue(this.subcategory.order);
+          this.subcategoryForm.controls.isVisible.setValue(this.subcategory.isVisible);
+        });
+      this.subcategoryService.getSubcategoryPostsTotalCount(this.subcategoryName)
+        .subscribe((response) => {
+          this.subcategoryPostsTotalCount = response.data;
+          console.log(this.subcategoryPostsTotalCount);
+
+        });
+    } else {
+      this.mode = 'create';
+    }
+  }
+  get name() { return this.subcategoryForm.get('name'); }
+  get order() { return this.subcategoryForm.get('order'); }
+  get isVisible() { return this.subcategoryForm.get('isVisible'); }
+  get nameErrorRequired() {
+    // const activated = this.username.errors.required;
+    if (this.name.errors) {
+      // console.log(this.title.errors);
+      if (this.name.errors.required) {
+        return true;
+      }
+    } else {
+      return null;
+    }
+  }
+  get nameErrorLengthMin() {
+    if (this.name.errors) {
+      if (this.name.errors.minlength) {
+        return true;
+      }
+    } else {
+      return null;
+    }
+  }
+  get nameErrorLengthMax() {
+    if (this.name.errors) {
+      if (this.name.errors.maxlength) {
+        return true;
+      }
+    } else {
+      return null;
+    }
+  }
+  get orderErrorMin() {
+    if (this.name.errors) {
+      if (this.name.errors.min) {
+        return true;
+      }
+    } else {
+      return null;
+    }
+  }
+  get orderErrorMax() {
+    if (this.name.errors) {
+      if (this.name.errors.max) {
+        return true;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  onEditSubcategory() {
+    if (this.subcategoryForm.invalid) { return; }
+    let subcategory;
+    let options;
+    options = {
+      mode: this.mode
+    };
+    if (this.mode === 'update') {
+      options._id = this.subcategory._id;
+    }
+
+    const name = this.subcategoryForm.value.name;
+    const order = this.subcategoryForm.value.order || 99;
+    const isVisible = this.subcategoryForm.value.isVisible || true;
+
+    subcategory = {
+      name,
+      isVisible,
+      order,
+    };
+    if (this.mode === 'create') {
+      subcategory.categoryName = this.categoryName;
+    }
+    if (order) { subcategory.order = order; }
+
+    this.subcategoryService.editSubcategory(subcategory, options);
+    this.subcategoryForm.reset();
+  }
+  onDelete() {
+    this.subcategoryService.deleteSubcategory(this.subcategory);
+  }
+  onLoadPosts() {
+    this.subcategoryService.getSubcategoryPosts(this.subcategoryName)
+      .subscribe((response) => {
+        this.subcategoryPosts = response.data.posts;
+        console.log(this.subcategoryPosts);
+
+      });
+  }
+  goToPost(post) {
+    const postLink = this.helper.createRoute(post);
+    this.router.navigateByUrl(postLink);
   }
 
 }

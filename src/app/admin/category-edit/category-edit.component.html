@@ -1,3 +1,54 @@
-<p>
-  category-edit works!
-</p>
+<div class="wrapper">
+  <form class="form"
+        [formGroup]="categoryForm"
+        (ngSubmit)="onEditCategory()">
+    <div class="name">
+      name:
+      <input formControlName="name"
+             type="text">
+    </div>
+
+    <div class="order">
+      order:
+      <input formControlName="order"
+             type="number"
+             name="order"
+             min="1"
+             max="99"
+             value="99">
+    </div>
+    <div class="isVisible">
+      isVisible:<br>
+      <input formControlName="isVisible"
+             type="radio"
+             [value]=true>true<br>
+      <input formControlName="isVisible"
+             type="radio"
+             [value]=false>false
+    </div>
+    <button class="form__submit-button"
+            [disabled]="!categoryForm.valid"
+            type="submit">
+      <span *ngIf="mode==='create'">Create</span>
+      <span *ngIf="mode==='update'">Update</span>
+    </button>
+  </form>
+  <button class="delete__submit-button"
+          [disabled]="category?.subcategories.length !== 0"
+          (click)="onDelete()"
+          type="submit">Delete</button>
+  <div class="dev-check"
+       style="max-width: 500px;overflow-wrap: break-word;">
+    <p>Form Status: {{ categoryForm.status }}</p>
+    <p>Form Values: {{ categoryForm.value | json}}</p>
+    <p>Errors:</p>
+    <ul>
+      <li>
+        <p>Name Errors: {{ name.errors | json}}</p>
+      </li>
+      <li>
+        <p>Order Errors: {{ order.errors | json}}</p>
+      </li>
+    </ul>
+  </div>
+</div>

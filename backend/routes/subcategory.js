@@ -10,6 +10,14 @@ router.get(
   subcategoryController.getSubcategories);
 
 router.get(
+  '/:name',
+  subcategoryController.getSubcategory);
+
+router.get(
+  '/:name/postIds',
+  subcategoryController.getSubcategoryPostIds);
+
+router.get(
   '/:name/posts',
   subcategoryController.getSubcategoryPosts);
 
@@ -24,7 +32,7 @@ router.post(
 
 router.put(
   '/:_id',
-  subcategoryController.renameSubcategory);
+  subcategoryController.updateSubcategory);
 
 router.delete(
   '/:_id',

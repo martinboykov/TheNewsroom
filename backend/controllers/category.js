@@ -3,6 +3,11 @@ const { Post } = require('../models/post');
 
 const Fawn = require('Fawn');
 
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+const window = (new JSDOM('')).window;
+const DOMPurify = createDOMPurify(window);
+
 function compare(a, b) {
   if (a.order > b.order) {
     return 1;
@@ -14,6 +19,17 @@ function compare(a, b) {
 }
 
 // GET
+const getCategory = async (req, res, next) => {
+  const name = req.params.name;
+  const category = await Category.findOne({ name: name })
+    .select('name subcategories order isVisible');
+  if (!category) return res.status(400).json({ message: 'No such category.' });
+  return res.status(200).json({
+    message: 'Category fetched successfully',
+    data: category,
+  });
+};
+
 const getCategories = async (req, res, next) => {
   const categories = await Category.find({ isVisible: true })
     .select('name subcategories order isVisible')
@@ -22,7 +38,7 @@ const getCategories = async (req, res, next) => {
   categories.forEach((category) => {
     const sortedSubcategories = category.subcategories
       .filter((x) => x.isVisible === true);
-      sortedSubcategories.sort(compare);
+    sortedSubcategories.sort(compare);
     category.subcategories = sortedSubcategories;
   });
   res.status(200).json({
@@ -38,7 +54,7 @@ const getCategoriesFull = async (req, res, next) => {
     .populate('subcategories', 'name order isVisible');
   categories.forEach((category) => {
     const sortedSubcategories = category.subcategories;
-      sortedSubcategories.sort(compare);
+    sortedSubcategories.sort(compare);
     category.subcategories = sortedSubcategories;
   });
   res.status(200).json({
@@ -65,15 +81,8 @@ const getCategoryPosts = async (req, res, next) => {
 
   posts.map((post) => {
     let content = post.content;
-    // for eventual HTML post document
-    // --------------------------------
-    // const el = document.createElement('html');
-    // el.innerHTML = content;
-    // el.querySelector('.first-paragraph'); // Live NodeList of your anchor elements
-
-    content = content.substring(0, 1000); // for now...
+    content = content.substring(0, 1000);
     post.content = content;
-    // console.log(post);
     return post;
   });
 
@@ -119,22 +128,22 @@ const addCategory = async (req, res, next) => {
 };
 
 // PUT
-const renameCategory = async (req, res, next) => {
-  const category = await Category.findOne({ _id: req.params._id });
+const updateCategory = async (req, res, next) => {
+  const _id = DOMPurify.sanitize(req.params._id);
+  const category = await Category.findOne({ _id: _id });
   if (!category) {
     return res.status(400).json({ message: 'No such category.' });
   }
-  if (category.name === req.body.newName) {
-    return res.status(400).json({
-      message: 'Same category name. Must provide different name.',
-    });
-  }
-  const ifExists = await Category.findOne({ name: req.body.newName });
+  const ifExists = await Category.findOne({ name: DOMPurify.sanitize(req.body.newName) });
   if (ifExists) {
     return res.status(400).json({ message: 'Duplicate category name.' });
   }
-
-  const { error } = validateCategory({ name: req.body.newName });
+  const updatedCategory = req.body;
+  const { error } = validateCategory({
+    name: updatedCategory.name,
+    order: updatedCategory.order,
+    isVisible: updatedCategory.isVisible,
+  });
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
@@ -144,15 +153,19 @@ const renameCategory = async (req, res, next) => {
   task.update('categories', {
     _id: category._id,
   }, {
-      $set: { name: req.body.newName },
+      $set: {
+        name: DOMPurify.sanitize(updatedCategory.name),
+        order: parseInt(DOMPurify.sanitize(updatedCategory.order), 10),
+        isVisible: updatedCategory.isVisible,
+      },
     });
 
-  category.name = req.body.newName;
+  category.name = updatedCategory.name;
 
   task.update('posts', {
     'category._id': category._id,
   }, {
-      $set: { 'category.name': req.body.newName },
+      $set: { 'category.name': updatedCategory.name },
     }).options({ multi: true });
 
   return task.run({ useMongoose: true })
@@ -184,11 +197,12 @@ const deleteCategory = async (req, res, next) => {
 };
 
 module.exports = {
+  getCategory,
   getCategories,
   getCategoriesFull,
   getCategoryPosts,
   getCategoryPostsTotalCount,
   addCategory,
-  renameCategory,
+  updateCategory,
   deleteCategory,
 };

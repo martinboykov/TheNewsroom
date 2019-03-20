@@ -6,8 +6,10 @@ import { SubcategoryEditComponent } from './subcategory-edit/subcategory-edit.co
 
 const routes: Routes = [
   { path: '', component: AdminComponent },
-  { path: 'category/:name', component: CategoryEditComponent },
-  { path: 'subcategory/:name', component: SubcategoryEditComponent },
+  { path: 'category-new', component: CategoryEditComponent },
+  { path: ':categoryName/subcategory-new', component: SubcategoryEditComponent },
+  { path: 'category-update/:name', component: CategoryEditComponent },
+  { path: 'subcategory-update/:subcategoryName', component: SubcategoryEditComponent },
 ];
 
 @NgModule({

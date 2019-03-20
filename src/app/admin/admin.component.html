@@ -1,58 +1,97 @@
 <div class="wrapper">
-  <div class="category">
-
-    <ng-select class="category--dropdown"
-               [items]="categories"
-               bindLabel="name"
-               placeholder="Choose Category..."
-               (change)="onCategorySelected()"
-               [(ngModel)]="selectedCategory">
-    </ng-select>
-    <div class="category--selected"
-         *ngIf="selectedCategory">
+  <!-- <ng-select class="category--dropdown"
+             [items]="categories"
+             bindLabel="name"
+             placeholder="Choose Category..."
+             (change)="onCategorySelected()"
+             [(ngModel)]="selectedCategory">
+  </ng-select> -->
+  <div class="category group">
+    <ul class="category__list list">
       <span class="label">
-        Selected Category:</span>
-      <a class="category__link link"
-         routerLink="/category/{{selectedCategory?.name}}"
-         [style.color]="selectedCategory.isVisible === true ? '#2c2c2c' : '#a1a1a1'">
-        <span class="name">{{selectedCategory?.name}}</span>
-        <span class="order">order: {{selectedCategory?.order}} | isVisible: {{selectedCategory?.isVisible}}</span>
-      </a>
-      <br />
-      <span>Subategory list:</span>
-      <ul class="subcategory__list">
-        <li class="subcategory__item"
-            *ngFor="let subcategory of selectedCategory?.subcategories">
-          <a class="item__link link"
-             *ngIf="selectedCategory?.subcategories"
-             routerLink="/subcategory/{{subcategory.name}}"
-             [style.color]="subcategory.isVisible === true ? '#2c2c2c' : '#a1a1a1'">
-            <span class="name">{{subcategory?.name}}</span>
-            <span class="order">order: {{subcategory?.order}} | isVisible: {{subcategory?.isVisible}} </span>
-          </a>
-
-        </li>
-      </ul>
-      <div class="no-subcategory link"
-           *ngIf="noSubcategories">
-        There are no subcategories...
-      </div>
-      <div class="new-subcategory">
-        <button class="new-subcategory__button button"
-                (click)="addSubcategroy(selectedCategory)"
-                type="button">Add Subcategory
-        </button>
-      </div>
-
+        Select Category:
+      </span>
+      <li class="category__item item link"
+          *ngFor="let category of categories; let i = index"
+          [style.color]="category.isVisible === true ? '#2c2c2c' : '#a1a1a1'">
+        <span class="category__name name"
+              (click)="onCategorySelected(i)">
+          {{category?.name}}
+        </span>
+        <span class="category__functionalities functionalities">
+          <span class="category__order order">
+            order: {{category?.order}}
+          </span>
+          <span class="category__visibility visibility"
+                *ngIf="category?.isVisible">
+            visible
+          </span>
+          <span class="category__visibility visibility"
+                *ngIf="!category?.isVisible">
+            hidden
+          </span>
+          <button class="category__edit edit"
+                  (click)="onEditCategory(i)">
+            Edit
+          </button>
+        </span>
+      </li>
+    </ul>
+    <div class="new-category">
+      <button class="new-category button"
+              (click)="addCategroy()"
+              type="button">
+        Add Category
+      </button>
     </div>
   </div>
 
-  <div class="new-category">
-    <button class="new-category button"
-            (click)="addCategroy()"
-            type="button">Add Category
-    </button>
-  </div>
+  <div class="subcategory group"
+       *ngIf="selectedCategory">
+    <ul class="subcategory__list list">
+      <span class="label"
+            *ngIf="!noSubcategories && selectedCategory">
+        Select Subcategory:
+      </span>
+      <li class="subcategory__item item link"
+          *ngFor="let subcategory of selectedCategory?.subcategories; let i = index"
+          [style.color]="subcategory.isVisible === true ? '#2c2c2c' : '#a1a1a1'">
 
+        <span class="subcategory__name name"
+              (click)="onCategorySelected(i)">
+          {{subcategory?.name}}
+        </span>
+        <span class="subcategory__functionalities functionalities">
+          <span class="subcategory__order order">
+            order: {{subcategory?.order}}
+          </span>
+          <span class="subcategory__visibility visibility"
+                *ngIf="subcategory?.isVisible">
+            visible
+          </span>
+          <span class="subcategory__visibility visibility"
+                *ngIf="!subcategory?.isVisible">
+            hidden
+          </span>
+          <button class="subcategory__edit edit"
+                  (click)="onEditSubcategory(i)">
+            Edit
+          </button>
+        </span>
+      </li>
+    </ul>
+    <div class="no-subcategory"
+         *ngIf="noSubcategories && selectedCategory">
+      No subcategories
+    </div>
+    <div class="new-subcategory">
+      <button class="new-subcategory__button button"
+              (click)="addSubcategroy()"
+              type="button">
+        Add Subcategory
+      </button>
+    </div>
+
+  </div>
 
 </div>
