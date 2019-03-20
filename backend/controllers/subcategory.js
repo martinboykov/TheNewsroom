@@ -174,12 +174,8 @@ const updateSubcategory = async (req, res, next) => {
   }, {
       $set: {
         name: DOMPurify.sanitize(updatedSubcategory.name),
-        order:
-          DOMPurify.sanitize(updatedSubcategory.order)
-          || subcategory.order,
-        isVisible:
-          DOMPurify.sanitize(updatedSubcategory.isVisible)
-          || subcategory.isVisible,
+        order: DOMPurify.sanitize(updatedSubcategory.order),
+        isVisible: updatedSubcategory.isVisible,
       },
     });
   task.update('posts', {

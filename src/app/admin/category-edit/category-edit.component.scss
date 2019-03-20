@@ -1,0 +1,16 @@
+@import "./partials/variables";
+@import "./partials/mixins";
+
+.link {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 30px;
+  background: white;
+  margin: 10px 0;
+  padding: 0 7px;
+  text-decoration: none;
+  color: $black;
+  cursor: pointer;
+}

@@ -92,6 +92,20 @@ const getCategoryPosts = async (req, res, next) => {
   });
 };
 
+const getCategoryPostsPartial = async (req, res, next) => {
+  const name = req.params.name;
+  const category = await Category.findOne({ name: name })
+    .select('posts')
+    .populate('posts', 'category.name subcategory.name title');
+  if (!category) {
+    return res.status(400).json({ message: 'No such subcategory.' });
+  }
+  return res.status(200).json({
+    message: 'Subcategory fetched successfully',
+    data: category,
+  });
+};
+
 const getCategoryPostsTotalCount = async (req, res, next) => {
   const categoryPosts = await Category
     .findOne({ name: req.params.name });
@@ -134,7 +148,9 @@ const updateCategory = async (req, res, next) => {
   if (!category) {
     return res.status(400).json({ message: 'No such category.' });
   }
-  const ifExists = await Category.findOne({ name: DOMPurify.sanitize(req.body.newName) });
+  const ifExists = await Category.findOne({
+    name: DOMPurify.sanitize(req.body.newName),
+  });
   if (ifExists) {
     return res.status(400).json({ message: 'Duplicate category name.' });
   }
@@ -201,6 +217,7 @@ module.exports = {
   getCategories,
   getCategoriesFull,
   getCategoryPosts,
+  getCategoryPostsPartial,
   getCategoryPostsTotalCount,
   addCategory,
   updateCategory,

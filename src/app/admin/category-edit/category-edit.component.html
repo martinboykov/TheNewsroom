@@ -34,9 +34,33 @@
     </button>
   </form>
   <button class="delete__submit-button"
-          [disabled]="category?.subcategories.length !== 0"
+          [disabled]="category?.subcategories.length !== 0 || categoryPostsTotalCount !== 0"
           (click)="onDelete()"
           type="submit">Delete</button>
+  <button class="posts__button"
+          (click)="onLoadPosts()"
+          *ngIf="categoryPostsTotalCount !== 0 && mode === 'update'">Show Posts</button>
+
+  <ng-select *ngIf="loadedPosts"
+             [items]="categoryPosts"
+             [virtualScroll]="true"
+             [loading]="loading"
+             bindLabel="title"
+             placeholder="Posts..."
+             (scroll)="onScroll($event)"
+             (scrollToEnd)="onScrollToEnd()"
+             [(ngModel)]="selectedPost">
+  </ng-select>
+  <div class="link"
+       (click)="goToPost(selectedPost)"
+       *ngIf="selectedPost">
+    {{selectedPost?.title}}
+  </div>
+  <!-- <ul>
+    <li *ngFor="let post of categoryPosts">
+
+    </li>
+  </ul> -->
   <div class="dev-check"
        style="max-width: 500px;overflow-wrap: break-word;">
     <p>Form Status: {{ categoryForm.status }}</p>

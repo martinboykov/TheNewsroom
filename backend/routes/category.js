@@ -17,6 +17,9 @@ router.get('/full',
 router.get('/:name/posts',
   categoryController.getCategoryPosts);
 
+router.get('/:name/posts/partial',
+  categoryController.getCategoryPostsPartial);
+
 router.get(
   '/:name/posts/totalCount',
   categoryController.getCategoryPostsTotalCount,

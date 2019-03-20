@@ -19,6 +19,12 @@ export class SubcategoryEditComponent implements OnInit {
   subcategoryName: string;
   subcategoryPostsTotalCount: number;
   subcategoryPosts: [];
+  subcategoryPostsBuffer = [];
+  selectedPost;
+  loading = false;
+  bufferSize = 50;
+  numberOfItemsFromEndBeforeFetchingMore = 10;
+  loadedPosts = false;
   constructor(
     private router: Router,
     private location: Location,
@@ -128,18 +134,18 @@ export class SubcategoryEditComponent implements OnInit {
     }
 
     const name = this.subcategoryForm.value.name;
-    const order = this.subcategoryForm.value.order || 99;
-    const isVisible = this.subcategoryForm.value.isVisible || true;
+    const order = this.subcategoryForm.value.order;
+    const isVisible = this.subcategoryForm.value.isVisible;
 
     subcategory = {
       name,
       isVisible,
-      order,
     };
     if (this.mode === 'create') {
       subcategory.categoryName = this.categoryName;
     }
     if (order) { subcategory.order = order; }
+    console.log(subcategory);
 
     this.subcategoryService.editSubcategory(subcategory, options);
     this.subcategoryForm.reset();
@@ -151,6 +157,7 @@ export class SubcategoryEditComponent implements OnInit {
     this.subcategoryService.getSubcategoryPosts(this.subcategoryName)
       .subscribe((response) => {
         this.subcategoryPosts = response.data.posts;
+        this.loadedPosts = true;
         console.log(this.subcategoryPosts);
 
       });
@@ -160,4 +167,28 @@ export class SubcategoryEditComponent implements OnInit {
     this.router.navigateByUrl(postLink);
   }
 
+  onScrollToEnd() {
+    this.fetchMore();
+  }
+
+  onScroll({ end }) {
+    if (this.loading || this.subcategoryPosts.length === this.subcategoryPostsBuffer.length) {
+      return;
+    }
+
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.subcategoryPostsBuffer.length) {
+      this.fetchMore();
+    }
+  }
+
+  private fetchMore() {
+    const len = this.subcategoryPostsBuffer.length;
+    const more = this.subcategoryPosts.slice(len, this.bufferSize + len);
+    this.loading = true;
+    // using timeout here to simulate backend API delay
+    setTimeout(() => {
+      this.loading = false;
+      this.subcategoryPostsBuffer = this.subcategoryPostsBuffer.concat(more);
+    }, 200);
+  }
 }

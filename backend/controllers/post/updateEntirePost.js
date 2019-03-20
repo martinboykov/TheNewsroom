@@ -35,14 +35,11 @@ const updatePost = async (req, res, next) => {
     req.body.imageMainPath = req.file.cloudStoragePublicUrl;
   }
 
-  console.log(req.body);
   const { error } = validatePost(data);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
     // return res.status(400).json({ message: 'Invalid request data' });
   }
-
-  console.log('PASSING VALIDATION');
 
   const postOld = await Post.findOne({ _id: req.params._id });
   // if such doesnt exists => error
@@ -92,7 +89,6 @@ const updatePost = async (req, res, next) => {
         postUpdated.category = { name: category.name, _id: category._id };
       });
   }
-  console.log('PASSING CATEGORY');
 
   // IF SUBCATEGORY CHANGED/UNCHANGED
   let oldSubcategory;
@@ -155,7 +151,6 @@ const updatePost = async (req, res, next) => {
         }
       }
     });
-    console.log('PASSING SUBCATEGORY');
 
   // TAG UPDATE
   if (data.tags.length === 0) {
@@ -227,7 +222,6 @@ const updatePost = async (req, res, next) => {
     ...promisesDifferentTags,
     ...promisesRemovedTags,
   ];
-  console.log('PASSING TAGS');
 
   return Promise.all(allPromises)
     .then(() => {

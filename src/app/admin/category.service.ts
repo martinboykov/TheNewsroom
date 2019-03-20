@@ -26,6 +26,18 @@ export class CategoryService {
       .get<{ message: string, data: Category }>(BACKEND_URL + route);
   }
 
+  getCategoryPostsPartial(name) {
+    const route = `/categories/${name}/posts/partial`;
+    return this.http
+      .get<{ message: string, data: any }>(BACKEND_URL + route);
+  }
+
+  getCategoryPostsTotalCount(name) {
+    const route = `/categories/${name}/posts/totalCount`;
+    return this.http
+      .get<{ message: string, data: number }>(BACKEND_URL + route);
+  }
+
   getCategories() {
     // if (this.categorySubscribtionExists) {
     //   return console.log('exist');
