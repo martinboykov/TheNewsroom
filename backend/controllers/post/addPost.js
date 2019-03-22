@@ -29,7 +29,6 @@ const addPost = async (req, res, next) => {
   }
 
   const data = req.body;
-  console.log(data);
 
   const parsedTags = JSON.parse(data.tags);
   data.tags = parsedTags;
@@ -50,7 +49,8 @@ const addPost = async (req, res, next) => {
       name: user.name,
       _id: user._id,
     },
-    imageMainPath: req.file.cloudStoragePublicUrl, // req.file.cloudStoragePublicUrl
+    imageMainPath: req.body.imageMainPath, // req.file.cloudStoragePublicUrl
+    // imageMainPath: req.file.cloudStoragePublicUrl, // req.file.cloudStoragePublicUrl
   });
 
   const task = new Fawn.Task(); // eslint-disable-line new-cap

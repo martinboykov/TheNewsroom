@@ -6,8 +6,8 @@ import { Component, OnInit, OnDestroy, Renderer2, ViewChild, AfterViewInit, Afte
 import { Post } from './../post.model';
 import { PostService } from '../post.service';
 import { mimeType } from './mime-type.validator';
-import { Subscription, from, timer } from 'rxjs';
-import { tap, delay, concatMap } from 'rxjs/operators';
+import { Subscription, timer, Subject, Observable, concat, of, from } from 'rxjs';
+import { tap, delay, concatMap, debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-post-edit',
@@ -26,8 +26,11 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   subcategories: any[] = []; // the data is not strict category !?!?, but with populate subcategories name
   categoryselected;
   contentTextOnly = '';
-  tagsArray: any[] = [];
+  tagsArray: Observable<any[]>;
   loading: boolean;
+  searchedTag = '';
+  tagsInput = new Subject<string>();
+
   private categoriesSubscription: Subscription;
   jodiConfig = {
     // defaultMode: '3',
@@ -71,9 +74,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
       category: new FormControl(null, [
         Validators.required]),
       subcategory: new FormControl(null, []),
-      tags: new FormArray([], [
-        this.tagsValidatorRequired,
-        this.tagsValidatorLength.bind(this)]),
+      tags: new FormControl([], [this.tagsValidatorRequired, this.tagsValidatorLength])
     });
 
     // get mode(create/update) and Post ID
@@ -91,16 +92,15 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
             this.postForm.controls.title.setValue(this.post.title);
             this.postForm.controls.content.setValue(this.post.content);
             this.postForm.controls.category.setValue(this.post.category.name);
+            const tagsArray = this.post.tags.reduce((accumulator, currentValue) => {
+              accumulator.push(currentValue.name);
+              return accumulator;
+            }, []);
+            this.postForm.controls.tags.setValue([...tagsArray]);
 
-            // 2. (async) get Tags -> to fill the ng-select tags options
-            return this.postService.getTagNames();
-          })
-        )
-        .pipe(
-          concatMap((tags) => {
-            this.tagsArray = [...tags];
 
-            // 3. (async) get Categories -> to fill the ng-select categories options
+            this.loadTags();
+            // 2. (async) get Categories -> to fill the ng-select categories options
             // and set the post category
             this.categoryService.getCategories();
             return this.categoryService.getCategoriesUpdateListener();
@@ -115,39 +115,46 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
             }
           })[0];
 
-          // 3.1. (sync) get Subcategories -> to fill the ng-select subcategories options (if such exists)
+          // 2.1. (sync) get Subcategories -> to fill the ng-select subcategories options (if such exists)
           if (currentCategory.subcategories) {
             this.subcategories = currentCategory.subcategories.reduce((accumulator, currentValue) => {
               accumulator.push(currentValue.name);
               return accumulator;
             }, []);
           }
-          // 3.2. (sync) set ng-select subcategory input field (if such exists)
+          // 2.2. (sync) set ng-select subcategory input field (if such exists)
           if (this.post.subcategory) {
             this.postForm.controls.subcategory.setValue(this.post.subcategory.name);
           }
 
-          // 3.3. (sync) set up ng-select tags input field
-          this.post.tags.forEach((tag) => {
-            const item = this.selectTags.itemsList.findByLabel(tag.name);
-            console.log(item);
-            if (item) {
-              this.selectTags.select(item);
-            }
-            // });
-          });
         });
     } else {
       this.mode = 'create';
       this.postId = null;
+      this.loadTags();
       this.categoriesSubscription = this.categoryService.getCategoriesUpdateListener()
         .subscribe((categories: any[]) => {
           this.categories = [...categories];
         });
-      this.postService.getTagNames()
-        .subscribe((tags) => {
-          this.tagsArray = [...tags];
-        });
+
+
+      // mongodb fake posts loading
+      // -------------------------
+      // let counter = 0;
+      // let post;
+      // while (counter < 1000) {
+      //   post = {
+      //     title: `Fake electric cars title #${counter} is above 10 characters`,
+      //     content: `Fake electric cars content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
+      //     category: 'technology',
+      //     subcategory: 'electric cars',
+      //     tags: [`electric cars${counter}`],
+      //     image: `https://i.imgur.com/to6SHOB.jpg`,
+      //   };
+      //   this.postService.editPost(post, this.mode);
+      //   counter += 1;
+      // }
+      // -------------------------
     }
   }
   ngAfterContentInit() {
@@ -158,7 +165,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   get title() { return this.postForm.get('title'); }
   get category() { return this.postForm.get('category'); }
   get subcategory() { return this.postForm.get('subcategory'); }
-  get tags() { return this.postForm.get('tags') as FormArray; }
+  get tags() { return this.postForm.get('tags'); }
   get content() { return this.postForm.get('content'); }
   get image() { return this.postForm.get('image'); }
 
@@ -290,11 +297,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     if (_id) { post._id = _id; }
 
     this.postService.editPost(post, this.mode);
-    this.postForm.reset();
-    // }
-    // if (this.mode === 'update') {
-    //   // ....
-    // }
+    // this.postForm.reset();
   }
 
   // Image
@@ -350,28 +353,50 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
   // Tags
   // ----------------------------------
-  onAdd(tag) {
-    if (typeof tag === 'object' && tag !== null) {
-      return (this.tags as FormArray).push(new FormControl(tag));
-    }
-    (this.tags as FormArray).push(new FormControl(tag));
-  }
 
-  onRemove(tag) {
-    const index = this.tags.value.indexOf(tag.label);
-    this.tags.removeAt(index);
+  private loadTags() {
+    // if (this.tagsInput.length > 1) {
+    //   this.tagsArray = this.postService.getTagNames(this.tagsInput);
+    // }
+    this.tagsArray =
+      concat(
+        of([]), // default items
+        this.tagsInput
+          .pipe(
+            debounceTime(1000),
+            distinctUntilChanged(),
+            tap(() => this.loading = true),
+            switchMap((name) => this.postService.getTagNames(name)
+              .pipe(
+                catchError(() => {
+                  this.loading = false;
+                  return of([]);
+                }), // empty list on error
+                tap(() => this.loading = false)
+              ))
+          )
+      );
   }
   onOpen() {
     // manually mark as touched, as otherwise it doesnt get fired
-    (this.tags as FormArray).markAsTouched();
+
+    // this.tags.markAsTouched();
   }
+  onAdd(tag) {
+    this.tags.setValue([...this.tags.value, tag]);
+  }
+  customSearchFn = () => {
+    console.log('custom search');
+
+  }
+
 
   // time laps simulator
   addTagPromise(name) {
     this.loading = true;
     return from([name])
       .pipe(
-        delay(1000),
+        // delay(1000),
         tap(() => this.loading = false),
       )
       .toPromise();
@@ -379,8 +404,10 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
   // ng-select internal
   addTag(name) {
-    // console.log(name);
     return { name: name, tag: true };
+  }
+  onRemove(tag) {
+
   }
 
   // gives entire ng-select object (for debugging etc...)
@@ -388,7 +415,12 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     // console.log(select);
     // console.log(select.itemsList.selectedItems);
     // console.log(this.selectTags);
+  }
 
+  onSearch(letter) {
+    if (letter.term.length > 1) {
+      this.searchedTag = letter.term;
+    }
   }
 
   // content length must be between 200 and 100000
@@ -416,7 +448,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     return lengthErrorIndicator ? { lengthErrorMax: true } : null;
   }
   // there must be at least one tag
-  private tagsValidatorRequired(controls: AbstractControl[]): { [key: string]: boolean } {
+  private tagsValidatorRequired(controls: AbstractControl): { [key: string]: boolean } {
     let requiredErrorIndicator = false;
     if (controls['value'].length === 0) {
       requiredErrorIndicator = true;
@@ -424,9 +456,9 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     return requiredErrorIndicator ? { requiredError: true } : null;
   }
   // tags must be between 2 and 25 characters each
-  private tagsValidatorLength(controls: AbstractControl[]): { [key: string]: boolean } {
+  private tagsValidatorLength(controls: AbstractControl): { [key: string]: boolean } {
     let lengthErrorIndicator = false;
-    if (controls.length > 0) {
+    if (controls['value'].length > 0) {
       controls['value'].forEach((tag) => {
         if (!tag) { return null; }
         if (tag.length < 2 || tag.length > 25) {
@@ -443,4 +475,3 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   }
 
 }
-

@@ -221,8 +221,11 @@ export class PostService {
       });
   }
 
-  getTagNames() {
-    const route = `/tags?namesOnly=true`;
+  getTagNames(name?) {
+    console.log(name);
+    let route;
+
+    route = `/tags?namesOnly=true&name=${name}`;
     return this.http
       .get<{ message: string, data: string[] }>(BACKEND_URL + route)
       .pipe(

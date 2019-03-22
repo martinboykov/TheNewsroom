@@ -65,38 +65,6 @@ export class SearchActivationDirective implements OnInit, OnDestroy {
       this.renderer.setStyle(offButton, 'display', 'none');
     }
 
-    // if (el === offButton) {
-    //   this.renderer.setStyle(offButton, 'display', 'none');
-    //   this.renderer.setStyle(onButton, 'display', 'block');
-    //   this.searchForm.forEach((element) => {
-    //     if (this.isMobile) {
-    //       if (element.classList.contains('mobile')) {
-    //         this.renderer.setStyle(element, 'display', 'none');
-    //       }
-    //     }
-    //     if (!this.isMobile) {
-    //       if (element.classList.contains('desktop')) {
-    //         this.renderer.setStyle(element, 'display', 'none');
-    //       }
-    //     }
-    //   });
-    // }
-    // if (el === onButton) {
-    //   this.renderer.setStyle(offButton, 'display', 'block');
-    //   this.renderer.setStyle(onButton, 'display', 'none');
-    //   this.searchForm.forEach((element) => {
-    //     if (this.isMobile) {
-    //       if (element.classList.contains('mobile')) {
-    //         this.renderer.setStyle(element, 'display', 'block');
-    //       }
-    //     }
-    //     if (!this.isMobile) {
-    //       if (element.classList.contains('desktop')) {
-    //         this.renderer.setStyle(element, 'display', 'block');
-    //       }
-    //     }
-    //   });
-    // }
   }
   ngOnDestroy() {
     this.isMobileResolutionSubscription.unsubscribe();

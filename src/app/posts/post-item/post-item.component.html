@@ -4,21 +4,21 @@
      class="link">
     <article class="item">
       <div class="item-top"
-           [ngStyle]="{'background-image': 'url(' + post.imageMainPath + ')'}">
+           [ngStyle]="{'background-image': 'url(' + post?.imageMainPath + ')'}">
         <div class="item-top--category text-center">
-          <h2 class="white">{{post.category.name}}</h2>
+          <h2 class="white">{{post?.category?.name}}</h2>
         </div>
         <div class="item-top--month white">
-          <h2 class="item-top--month__date white">{{post.dateCreated | date:'LLL' }}</h2>
+          <h2 class="item-top--month__date white">{{post?.dateCreated | date:'LLL' }}</h2>
         </div>
         <div class="item-top--day white">
-          <h2 class="item-top--day__date white">{{post.dateCreated | date:'d' }}</h2>
+          <h2 class="item-top--day__date white">{{post?.dateCreated | date:'d' }}</h2>
         </div>
       </div>
       <div class="item-bottom">
         <div class="item-bottom__upper">
-          <h1 class="item-bottom__upper--title red">{{post.title}}</h1>
-          <h3 class="item-bottom__upper--author black">posted by {{post.author.name}}</h3>
+          <h1 class="item-bottom__upper--title red">{{post?.title}}</h1>
+          <h3 class="item-bottom__upper--author black">posted by {{post?.author?.name}}</h3>
         </div>
         <div class="item-bottom__lower">
           <div class="item-bottom__lower--text"

@@ -3,11 +3,19 @@ const { Post } = require('../models/post');
 
 // GET
 const getTags = async (req, res, next) => {
-  const query = req.query.namesOnly;
+  const queryNamesOnly = req.query.namesOnly;
+  const queryName = req.query.name;
+  console.log(queryNamesOnly);
+  console.log(queryName);
   let tagQuery;
-  if (query === 'true') tagQuery = Tag.find().distinct('name');
-  if (query !== 'true') tagQuery = Tag.find();
+  if (queryNamesOnly === 'true' && queryName) {
+    tagQuery = Tag.find({
+      name: { $regex: queryName },
+    }).distinct('name');
+  }
+  if (queryNamesOnly !== 'true') tagQuery = Tag.find();
   const tags = await tagQuery;
+  console.log(tags);
   res.status(200).json({
     message: 'Tags fetched successfully',
     data: tags,

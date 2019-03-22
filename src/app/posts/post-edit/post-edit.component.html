@@ -52,19 +52,21 @@
     <!-- tags -->
     <ng-select class="form__tags"
                #selectTags
-               [items]="tagsArray"
-               [addTag]="addTagPromise"
+               [items]="tagsArray | async"
+               [typeahead]="tagsInput"
                [hideSelected]="false"
                [clearable]="false"
+               [loading]="loading"
                multiple="true"
                bindLabel="name"
                maxSelectedItems="10"
                (remove)="onRemove($event)"
                (add)="onAdd($event)"
                (change)="onChange(selectTags)"
+               (search)="onSearch($event)"
                (open)="onOpen()"
-               [loading]="loading"
-               placeholder="Add Tag...">
+               placeholder="Add Tag..."
+               formControlName="tags">
       <ng-template ng-tag-tmp
                    let-search="searchTerm">
         <b>create new</b>: {{search}}
@@ -118,7 +120,7 @@
             type="submit">Save Post</button>
   </form>
 
-  <div class="dev-check"
+  <!-- <div class="dev-check"
        style="max-width: 500px;overflow-wrap: break-word;">
     <p>Form Status: {{ postForm.status }}</p>
     <p>Form Values: {{ postForm.value | json}}</p>
@@ -143,5 +145,5 @@
         <p>Tags Errors: {{ tags.errors | json}}</p>
       </li>
     </ul>
-  </div>
+  </div> -->
 </div>
