@@ -178,11 +178,16 @@ const updateSubcategory = async (req, res, next) => {
         isVisible: updatedSubcategory.isVisible,
       },
     });
-  task.update('posts', {
-    'subcategory._id': subcategory._id,
-  }, {
-      $set: { 'subcategory.name': DOMPurify.sanitize(updatedSubcategory.name) },
-    }).options({ multi: true });
+  if (subcategory.name !== updatedSubcategory.name) {
+    task.update('posts', {
+      'subcategory._id': subcategory._id,
+    }, {
+        $set: {
+          'subcategory.name': DOMPurify.sanitize(updatedSubcategory.name),
+        },
+      }).options({ multi: true });
+  }
+
   return task.run({ useMongoose: true })
     .then((result) => {
       res.status(200).json({

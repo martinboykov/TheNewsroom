@@ -38,18 +38,13 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.previousIndex = index;
     this.selectedCategory = this.categories[index];
     // if (!this.selectedCategory) { return; }
-    if (this.selectedCategory.subcategories.length !== 0) {
-      this.noSubcategories = false;
-    } else {
-      this.noSubcategories = true;
-    }
   }
-  onEditCategory(index) {
-    const categoryName = this.categories[index].name;
+  onEditCategory(i) {
+    const categoryName = this.categories[i].name;
     this.router.navigateByUrl(`admin/category-update/${categoryName}`);
   }
-  onEditSubcategory(index) {
-    const subcategoryName = this.selectedCategory.subcategories[index].name;
+  onEditSubcategory(subcategory) {
+    const subcategoryName = subcategory.name;
     this.router.navigateByUrl(`admin/subcategory-update/${subcategoryName}`);
   }
 

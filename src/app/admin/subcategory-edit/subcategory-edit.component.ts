@@ -1,3 +1,4 @@
+import { CategoryService } from './../category.service';
 import { HelperService } from './../../shared/helper.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -31,6 +32,7 @@ export class SubcategoryEditComponent implements OnInit {
     private subcategoryService: SubcategoryService,
     public route: ActivatedRoute,
     private helper: HelperService,
+    private categoryService: CategoryService,
   ) { }
 
   ngOnInit() {
@@ -146,9 +148,14 @@ export class SubcategoryEditComponent implements OnInit {
     }
     if (order) { subcategory.order = order; }
     console.log(subcategory);
-
-    this.subcategoryService.editSubcategory(subcategory, options);
-    this.subcategoryForm.reset();
+    this.loading = true;
+    this.subcategoryService.editSubcategory(subcategory, options)
+      .subscribe((response) => {
+        console.log(response);
+        this.categoryService.getCategories();
+        this.loading = false;
+        this.router.navigateByUrl('admin');
+      });
   }
   onDelete() {
     this.subcategoryService.deleteSubcategory(this.subcategory);

@@ -6,12 +6,14 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
 import { SubcategoryEditComponent } from './subcategory-edit/subcategory-edit.component';
 import { CategoryEditComponent } from './category-edit/category-edit.component';
+import { ToggleSubItemsDirective } from './toggleSubitems.directive';
 
 @NgModule({
   declarations: [
     AdminComponent,
     SubcategoryEditComponent,
-    CategoryEditComponent
+    CategoryEditComponent,
+    ToggleSubItemsDirective
   ],
   imports: [
     CommonModule,

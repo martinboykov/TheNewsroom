@@ -43,12 +43,6 @@ const getTagPosts = async (req, res, next) => {
 
   posts.map((post) => {
     let content = post.content;
-    // for eventual HTML post document
-    // --------------------------------
-    // const el = document.createElement('html');
-    // el.innerHTML = content;
-    // el.querySelector('.first-paragraph'); // Live NodeList of your anchor elements
-
     content = content.substring(0, 300); // for now...
     post.content = content;
     // console.log(post);

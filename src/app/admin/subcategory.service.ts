@@ -53,15 +53,11 @@ export class SubcategoryService {
     if (options.mode === 'update') {
       const _id = options._id;
       const route = `/subcategories/${_id}`;
-      this.http
+     return  this.http
         .put<{ message: string, data: Subcategory }>(
           BACKEND_URL + route,
-          subcategory)
-        .subscribe((response) => {
-          console.log(response);
-          this.categoryService.getCategories();
-          this.router.navigateByUrl('admin');
-        });
+          subcategory);
+
     }
   }
 

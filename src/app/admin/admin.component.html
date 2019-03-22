@@ -12,15 +12,15 @@
         Select Category:
       </span>
       <li class="category__item item "
-          *ngFor="let category of categories; let i = index"
-          >
+          *ngFor="let category of categories; let i = index">
         <div class="item__link link"
-        [style.color]="category.isVisible === true ? '#2c2c2c' : '#a1a1a1'">
+             [style.color]="category.isVisible === true ? '#2c2c2c' : '#a1a1a1'">
           <span class="category__name name">
             {{category?.name}}
             <span class=" category--toggle-btn"
                   [style.transform]="selectedCategory?.name === category.name ? 'scale(1, -1)' : 'scale(1, 1)'"
-                  (click)="onCategorySelected(i)">
+                  (click)="onCategorySelected(i)"
+                  appToggleSubItems>
               <svg version="1.1"
                    id="Capa_1"
                    xmlns="http://www.w3.org/2000/svg"
@@ -58,15 +58,10 @@
             </button>
           </span>
         </div>
-        <div class="subcategory group"
-             *ngIf="selectedCategory?.name === category?.name">
+        <div class="subcategory group">
           <ul class="subcategory__list list">
-            <!-- <span class="label"
-                  *ngIf="!noSubcategories && selectedCategory">
-              Subcategories:
-            </span> -->
             <li class="subcategory__item link"
-                *ngFor="let subcategory of selectedCategory?.subcategories; let i = index"
+                *ngFor="let subcategory of category?.subcategories; let i = index"
                 [style.color]="subcategory.isVisible === true ? '#2c2c2c' : '#a1a1a1'">
 
               <span class="subcategory__name name"
@@ -84,9 +79,9 @@
                        style="enable-background:new 0 0 220.682 220.682;"
                        xml:space="preserve">
                     <polygon points="92.695,38.924 164.113,110.341 92.695,181.758 120.979,210.043 220.682,110.341 120.979,10.639  "
-                             [style.fill]="category.isVisible === true ? '#585858' : '#a1a1a1'"/>
+                             [style.fill]="category.isVisible === true ? '#585858' : '#a1a1a1'" />
                     <polygon points="28.284,210.043 127.986,110.341 28.284,10.639 0,38.924 71.417,110.341 0,181.758  "
-                             [style.fill]="category.isVisible === true ? '#585858' : '#a1a1a1'"/>
+                             [style.fill]="category.isVisible === true ? '#585858' : '#a1a1a1'" />
                   </svg>
                 </span>
                 {{subcategory?.name}}
@@ -104,17 +99,14 @@
                   hidden
                 </span>
                 <button class="subcategory__edit edit"
-                        (click)="onEditSubcategory(i)">
+                        (click)="onEditSubcategory(subcategory)">
                   Edit
                 </button>
               </span>
             </li>
           </ul>
-          <!-- <div class="no-subcategory"
-               *ngIf="noSubcategories && selectedCategory">
-            No subcategories
-          </div> -->
-          <div class="new-subcategory">
+          <div class="new-subcategory"
+               *ngIf="selectedCategory?.name === category?.name">
             <button class="new-subcategory__button button"
                     (click)="addSubcategroy()"
                     type="button">

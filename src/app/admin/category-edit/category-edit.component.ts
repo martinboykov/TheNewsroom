@@ -130,8 +130,15 @@ export class CategoryEditComponent implements OnInit {
     };
     if (order) { category.order = order; }
     if (_id) { category._id = _id; }
-    this.categoryService.editCategory(category, this.mode);
-    this.categoryForm.reset();
+    this.loading = true;
+    this.categoryService.editCategory(category, this.mode)
+    .subscribe((response) => {
+      this.loading = false;
+      console.log(response);
+      this.categoryService.getCategories();
+      this.router.navigateByUrl('admin');
+      this.categoryForm.reset();
+    });
   }
   onDelete() {
     if (this.category.subcategories.length !== 0) { return; }

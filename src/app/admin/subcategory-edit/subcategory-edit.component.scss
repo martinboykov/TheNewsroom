@@ -1,0 +1,18 @@
+@import "./partials/variables";
+@import "./partials/mixins";
+
+
+.spinner-container {
+  display: inline-block;
+  background: white;
+  height: 30px;
+  width: 100px;
+}
+
+.form__submit-button {
+  height: 30px;
+  .submit-button,
+  .loader {
+    display: inline-block;
+  }
+}

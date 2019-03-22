@@ -62,28 +62,19 @@ export class CategoryService {
 
     if (mode === 'create') {
       const route = `/categories`;
-      this.http
+      return this.http
         .post<{ message: string, data: Category }>(
           BACKEND_URL + route,
-          category)
-        .subscribe((response) => {
-          console.log(response);
-          this.getCategories();
-          this.router.navigateByUrl('admin');
-        });
+          category);
     }
     if (mode === 'update') {
       const _id = category._id;
       const route = `/categories/${_id}`;
-      this.http
+      return this.http
         .put<{ message: string, data: Category }>(
           BACKEND_URL + route,
-          category)
-        .subscribe((response) => {
-          console.log(response);
-          this.getCategories();
-          this.router.navigateByUrl('admin');
-        });
+          category);
+
     }
   }
 

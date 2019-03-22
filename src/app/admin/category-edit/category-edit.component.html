@@ -26,12 +26,16 @@
              type="radio"
              [value]=false>false
     </div>
-    <button class="form__submit-button"
-            [disabled]="!categoryForm.valid"
-            type="submit">
-      <span *ngIf="mode==='create'">Create</span>
-      <span *ngIf="mode==='update'">Update</span>
-    </button>
+    <div class="form__submit-button">
+      <button class="submit-button"
+              [disabled]="!categoryForm.valid"
+              type="submit">
+        <span *ngIf="mode==='create'">Create</span>
+        <span *ngIf="mode==='update'">Update</span>
+      </button>
+      <div class="loader"
+      *ngIf="loading"></div>
+    </div>
   </form>
   <button class="delete__submit-button"
           [disabled]="category?.subcategories.length !== 0 || categoryPostsTotalCount !== 0"

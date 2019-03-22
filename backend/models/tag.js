@@ -24,8 +24,9 @@ const tagSchema = new mongoose.Schema({
   },
 });
 
-// tagSchema.index({ name: 1 }); // schema level
+
 tagSchema.index({ name: 'text' }); // schema level
+tagSchema.index({ name: 1 }); // schema level
 
 function validateTag(tag) {
   const schema = Joi.object({

@@ -176,14 +176,15 @@ const updateCategory = async (req, res, next) => {
       },
     });
 
-  category.name = updatedCategory.name;
+  // category.name = updatedCategory.name;
 
-  task.update('posts', {
-    'category._id': category._id,
-  }, {
-      $set: { 'category.name': updatedCategory.name },
-    }).options({ multi: true });
-
+  if (category.name !== updatedCategory.name) {
+    task.update('posts', {
+      'category._id': category._id,
+    }, {
+        $set: { 'category.name': DOMPurify.sanitize(updatedCategory.name) },
+      }).options({ multi: true });
+  }
   return task.run({ useMongoose: true })
     .then(() => {
       res.status(200).json({
