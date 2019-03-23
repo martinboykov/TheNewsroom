@@ -62,6 +62,7 @@
                maxSelectedItems="10"
                (remove)="onRemove($event)"
                (add)="onAdd($event)"
+               [addTag]="addTagPromise"
                (change)="onChange(selectTags)"
                (search)="onSearch($event)"
                (open)="onOpen()"
@@ -75,8 +76,10 @@
     <div class="form__error-messages">
       <div *ngIf="tagsErrorRequired && tags.touched"
            class="error-block">*Please provide a tag</div>
-      <div *ngIf="tagsErrorLength"
+      <div *ngIf="tagsErrorLength && tags.touched"
            class="error-block">*Tag must be between 2 and 25 characters</div>
+      <div *ngIf="tagsErrorCharacter && tags.touched"
+           class="error-block">*Tag characters can include: a-z, 0-9, -, _, space </div>
     </div>
 
     <!-- title -->

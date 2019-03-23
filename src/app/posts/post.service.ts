@@ -47,21 +47,6 @@ export class PostService {
     // console.log(BACKEND_URL + url + queryParams);
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams)
-      // content substringing is done in the backend for now
-      // .pipe(
-      //   map((postData) => {
-      //     return postData.data.map((post) => {
-      //       let content = post.content;
-      //       // const el = document.createElement('html');
-      //       // el.innerHTML = content;
-      //       // el.querySelector('.first-paragraph'); // Live NodeList of your anchor elements
-      //       content = content.substring(0, 20);
-      //       post.content = content;
-      //       // console.log(post);
-      //       return post;
-      //     });
-      //   })
-      // )
       .subscribe((postData) => {
         this.posts = postData.data;
         this.postsUpdated.next([...this.posts]);
@@ -202,7 +187,6 @@ export class PostService {
           const newPost = response.data;
           this.posts.push(newPost);
           this.postsUpdated.next([...this.posts]);
-
           const postLink = this.helper.createRoute(newPost);
           this.router.navigateByUrl(postLink);
         });

@@ -74,7 +74,11 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
       category: new FormControl(null, [
         Validators.required]),
       subcategory: new FormControl(null, []),
-      tags: new FormControl([], [this.tagsValidatorRequired, this.tagsValidatorLength])
+      tags: new FormControl([], [
+        this.tagsValidatorRequired,
+        this.tagsValidatorLength,
+        this.tagsValidatorCharacter,
+      ])
     });
 
     // get mode(create/update) and Post ID
@@ -140,20 +144,22 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
       // mongodb fake posts loading
       // -------------------------
-      // let counter = 0;
-      // let post;
-      // while (counter < 100) {
-      //   post = {
-      //     title: `Fake bulgaria title #${counter} is above 10 characters`,
-      //     content: `Fake bulgaria content #${counter}  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
-      //     category: 'bulgaria',
-      //     // subcategory: 'tennis',
-      //     tags: [`bulgaria #${counter}`],
-      //     image: `https://i.imgur.com/XWm5B9k.jpg`,
-      //   };
-      //   this.postService.editPost(post, this.mode);
-      //   counter += 1;
-      // }
+
+      // this.addPosts({category: 'bulgaria', imageUrl: 'https://i.imgur.com/yFbZPez.jpg'});
+
+      // this.addPosts({ category: 'world', imageUrl: 'https://i.imgur.com/hTUI3UT.jpg' });
+
+      // this.addPosts({ category: 'sport', subcategory: 'football', imageUrl: 'https://i.imgur.com/LsBWGGk.jpg' });
+      // this.addPosts({ category: 'sport', subcategory: 'basketball', imageUrl: 'https://i.imgur.com/lxUuEeK.jpg' });
+      // this.addPosts({ category: 'sport', subcategory: 'tennis', imageUrl: 'https://i.imgur.com/x0diArN.jpg' });
+
+      // this.addPosts({ category: 'entertainment', subcategory: 'cinema', imageUrl: 'https://i.imgur.com/uHHt7W7.jpg' });
+      // this.addPosts({ category: 'entertainment', subcategory: 'music', imageUrl: 'https://i.imgur.com/qaFz9Wg.jpg' });
+      // this.addPosts({ category: 'entertainment', subcategory: 'art', imageUrl: 'https://i.imgur.com/dD4sSfZ.jpg' });
+
+      // this.addPosts({ category: 'technology', subcategory: 'smartphones', imageUrl: 'https://i.imgur.com/1oHfgLL.jpg' });
+      // this.addPosts({ category: 'technology', subcategory: 'electric cars', imageUrl: 'https://i.imgur.com/d0VkVpc.jpg' });
+
       // -------------------------
     }
   }
@@ -246,6 +252,15 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   get tagsErrorLength() {
     if (this.tags.errors) {
       if (this.tags.errors.lengthError) {
+        return true;
+      }
+    } else {
+      return null;
+    }
+  }
+  get tagsErrorCharacter() {
+    if (this.tags.errors) {
+      if (this.tags.errors.characterError) {
         return true;
       }
     } else {
@@ -470,8 +485,61 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
       return null;
     }
   }
+  private tagsValidatorCharacter(controls: AbstractControl): { [key: string]: boolean } {
+    let characterErrorIndicator = false;
+    const regex = /^[\w\-\s]+$/;
+    if (controls['value'].length > 0) {
+      controls['value'].forEach((tag) => {
+        if (!tag) { return null; }
+        if (!regex.test(tag)) {
+          characterErrorIndicator = true;
+        }
+      });
+      return characterErrorIndicator ? { characterError: true } : null;
+    } else {
+      return null;
+    }
+  }
+
+  // fake suvice
+  private addPosts(options) {
+    let counter = 0;
+    let post;
+    const category = options.category;
+    const subcategory = options.subcategory;
+    const imageUrl = options.imageUrl;
+    if (subcategory) {
+      while (counter < 100) {
+        post = {
+          title: `Fake ${subcategory} title ${counter} is above 10 characters`,
+          content: `Fake ${subcategory} content ${counter}  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
+          category: category,
+          subcategory: subcategory,
+          tags: [`${subcategory} ${counter}`],
+          image: imageUrl,
+        };
+        this.postService.editPost(post, this.mode);
+        counter += 1;
+      }
+    } else {
+      while (counter < 100) {
+        post = {
+          title: `Fake ${category} title ${counter} is above 10 characters`,
+          content: `Fake ${category} content ${counter}  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
+          category: category,
+          tags: [`${category} ${counter}`],
+          image: imageUrl,
+        };
+        this.postService.editPost(post, this.mode);
+        counter += 1;
+      }
+    }
+
+  }
+
 
   ngOnDestroy() {
   }
 
 }
+

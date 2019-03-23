@@ -169,8 +169,9 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
         this.comments = [...response.data.commentsFirstPage];
         this.paginator.totalItems = response.data.totalCommentsCount;
         this.paginator.currentPage = 1;
+        this.postService.getCommentedPosts();
+        this.commentForm.reset();
       });
-    this.commentForm.reset();
   }
 
   onChangedPage(page: number) {
