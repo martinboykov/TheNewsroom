@@ -28,9 +28,15 @@ const getPosts = async (req, res, next) => {
 };
 
 const getPostsTotalCount = async (req, res, next) => {
-  const posts = await Post.find({ isVisible: true });
+  // const posts = await Post.find({ isVisible: true });
   // const postsCount = await Post.countDocuments();
-  const postsCount = posts.length;
+  // const postsCount = posts.length;
+  const posts = await Post.aggregate([
+    { $match: { isVisible: true } },
+    { $group: { _id: null, count: { $sum: 1 } } },
+    { $project: { _id: 0 } },
+  ]);
+  const postsCount = posts[0].count;
   res.status(200).json({
     message: 'Total posts count fetched successfully',
     data: postsCount,

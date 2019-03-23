@@ -112,9 +112,14 @@ const getCategoryPostsPartial = async (req, res, next) => {
 };
 
 const getCategoryPostsTotalCount = async (req, res, next) => {
-  const categoryPosts = await Category
-    .findOne({ name: req.params.name });
-  const totalCount = categoryPosts.posts.length;
+  const posts = await Category.aggregate([
+    { $match: { name: req.params.name } },
+    { $project: { count: { $size: '$posts' } } },
+  ]);
+  const totalCount = posts[0].count;
+  // const categoryPosts = await Category
+  //   .findOne({ name: req.params.name });
+  // const totalCount = categoryPosts.posts.length;
   res.status(200).json({
     message: 'Total posts count fetched successfully',
     data: totalCount,

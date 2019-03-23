@@ -81,9 +81,14 @@ const getSubcategoryPosts = async (req, res, next) => {
 };
 
 const getSubcategoryPostsTotalCount = async (req, res, next) => {
-  const subcategoryPosts = await Subcategory
-    .findOne({ name: req.params.name });
-  const totalCount = subcategoryPosts.posts.length;
+  const posts = await Subcategory.aggregate([
+    { $match: { name: req.params.name } },
+    { $project: { count: { $size: '$posts' } } },
+  ]);
+  const totalCount = posts[0].count;
+  // const subcategoryPosts = await Subcategory
+  //   .findOne({ name: req.params.name });
+  // const totalCount = subcategoryPosts.posts.length;
   res.status(200).json({
     message: 'Total posts count fetched successfully',
     data: totalCount,
