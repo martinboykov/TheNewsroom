@@ -37,29 +37,25 @@ export class SubcategoryService {
   }
 
   editSubcategory(subcategory, options) {
-    console.log(subcategory);
+    let route;
     if (options.mode === 'create') {
-      const route = `/subcategories`;
-      this.http
+      route = `/subcategories`;
+      return this.http
         .post<{ message: string, data: Subcategory }>(
           BACKEND_URL + route,
-          subcategory)
-        .subscribe((response) => {
-          console.log(response);
-          this.categoryService.getCategories();
-          this.router.navigateByUrl('admin');
-        });
+          subcategory);
     }
     if (options.mode === 'update') {
       const _id = options._id;
-      const route = `/subcategories/${_id}`;
-     return  this.http
+      route = `/subcategories/${_id}`;
+      return this.http
         .put<{ message: string, data: Subcategory }>(
           BACKEND_URL + route,
           subcategory);
-
     }
+
   }
+
 
   deleteSubcategory(subcategory) {
     const route = `/subcategories/${subcategory._id}`;

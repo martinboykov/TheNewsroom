@@ -2,69 +2,91 @@
   <form class="form"
         [formGroup]="categoryForm"
         (ngSubmit)="onEditCategory()">
-    <div class="name">
-      name:
-      <input formControlName="name"
-             type="text">
+    <div class="form__name">
+      <div class="label">
+        Name:
+      </div>
+      <input class="name__link link"
+             formControlName="name"
+             type="text"
+             autofocus>
     </div>
 
-    <div class="order">
-      order:
-      <input formControlName="order"
+    <div class="form__order">
+      <div class="label">
+        Order:
+      </div>
+      <input class="order__link  link"
+             formControlName="order"
              type="number"
              name="order"
              min="1"
              max="99"
              value="99">
     </div>
-    <div class="isVisible">
-      isVisible:<br>
-      <input formControlName="isVisible"
-             type="radio"
-             [value]=true>true<br>
-      <input formControlName="isVisible"
-             type="radio"
-             [value]=false>false
+    <div class="form__visibility">
+      <div class="label">
+        Visibility:
+      </div>
+      <div class="link">
+
+        <input class="visibility__link "
+               formControlName="isVisible"
+               type="radio"
+               [value]=true>visible
+      </div>
+      <div class="link">
+        <input class="visibility__link  "
+               formControlName="isVisible"
+               type="radio"
+               [value]=false>hidden
+      </div>
     </div>
-    <div class="form__submit-button">
-      <button class="submit-button"
+
+
+    <div class="form__modification-buttons">
+      <button class="edit-button button"
               [disabled]="!categoryForm.valid"
               type="submit">
-        <span *ngIf="mode==='create'">Create</span>
-        <span *ngIf="mode==='update'">Update</span>
+        <span *ngIf="mode==='create' && !loading">Create</span>
+        <span *ngIf="mode==='update' && !loading">Update</span>
+        <div class="loader-wrapper"
+             *ngIf="loading">
+          <div class="loader"
+               *ngIf="loading"></div>
+        </div>
       </button>
-      <div class="loader"
-      *ngIf="loading"></div>
+      <button class="delete-button button"
+              [disabled]="category?.subcategories?.length !== 0 || categoryPostsTotalCount !== 0"
+              (click)="onDelete()"
+              type="submit">Delete</button>
+
     </div>
   </form>
-  <button class="delete__submit-button"
-          [disabled]="category?.subcategories.length !== 0 || categoryPostsTotalCount !== 0"
-          (click)="onDelete()"
-          type="submit">Delete</button>
-  <button class="posts__button"
-          (click)="onLoadPosts()"
-          *ngIf="categoryPostsTotalCount !== 0 && mode === 'update'">Show Posts</button>
 
-  <ng-select *ngIf="loadedPosts"
-             [items]="categoryPosts"
-             [virtualScroll]="true"
-             [loading]="loading"
-             bindLabel="title"
-             placeholder="Posts..."
-             (scroll)="onScroll($event)"
-             (scrollToEnd)="onScrollToEnd()"
-             [(ngModel)]="selectedPost">
-  </ng-select>
-  <div class="link"
-       (click)="goToPost(selectedPost)"
-       *ngIf="selectedPost">
-    {{selectedPost?.title}}
+  <div class="posts">
+    <div class="post--count"
+         *ngIf="categoryPostsTotalCount !== 0 && mode === 'update' && !loadedPosts">
+      Post Count: {{categoryPostsTotalCount}}
+    </div>
+    <button class="posts-button button"
+            (click)="onLoadPosts()"
+            *ngIf="categoryPostsTotalCount !== 0 && mode === 'update' && !loadedPosts">Show Posts</button>
+    <ng-select class="post__list"
+               *ngIf="loadedPosts"
+               [items]="categoryPosts"
+               [virtualScroll]="true"
+               [loading]="loadingPosts"
+               [dropdownPosition]="'bottom'"
+               bindLabel="title"
+               (change)="onSelect($event)"
+               placeholder="Go to Post..."
+               (scroll)="onScroll($event)"
+               (scrollToEnd)="onScrollToEnd()"
+               [(ngModel)]="selectedPost">
+    </ng-select>
   </div>
-  <!-- <ul>
-    <li *ngFor="let post of categoryPosts">
 
-    </li>
-  </ul> -->
   <div class="dev-check"
        style="max-width: 500px;overflow-wrap: break-word;">
     <p>Form Status: {{ categoryForm.status }}</p>

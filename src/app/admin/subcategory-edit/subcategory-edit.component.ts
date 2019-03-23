@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { SubcategoryService } from '../subcategory.service';
 import { Subcategory } from '../subcategory.model';
+import { PostService } from 'src/app/posts/post.service';
 
 @Component({
   selector: 'app-subcategory-edit',
@@ -23,9 +24,10 @@ export class SubcategoryEditComponent implements OnInit {
   subcategoryPostsBuffer = [];
   selectedPost;
   loading = false;
+  loadingPosts = false;
+  loadedPosts = false;
   bufferSize = 50;
   numberOfItemsFromEndBeforeFetchingMore = 10;
-  loadedPosts = false;
   constructor(
     private router: Router,
     private location: Location,
@@ -33,6 +35,7 @@ export class SubcategoryEditComponent implements OnInit {
     public route: ActivatedRoute,
     private helper: HelperService,
     private categoryService: CategoryService,
+    private postService: PostService,
   ) { }
 
   ngOnInit() {
@@ -153,6 +156,9 @@ export class SubcategoryEditComponent implements OnInit {
       .subscribe((response) => {
         console.log(response);
         this.categoryService.getCategories();
+        this.postService.getlatestPosts();
+        this.postService.getPopularPosts();
+        this.postService.getCommentedPosts();
         this.loading = false;
         this.router.navigateByUrl('admin');
       });
@@ -169,7 +175,11 @@ export class SubcategoryEditComponent implements OnInit {
 
       });
   }
-  goToPost(post) {
+  // goToPost(post) {
+  //   const postLink = this.helper.createRoute(post);
+  //   this.router.navigateByUrl(postLink);
+  // }
+  onSelect(post) {
     const postLink = this.helper.createRoute(post);
     this.router.navigateByUrl(postLink);
   }

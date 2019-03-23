@@ -1,3 +1,4 @@
+import { PostService } from './../../posts/post.service';
 import { HelperService } from './../../shared/helper.service';
 import { Category } from './../category.model';
 import { CategoryService } from './../category.service';
@@ -21,15 +22,17 @@ export class CategoryEditComponent implements OnInit {
   categoryPostsTotalCount: number;
   selectedPost;
   loading = false;
+  loadingPosts = false;
+  loadedPosts = false;
   bufferSize = 50;
   numberOfItemsFromEndBeforeFetchingMore = 10;
-  loadedPosts = false;
   constructor(
     private router: Router,
     private location: Location,
     private categoryService: CategoryService,
     public route: ActivatedRoute,
     private helper: HelperService,
+    private postService:PostService,
   ) { }
 
   ngOnInit() {
@@ -132,36 +135,47 @@ export class CategoryEditComponent implements OnInit {
     if (_id) { category._id = _id; }
     this.loading = true;
     this.categoryService.editCategory(category, this.mode)
-    .subscribe((response) => {
-      this.loading = false;
-      console.log(response);
-      this.categoryService.getCategories();
-      this.router.navigateByUrl('admin');
-      this.categoryForm.reset();
-    });
+      .subscribe((response) => {
+        this.loading = false;
+        console.log(response);
+        this.categoryService.getCategories();
+        this.postService.getlatestPosts();
+        this.postService.getPopularPosts();
+        this.postService.getCommentedPosts();
+        this.router.navigateByUrl('admin');
+        this.categoryForm.reset();
+      });
   }
   onDelete() {
     if (this.category.subcategories.length !== 0) { return; }
     this.categoryService.deleteCategory(this.category);
   }
   onLoadPosts() {
+    this.loadingPosts = true;
+    this.loadedPosts = true;
     this.categoryService.getCategoryPostsPartial(this.categoryName)
       .subscribe((response) => {
+        this.loadingPosts = false;
         this.categoryPosts = response.data.posts;
         console.log(this.categoryPosts);
-        this.loadedPosts = true;
       });
   }
   goToPost(post) {
     const postLink = this.helper.createRoute(post);
     this.router.navigateByUrl(postLink);
   }
+
+  onSelect(post) {
+    const postLink = this.helper.createRoute(post);
+    this.router.navigateByUrl(postLink);
+  }
+
   onScrollToEnd() {
     this.fetchMore();
   }
 
   onScroll({ end }) {
-    if (this.loading || this.categoryPosts.length === this.categoryPostsBuffer.length) {
+    if (this.loadingPosts || this.categoryPosts.length === this.categoryPostsBuffer.length) {
       return;
     }
 
@@ -173,10 +187,10 @@ export class CategoryEditComponent implements OnInit {
   private fetchMore() {
     const len = this.categoryPostsBuffer.length;
     const more = this.categoryPosts.slice(len, this.bufferSize + len);
-    this.loading = true;
+    this.loadingPosts = true;
     // using timeout here to simulate backend API delay
     setTimeout(() => {
-      this.loading = false;
+      this.loadingPosts = false;
       this.categoryPostsBuffer = this.categoryPostsBuffer.concat(more);
     }, 200);
   }

@@ -180,10 +180,14 @@
       width: 100%;
       margin-top: 15px;
       opacity: 0;
+      transition-property: all;
+      transition-duration: 0.3s;
       // transition: opacity 0.3s, transform 0.3s;
       .main-nav__item {
         &--accordeon {
           height: 0px;
+          transition-property: all;
+          transition-duration: 0.3s;
           // transition: height 0.3s, transform 0.3s;
         }
       }
@@ -199,10 +203,14 @@
       // display: none;
       opacity: 1;
       overflow: hidden;
+      transition-property: all;
+      transition-duration: 0.3s;
       // transform: opacity(1);
       .main-nav__item {
         &--accordeon {
           height: 30px;
+          transition-property: all;
+          transition-duration: 0.3s;
           // transform: height(30px);
         }
       }
@@ -286,16 +294,17 @@
       .main-nav__subitem {
         opacity: 0;
         height: 0px;
-
         transition-property: all;
         transition-duration: 0.3s;
       }
     }
     &__subitems.open {
-      opacity: 1;
+      // opacity: 1;
       .main-nav__subitem {
         height: 28px;
         opacity: 1;
+        transition-property: all;
+        transition-duration: 0.3s;
       }
     }
     &__subitem {

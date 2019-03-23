@@ -64,8 +64,8 @@
                 *ngFor="let subcategory of category?.subcategories; let i = index"
                 [style.color]="subcategory.isVisible === true ? '#2c2c2c' : '#a1a1a1'">
 
-              <span class="subcategory__name name"
-                    (click)="onCategorySelected(i)">
+              <span class="subcategory__name name">
+                  <!-- (click)="onCategorySelected(i)" -->
                 <span class="link__arrows">
                   <svg xmlns="http://www.w3.org/2000/svg"
                        xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -79,12 +79,14 @@
                        style="enable-background:new 0 0 220.682 220.682;"
                        xml:space="preserve">
                     <polygon points="92.695,38.924 164.113,110.341 92.695,181.758 120.979,210.043 220.682,110.341 120.979,10.639  "
-                             [style.fill]="category.isVisible === true ? '#585858' : '#a1a1a1'" />
+                             [style.fill]="subcategory.isVisible === true ? '#585858' : '#a1a1a1'" />
                     <polygon points="28.284,210.043 127.986,110.341 28.284,10.639 0,38.924 71.417,110.341 0,181.758  "
-                             [style.fill]="category.isVisible === true ? '#585858' : '#a1a1a1'" />
+                             [style.fill]="subcategory.isVisible === true ? '#585858' : '#a1a1a1'" />
                   </svg>
                 </span>
-                {{subcategory?.name}}
+                <span class="name__text">
+                  {{subcategory?.name}}
+                </span>
               </span>
               <span class="subcategory__functionalities functionalities">
                 <span class="subcategory__order order">
@@ -99,6 +101,7 @@
                   hidden
                 </span>
                 <button class="subcategory__edit edit"
+                [disabled]="!category?.isVisible"
                         (click)="onEditSubcategory(subcategory)">
                   Edit
                 </button>

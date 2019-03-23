@@ -68,7 +68,10 @@ const getCategoryPosts = async (req, res, next) => {
   const pageSize = parseInt(req.query.pageSize, 10);
   const currentPage = parseInt(req.query.page, 10);
 
-  const postQuery = Post.find({ 'category.name': categoryName });
+  const postQuery = Post.find({
+    'category.name': categoryName,
+    isVisible: true,
+  });
   if (pageSize && currentPage) {
     postQuery
       .skip(pageSize * (currentPage - 1))
@@ -92,11 +95,13 @@ const getCategoryPosts = async (req, res, next) => {
   });
 };
 
+// for admin -> category posts
 const getCategoryPostsPartial = async (req, res, next) => {
   const name = req.params.name;
   const category = await Category.findOne({ name: name })
     .select('posts')
-    .populate('posts', 'category.name subcategory.name title');
+    .populate('posts', 'category.name subcategory.name title isVisible');
+  console.log(category);
   if (!category) {
     return res.status(400).json({ message: 'No such subcategory.' });
   }
@@ -178,13 +183,24 @@ const updateCategory = async (req, res, next) => {
 
   // category.name = updatedCategory.name;
 
-  if (category.name !== updatedCategory.name) {
-    task.update('posts', {
-      'category._id': category._id,
-    }, {
-        $set: { 'category.name': DOMPurify.sanitize(updatedCategory.name) },
-      }).options({ multi: true });
-  }
+  // if (category.name !== updatedCategory.name) {
+  task.update('posts', {
+    'category._id': category._id,
+  }, {
+      $set: {
+        'category.name': DOMPurify.sanitize(updatedCategory.name),
+        isVisible: updatedCategory.isVisible,
+      },
+    }).options({ multi: true });
+  // }
+
+  task.update('subcategories', {
+    categoryId: category._id,
+  }, {
+      $set: {
+        isVisible: updatedCategory.isVisible,
+      },
+    }).options({ multi: true });
   return task.run({ useMongoose: true })
     .then(() => {
       res.status(200).json({

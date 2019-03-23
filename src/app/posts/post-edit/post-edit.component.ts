@@ -142,14 +142,14 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
       // -------------------------
       // let counter = 0;
       // let post;
-      // while (counter < 1000) {
+      // while (counter < 100) {
       //   post = {
-      //     title: `Fake electric cars title #${counter} is above 10 characters`,
-      //     content: `Fake electric cars content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
-      //     category: 'technology',
-      //     subcategory: 'electric cars',
-      //     tags: [`electric cars${counter}`],
-      //     image: `https://i.imgur.com/to6SHOB.jpg`,
+      //     title: `Fake bulgaria title #${counter} is above 10 characters`,
+      //     content: `Fake bulgaria content #${counter}  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
+      //     category: 'bulgaria',
+      //     // subcategory: 'tennis',
+      //     tags: [`bulgaria #${counter}`],
+      //     image: `https://i.imgur.com/XWm5B9k.jpg`,
       //   };
       //   this.postService.editPost(post, this.mode);
       //   counter += 1;

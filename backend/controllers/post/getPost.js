@@ -4,7 +4,7 @@ const { Post } = require('../../models/post');
 const getPosts = async (req, res, next) => {
   const pageSize = parseInt(req.query.pageSize, 10) || 10;
   const currentPage = parseInt(req.query.page, 10) || 1;
-  const postQuery = Post.find();
+  const postQuery = Post.find({ isVisible: true });
   if (pageSize && currentPage) {
     postQuery
       .skip(pageSize * (currentPage - 1))
@@ -28,7 +28,9 @@ const getPosts = async (req, res, next) => {
 };
 
 const getPostsTotalCount = async (req, res, next) => {
-  const postsCount = await Post.countDocuments();
+  const posts = await Post.find({ isVisible: true });
+  // const postsCount = await Post.countDocuments();
+  const postsCount = posts.length;
   res.status(200).json({
     message: 'Total posts count fetched successfully',
     data: postsCount,
@@ -92,6 +94,7 @@ const getSearchedPosts = async (req, res, next) => {
     $text: {
       $search: searchString,
     },
+    isVisible: true,
   });
   if (pageSize && currentPage) {
     postQuery
@@ -124,7 +127,12 @@ const getSearchedPostsTotalCount = async (req, res, next) => {
   const searchString = req.params.searchQuery;
   const postsAggregate = await Post.aggregate(
     [
-      { $match: { $text: { $search: searchString } } },
+      {
+        $match: {
+          $text: { $search: searchString },
+          isVisible: true,
+        },
+      },
       {
         $count: 'document_count',
       },
@@ -154,7 +162,7 @@ const getRelatedPosts = async (req, res, next) => {
     return accumulator;
   }, []);
   const posts = await Post
-    .find({ 'tags._id': [...tags], _id: { $ne: _id } })
+    .find({ 'tags._id': [...tags], _id: { $ne: _id }, isVisible: true })
     .sort({ 'dateCreated': -1 })
     .limit(5)
     .select(
@@ -168,7 +176,7 @@ const getRelatedPosts = async (req, res, next) => {
 
 const getLatestPosts = async (req, res, next) => {
   const posts = await Post
-    .find()
+    .find({ isVisible: true })
     .limit(6)
     .sort({ 'dateCreated': -1 })
     .select(
@@ -188,6 +196,7 @@ const getPopularPosts = async (req, res, next) => {
       dateCreated: {
         $gte: new Date(dateNow.setDate(dateNow.getDate() - daysInPast)),
       },
+      isVisible: true,
     })
     .sort({ 'popularity': -1 })
     .limit(6)
@@ -209,6 +218,7 @@ const getComentedPosts = async (req, res, next) => {
         'dateCreated': {
           $gte: new Date(dateNow.setDate(dateNow.getDate() - daysInPast)),
         },
+        isVisible: true,
       },
     },
     {

@@ -167,7 +167,7 @@ const updateSubcategory = async (req, res, next) => {
   }
 
   const task = new Fawn.Task(); // eslint-disable-line new-cap
-  subcategory.name = DOMPurify.sanitize(req.body.name);
+  // subcategory.name = DOMPurify.sanitize(req.body.name);
   const updatedSubcategory = req.body;
   task.update('subcategories', {
     _id: subcategory._id,
@@ -178,15 +178,16 @@ const updateSubcategory = async (req, res, next) => {
         isVisible: updatedSubcategory.isVisible,
       },
     });
-  if (subcategory.name !== updatedSubcategory.name) {
+  // if (subcategory.name !== updatedSubcategory.name) {
     task.update('posts', {
       'subcategory._id': subcategory._id,
     }, {
         $set: {
           'subcategory.name': DOMPurify.sanitize(updatedSubcategory.name),
+          isVisible: updatedSubcategory.isVisible,
         },
       }).options({ multi: true });
-  }
+  // }
 
   return task.run({ useMongoose: true })
     .then((result) => {

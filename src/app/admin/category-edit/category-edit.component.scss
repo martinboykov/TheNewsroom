@@ -6,13 +6,13 @@
   flex-flow: row wrap;
   align-items: center;
   justify-content: space-between;
-  min-height: 30px;
+  min-height: 25px;
   background: white;
   margin: 10px 0;
   padding: 0 7px;
   text-decoration: none;
   color: $black;
-  cursor: pointer;
+  text-align: left;
 }
 
 .spinner-container {
@@ -22,10 +22,153 @@
   width: 100px;
 }
 
-.form__submit-button {
-  height: 30px;
-  .submit-button,
-  .loader {
-    display: inline-block;
+.button,
+.button:disabled:hover {
+  // box-shadow: inset 0px 1px 0px 0px #ffffff;
+  background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+  border: none;
+  display: inline-block;
+  cursor: default;
+  color: $black;
+  font-family: $font-mp;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #ffffff;
+  outline: 0;
+}
+.button {
+  min-width: 60px;
+  // margin-bottom: 50px;
+  cursor: pointer;
+  &:hover,
+  &:active {
+    color: $black;
+    // outline: 1px solid $light-grey;
+  }
+  &:hover {
+    background: linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+  }
+  &:active {
+    position: relative;
+    top: 1px;
+  }
+}
+.button:disabled {
+  color: lighten($color: $black, $amount: 30);
+  position: relative;
+  top: 0px;
+}
+.button:disabled:hover {
+  color: lighten($color: $black, $amount: 30);
+}
+.label {
+  margin: 5px 0;
+}
+
+.loader-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  //  margin-left: 10px;
+}
+.wrapper {
+  .form {
+    &__name {
+
+    }
+    &__order {
+
+      input[type="number"] {
+        -moz-appearance: textfield;
+        text-align: right;
+        padding: 0 5px;
+      }
+
+      input[type="number"]::-webkit-outer-spin-button,
+      input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+    &__visibility {
+      margin-bottom: 5px;
+      width: 72px;
+      .visibility__link {
+        height: 25px;
+      }
+    }
+    &__modification-buttons {
+      display: flex;
+      flex-flow: row nowrap;
+      margin-bottom: 10px;
+      .edit-button,
+      .edit-button:disabled:hover {
+        background: linear-gradient(to bottom, $gold 5%, darken($gold, 20%) 100%);
+        border: none;
+        color: white;
+        text-shadow: none;
+        margin-right: 10px;
+      }
+      .edit-button--edit {
+        &:hover {
+          background: linear-gradient(to bottom, darken($gold, 20%) 5%, $gold 100%);
+        }
+      }
+      .delete-button {
+        background: linear-gradient(to bottom, lighten($red, 10%) 5%, lighten($red, 1%) 100%);
+        border: none;
+        color: white;
+        text-shadow: none;
+      }
+      .delete-button {
+        &:hover {
+          background: linear-gradient(to bottom, $red 5%, lighten($red, 10%) 100%);
+        }
+      }
+      .delete-button:disabled,
+      .delete-button:disabled:hover {
+        background: linear-gradient(to bottom, lighten($red, 40%) 5%, lighten($red, 20%) 100%);
+        border: none;
+        color: white;
+        text-shadow: none;
+      }
+    }
+  }
+  .posts {
+    .post--count {
+      margin-bottom: 5px;
+    }
+    .post__link {
+      background: $gold;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+}
+
+@media (min-width: $desctop) {
+  .posts {
+    .post__list {
+      width: 600px;
+    }
+    .post__link {
+      width: 600px;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      overflow-wrap: break-word;
+    }
+  }
+}
+@media (max-width: $mobile) {
+  .posts {
+    .post__list {
+    }
+    .post__link {
+    }
   }
 }

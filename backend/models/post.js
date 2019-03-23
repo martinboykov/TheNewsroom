@@ -86,6 +86,10 @@ const postSchema = new mongoose.Schema({
     type: [String],
     default: undefined,
   },
+  isVisible: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 postSchema.index({ 'category.name': 1, 'subcategory.name': 1 }); // schema level
