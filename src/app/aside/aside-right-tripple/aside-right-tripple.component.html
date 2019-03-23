@@ -23,7 +23,10 @@
       <a class="latest-post__link"
          (click)="onPostSelected(latestPost)">
         <div class="latest-post__image"
-             [ngStyle]="{'background-image': 'url(' + latestPost.imageMainPath + ')'}">
+             [defaultImage]="defaultimage"
+             [lazyLoad]=latestPost.imageMainPath
+             [offset]="offset">
+          <!-- [ngStyle]="{'background-image': 'url(' + latestPost.imageMainPath + ')'}" -->
         </div>
         <div class="latest-post__additional-info">
           <div class="additional-info__title">
@@ -46,7 +49,10 @@
       <a class="popular-post__link"
          (click)="onPostSelected(popularPost)">
         <div class="popular-post__image"
-             [ngStyle]="{'background-image': 'url(' + popularPost.imageMainPath + ')'}">
+             [defaultImage]="defaultimage"
+             [lazyLoad]=popularPost.imageMainPath
+             [offset]="offset">
+          <!-- [ngStyle]="{'background-image': 'url(' + popularPost.imageMainPath + ')'}"> -->
         </div>
         <div class="popular-post__additional-info">
           <div class="additional-info__title">
@@ -69,7 +75,10 @@
       <a class="commented-post__link"
          (click)="onPostSelected(commentedPost)">
         <div class="commented-post__image"
-             [ngStyle]="{'background-image': 'url(' + commentedPost.imageMainPath + ')'}">
+          [defaultImage]="defaultimage"
+          [lazyLoad]=commentedPost.imageMainPath
+          [offset]="offset">
+          <!-- [ngStyle]="{'background-image': 'url(' + commentedPost.imageMainPath + ')'}"> -->
         </div>
         <div class="commented-post__additional-info">
           <div class="additional-info__title">

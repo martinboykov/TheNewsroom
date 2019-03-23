@@ -69,6 +69,8 @@ $types: latest, popular, commented;
             border: 3px solid #d6d6d6;
             background-size: cover;
             background-position: 50% 50%;
+            animation: fadein 0.3s;
+            transition: background-image 0.3s ease-out;
           }
           .#{$type}-post__additional-info {
             font-size: 11px;
@@ -276,4 +278,9 @@ $types: latest, popular, commented;
   // display: none;
   opacity: 0;
   height: 0;
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }

@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { LazyLoadImageModule, intersectionObserverPreset } from 'ng-lazyload-image';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -56,7 +57,10 @@ import { TimeAgoPipe } from './shared/time-ago.pipe';
     AppRoutingModule,
     NgxPaginationModule,
     InfiniteScrollModule,
-
+    // LazyLoadImageModule
+    LazyLoadImageModule.forRoot({
+      preset: intersectionObserverPreset
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

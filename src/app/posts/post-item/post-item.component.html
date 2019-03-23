@@ -3,8 +3,14 @@
   <a (click)="onPostSelected()"
      class="link">
     <article class="item">
-      <div class="item-top"
-           [ngStyle]="{'background-image': 'url(' + post?.imageMainPath + ')'}">
+      <div class="item-top">
+        <div class="image"
+             [defaultImage]="defaultimage"
+             [lazyLoad]="image"
+             [offset]="offset">
+
+        </div>
+        <!-- [ngStyle]="{'background-image': 'url(' + post?.imageMainPath + ')'}"> -->
         <div class="item-top--category text-center">
           <h2 class="white">{{post?.category?.name}}</h2>
         </div>
