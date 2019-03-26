@@ -1,10 +1,13 @@
-import { NgModule } from '@angular/core';
+import { ServerErrorInterceptor } from './error-handling/server-error.interceptor';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { LazyLoadImageModule, intersectionObserverPreset } from 'ng-lazyload-image';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -28,6 +31,7 @@ import { SelectorsAsideDirective } from './aside/aside-right-tripple/selectorsAs
 
 
 import { TimeAgoPipe } from './shared/time-ago.pipe';
+import { GlobalErrorHandler } from './error-handling/global-error-handler';
 
 @NgModule({
   declarations: [
@@ -49,6 +53,7 @@ import { TimeAgoPipe } from './shared/time-ago.pipe';
     SelectorsAsideDirective,
     TimeAgoPipe,
 
+
   ],
   imports: [
     BrowserModule,
@@ -60,9 +65,18 @@ import { TimeAgoPipe } from './shared/time-ago.pipe';
     // LazyLoadImageModule
     LazyLoadImageModule.forRoot({
       preset: intersectionObserverPreset
-    })
+    }),
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+    timeOut: 10000,
+    positionClass: 'toast-top-right',
+    preventDuplicates: true,
+  }),
   ],
-  providers: [],
+  providers: [
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

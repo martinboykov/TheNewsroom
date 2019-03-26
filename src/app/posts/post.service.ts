@@ -41,6 +41,8 @@ export class PostService {
 
 
   getPosts(url: String, commentsPerPage: number, currentPage: number) {
+    //  this.http.get(`${BACKEND_URL}` + '/urlhere').subscribe(); // testing error handling
+
     const pageSize = commentsPerPage;
     const page = currentPage;
     const queryParams = `?pageSize=${pageSize}&page=${page}`;

@@ -28,7 +28,8 @@
             ],
             "styles": [
               "src/styles/main.scss",
-              "node_modules/jodit/build/jodit.min.css"
+              "node_modules/jodit/build/jodit.min.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [

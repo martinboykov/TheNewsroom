@@ -78,6 +78,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     });
 
     this.currentUrl = APP_URL + this.route.url;
+
     // first request
     this.route.paramMap
       .pipe(

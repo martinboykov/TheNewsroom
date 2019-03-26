@@ -58,6 +58,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   ) { }
 
   ngOnInit() {
+    // throw new Error('My Pretty Error'); // for teting
     this.postForm = new FormGroup({
       image: new FormControl('', {
         validators: [Validators.required],
@@ -145,20 +146,20 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
       // mongodb fake posts loading
       // -------------------------
 
-      // this.addPosts({category: 'bulgaria', imageUrl: 'https://i.imgur.com/yFbZPez.jpg'});
+      // this.addPosts({category: 'bulgaria', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/bulgaria.jpg'});
 
-      // this.addPosts({ category: 'world', imageUrl: 'https://i.imgur.com/hTUI3UT.jpg' });
+      // this.addPosts({ category: 'world', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/world.jpg' });
 
-      // this.addPosts({ category: 'sport', subcategory: 'football', imageUrl: 'https://i.imgur.com/LsBWGGk.jpg' });
-      // this.addPosts({ category: 'sport', subcategory: 'basketball', imageUrl: 'https://i.imgur.com/lxUuEeK.jpg' });
+      // this.addPosts({ category: 'sport', subcategory: 'football', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/football.jpg' });
+      // this.addPosts({ category: 'sport', subcategory: 'basketball', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/nba_Timberwolves%20.jpg' });
       // this.addPosts({ category: 'sport', subcategory: 'tennis', imageUrl: 'https://i.imgur.com/x0diArN.jpg' });
 
-      // this.addPosts({ category: 'entertainment', subcategory: 'cinema', imageUrl: 'https://i.imgur.com/uHHt7W7.jpg' });
-      // this.addPosts({ category: 'entertainment', subcategory: 'music', imageUrl: 'https://i.imgur.com/qaFz9Wg.jpg' });
-      // this.addPosts({ category: 'entertainment', subcategory: 'art', imageUrl: 'https://i.imgur.com/dD4sSfZ.jpg' });
+      // this.addPosts({ category: 'entertainment', subcategory: 'cinema', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/tennis.jpg' });
+      // this.addPosts({ category: 'entertainment', subcategory: 'music', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/u2.jpg' });
+      // this.addPosts({ category: 'entertainment', subcategory: 'art', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/culture.jpg' });
 
-      // this.addPosts({ category: 'technology', subcategory: 'smartphones', imageUrl: 'https://i.imgur.com/1oHfgLL.jpg' });
-      // this.addPosts({ category: 'technology', subcategory: 'electric cars', imageUrl: 'https://i.imgur.com/d0VkVpc.jpg' });
+      // this.addPosts({ category: 'technology', subcategory: 'smartphones', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/Huawei%20Honor%20V20%206%2B128GB%20%20%20.jpg' });
+      // this.addPosts({ category: 'technology', subcategory: 'electric cars', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/tesla.jpg' });
 
       // -------------------------
     }
@@ -503,13 +504,14 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
   // fake suvice
   private addPosts(options) {
-    let counter = 0;
+    const fakePostsCount = 200;
+    let counter = 100;
     let post;
     const category = options.category;
     const subcategory = options.subcategory;
     const imageUrl = options.imageUrl;
     if (subcategory) {
-      while (counter < 100) {
+      while (counter < fakePostsCount) {
         post = {
           title: `Fake ${subcategory} title ${counter} is above 10 characters`,
           content: `Fake ${subcategory} content ${counter}  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
@@ -522,7 +524,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
         counter += 1;
       }
     } else {
-      while (counter < 100) {
+      while (counter < fakePostsCount) {
         post = {
           title: `Fake ${category} title ${counter} is above 10 characters`,
           content: `Fake ${category} content ${counter}  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
