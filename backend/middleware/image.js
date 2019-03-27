@@ -41,7 +41,7 @@ function sendUploadToGCS(req, res, next) {
     .replace(/\s+|(jpg)|(png)|(jpeg)/ig, '')
     .toLowerCase();
 
-  const gcsname = Date.now() + '_'
+    const gcsname = Date.now() + '_'
     + originalName
     + MIME_TYPE_MAP[req.file.mimetype];
 
@@ -68,6 +68,7 @@ function sendUploadToGCS(req, res, next) {
   });
 
   stream.end(req.file.buffer);
+  return null;
 }
 
 const deleteImg = async function(filename) {

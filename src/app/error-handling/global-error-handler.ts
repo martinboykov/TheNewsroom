@@ -42,6 +42,9 @@ export class GlobalErrorHandler implements ErrorHandler {
         console.log(httpErrorCode);
 
         switch (httpErrorCode) {
+          case HttpError.ERR_CONNECTION_REFUSED: // 0
+            this.notifier.showError('There is no connection to the server', 'Server down');
+            break;
           case HttpError.BAD_REQUEST: // 400
             this.notifier.showError('App is recovering from crash', this.DEFAULT_ERROR_TITLE);
             break;

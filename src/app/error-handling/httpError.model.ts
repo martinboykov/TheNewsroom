@@ -1,4 +1,5 @@
 export class HttpError {
+  static ERR_CONNECTION_REFUSED = 0;
   static BAD_REQUEST = 400;
   static UNAUTHORIZED = 401;
   static FORBIDDEN = 403;
