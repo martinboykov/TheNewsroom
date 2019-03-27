@@ -140,12 +140,9 @@
         grid-column: 1/2;
         grid-row: 1/2;
         display: grid;
-        grid-template-rows: repeat(auto-fill, 360px);
-        // grid-row-gap: 20px;
+        grid-template-rows: repeat(auto-fill, auto);
         app-post-item {
           min-width: 230px;
-          max-height: 360px;
-
         }
       }
     }

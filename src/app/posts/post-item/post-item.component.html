@@ -1,5 +1,4 @@
 <div class="wrapper">
-  <!-- <a routerLink="/" -->
   <a (click)="onPostSelected()"
      class="link">
     <article class="item">
@@ -10,7 +9,10 @@
              [offset]="offset">
 
         </div>
-        <!-- [ngStyle]="{'background-image': 'url(' + post?.imageMainPath + ')'}"> -->
+        <div class="item-top--title"
+             *ngIf="isMobileResolution">
+          <h2 class="title ">{{post?.title}}</h2>
+        </div>
         <div class="item-top--category text-center">
           <h2 class="white">{{post?.category?.name}}</h2>
         </div>
@@ -21,7 +23,8 @@
           <h2 class="item-top--day__date white">{{post?.dateCreated | date:'d' }}</h2>
         </div>
       </div>
-      <div class="item-bottom">
+      <div class="item-bottom"
+           *ngIf="!isMobileResolution">
         <div class="item-bottom__upper">
           <h1 class="item-bottom__upper--title red">{{post?.title}}</h1>
           <h3 class="item-bottom__upper--author black">posted by {{post?.author?.name}}</h3>
@@ -29,7 +32,6 @@
         <div class="item-bottom__lower">
           <div class="item-bottom__lower--text"
                [innerHTML]="postContent">
-            <!-- {{post.content}} -->
           </div>
 
         </div>

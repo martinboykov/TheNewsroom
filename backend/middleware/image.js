@@ -1,6 +1,7 @@
 /* eslint-disable no-process-env*/
 /* eslint-disable new-cap*/
 const path = require('path');
+const sharp = require('sharp');
 const { Storage } = require('@google-cloud/storage');
 const storage = new Storage({
   projectId: 'thenewsroom-mean-app',
@@ -28,6 +29,7 @@ function getPublicUrl(filename) {
 }
 
 function sendUploadToGCS(req, res, next) {
+  console.log(req.file);
   if (!req.file) {
     return next();
   }
@@ -41,9 +43,13 @@ function sendUploadToGCS(req, res, next) {
     .replace(/\s+|(jpg)|(png)|(jpeg)/ig, '')
     .toLowerCase();
 
-    const gcsname = Date.now() + '_'
-    + originalName
-    + MIME_TYPE_MAP[req.file.mimetype];
+  // uploadAllSizes(980, originalName, req.file, next);
+  uploadAllSizes(280, originalName, req.file, next);
+  uploadAllSizes(180, originalName, req.file, next);
+  uploadAllSizes(51, originalName, req.file, next);
+
+  const gcsname =
+    Date.now() + '_' + originalName + MIME_TYPE_MAP[req.file.mimetype];
 
   const file = bucket.file(gcsname);
 
@@ -67,8 +73,61 @@ function sendUploadToGCS(req, res, next) {
     });
   });
 
-  stream.end(req.file.buffer);
+  sharp(req.file.buffer)
+    .resize({
+      width: 980,
+      fit: sharp.fit.inside,
+      withoutEnlargement: true,
+    })
+    .jpeg({
+      quality: 80,
+    })
+    .toBuffer()
+    .then((data) => stream.end(data))
+    .catch((err) => console.log(err));
+
   return null;
+}
+
+function uploadAllSizes(size, originalName, reqFile, next) {
+  const gcsname =
+    `resized-${size}` + '_' +
+    Date.now() + '_' + originalName + MIME_TYPE_MAP[reqFile.mimetype];
+
+  const file = bucket.file(gcsname);
+
+  const stream = file.createWriteStream({
+    metadata: {
+      contentType: reqFile.mimetype,
+    },
+    resumable: false,
+  });
+
+  stream.on('error', (err) => {
+    reqFile.cloudStorageError = err;
+    next(err);
+  });
+
+  stream.on('finish', () => {
+    reqFile.cloudStorageObject = gcsname;
+    file.makePublic().then(() => {
+      console.log(getPublicUrl(gcsname));
+      // next();
+    });
+  });
+
+  sharp(reqFile.buffer)
+    .resize({
+      width: size,
+      fit: sharp.fit.inside,
+      withoutEnlargement: true,
+    })
+    .jpeg({
+      quality: 80,
+    })
+    .toBuffer()
+    .then((data) => stream.end(data))
+    .catch((err) => console.log(err));
 }
 
 const deleteImg = async function(filename) {
