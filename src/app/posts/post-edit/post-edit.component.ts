@@ -8,6 +8,7 @@ import { PostService } from '../post.service';
 import { mimeType } from './mime-type.validator';
 import { Subscription, timer, Subject, Observable, concat, of, from } from 'rxjs';
 import { tap, delay, concatMap, debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
+import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 
 @Component({
   selector: 'app-post-edit',
@@ -48,6 +49,12 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
      |,undo,redo,\n,cut,hr,eraser,copyformat,
      |,symbol,selectall,print`
   };
+
+  @ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent;
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  showCropper = false;
+  fileName: string;
 
   constructor(
     private postService: PostService,
@@ -146,20 +153,20 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
       // mongodb fake posts loading
       // -------------------------
 
-      // this.addPosts({category: 'bulgaria', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/bulgaria.jpg'});
+      // this.addPosts({category: 'bulgaria', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553721504042_bulgaria.jpeg'});
 
-      // this.addPosts({ category: 'world', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/world.jpg' });
+      // this.addPosts({ category: 'world', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553721664677_world.jpeg' });
 
-      // this.addPosts({ category: 'sport', subcategory: 'football', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/football.jpg' });
-      // this.addPosts({ category: 'sport', subcategory: 'basketball', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/nba_Timberwolves%20.jpg' });
-      // this.addPosts({ category: 'sport', subcategory: 'tennis', imageUrl: 'https://i.imgur.com/x0diArN.jpg' });
+      // this.addPosts({ category: 'sport', subcategory: 'football', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553722305554_lionel-messi.jpeg' });
+      // this.addPosts({ category: 'sport', subcategory: 'basketball', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553720010256_nba1920x1080.jpeg' });
+      // this.addPosts({ category: 'sport', subcategory: 'tennis', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553721196375_tennis.jpeg' });
 
-      // this.addPosts({ category: 'entertainment', subcategory: 'cinema', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/tennis.jpg' });
-      // this.addPosts({ category: 'entertainment', subcategory: 'music', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/u2.jpg' });
-      // this.addPosts({ category: 'entertainment', subcategory: 'art', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/culture.jpg' });
+      // this.addPosts({ category: 'entertainment', subcategory: 'movies', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553719797744_thematrix1999.jpeg' });
+      // this.addPosts({ category: 'entertainment', subcategory: 'music', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553722473731_u2.jpeg' });
+      // this.addPosts({ category: 'entertainment', subcategory: 'tv', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553722732688_truedetective.jpeg' });
 
-      // this.addPosts({ category: 'technology', subcategory: 'smartphones', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/Huawei%20Honor%20V20%206%2B128GB%20%20%20.jpg' });
-      // this.addPosts({ category: 'technology', subcategory: 'electric cars', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/fake_posts_img/tesla.jpg' });
+      // this.addPosts({ category: 'technology', subcategory: 'smartphones', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553723207397_smartphone.jpeg' });
+      // this.addPosts({ category: 'technology', subcategory: 'cars', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553722877470_tesla.jpeg' });
 
       // -------------------------
     }
@@ -318,6 +325,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
   // Image
   // ----------------------------------
+
   onImagePickerClicked() {
     return timer(2000).subscribe(() => {
       if (!this.image.value) {
@@ -326,23 +334,54 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     });
   }
   onImagePicked(event: Event) {
+    this.imageChangedEvent = event;
     const file = (event.target as HTMLInputElement).files[0];
-    // console.log(file.type);
+    this.fileName = file.name;
+    //  console.log(file);
     // const isValidType = this.fileTypeCheck(file.type); // my checker
     // if(!isValidType) console.log('not valid'); // my checker
-
-    this.postForm.patchValue({ image: file });
+    console.log(file);
+    // this.postForm.patchValue({ image: file });
     this.image.updateValueAndValidity();
 
     // convert image to data url
     // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
-    const reader = new FileReader();
-    reader.onload = () => {
-      // get the img src="imagePreview"
-      this.imagePreview = reader.result;
-    };
-    reader.readAsDataURL(file);
+    // const reader = new FileReader();
+    // reader.onload = () => {
+    //   // get the img src="imagePreview"
+    //   this.imagePreview = reader.result;
+    //   // console.log(reader);
 
+    // };
+    // reader.readAsDataURL(file);
+
+  }
+  fileChangeEvent(event: any): void {
+    this.imageChangedEvent = event;
+  }
+  imageCropped(event: ImageCroppedEvent) {
+    console.log(event);
+    this.croppedImage = event.base64;
+    const file = this.blobToFile(event.file, this.fileName);
+    // const file = new File([event.file], this.fileName, { lastModified: Date.now() });
+    this.postForm.patchValue({ image: file });
+    console.log(this.image.value);
+  }
+  imageLoaded() {
+    this.showCropper = true;
+    // console.log('Image loaded');
+  }
+  cropperReady() {
+    // console.log('Cropper ready');
+  }
+  loadImageFailed() {
+    // console.log('Load failed');
+  }
+  public blobToFile(blobData, fileName: string) {
+    const fd = new FormData();
+    // fd.set('a', blobData);
+    fd.set('a', blobData, fileName);
+    return fd.get('a');
   }
 
   // Content
@@ -504,8 +543,8 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
   // fake suvice
   private addPosts(options) {
-    const fakePostsCount = 200;
-    let counter = 100;
+    const fakePostsCount = 6;
+    let counter = 5;
     let post;
     const category = options.category;
     const subcategory = options.subcategory;

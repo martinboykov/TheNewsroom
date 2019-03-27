@@ -3,8 +3,10 @@
     <div class="top">
       <aside class="aside">
         <section class="image-section"
-                 [style.background-image]='mainImage'>
-          <!-- [ngStyle]="{'background-image': url(' + post?.imageMainPath + ')}" -->
+          [defaultImage]=defaultimage
+          [lazyLoad]=mainImage
+          [offset]="offset">
+          <!-- [style.background-image]="post?.imageMainPath" -->
           <div class="image-section__category text-center">
             <h2 class="image-section__category--name white">{{post?.category.name}}</h2>
           </div>
@@ -84,7 +86,7 @@
               <a class="related-posts-section__item--link"
                  (click)="onRelatedPostSelected(relatedPost)">
                 <span class="link-text">
-                  {{ relatedPost.title}}
+                  {{ relatedPost?.title}}
                 </span>
               </a>
             </li>
@@ -112,7 +114,7 @@
               <a class="related-posts-section__item--link"
                  (click)="onRelatedPostSelected(relatedPost)">
                 <span class="link-text">
-                  {{ relatedPost.title}}
+                  {{ relatedPost?.title}}
                 </span>
               </a>
             </li>
@@ -122,11 +124,11 @@
       <div class="post__modification">
         <button class="modification__button--edit button"
                 (click)="onEdit()">
-                EDIT
+          EDIT
         </button>
         <button class="modification__button--delete button"
                 (click)="onDelete()">
-                DELETE
+          DELETE
         </button>
       </div>
     </div>

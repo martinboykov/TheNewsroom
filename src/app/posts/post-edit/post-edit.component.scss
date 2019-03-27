@@ -31,6 +31,9 @@
         }
       }
     }
+    image-cropper{
+      max-width: 600px;
+    }
     &__image-preview {
       display: grid;
       grid-template-columns: 1fr;

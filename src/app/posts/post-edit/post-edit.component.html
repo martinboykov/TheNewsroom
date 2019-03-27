@@ -14,11 +14,30 @@
              (change)="onImagePicked($event)"
              #filePicker>
     </div>
-    <div class="form__image-preview"
-         *ngIf="imagePreview !== '' && imagePreview">
-      <img [src]="imagePreview"
-           [alt]="postForm.value.title">
+
+    <div>
+
+      <image-cropper [imageChangedEvent]="imageChangedEvent"
+                     [maintainAspectRatio]="true"
+                     [aspectRatio]="4 / 3"
+                     [resizeToWidth]="980"
+                     [cropperMinWidth]="980"
+                     [onlyScaleDown]="true"
+                     [roundCropper]="false"
+                     format="jpeg"
+                     outputType="both"
+                     (imageCropped)="imageCropped($event)"
+                     (imageLoaded)="imageLoaded()"
+                     (cropperReady)="cropperReady()"
+                     (loadImageFailed)="loadImageFailed()"
+                     [style.display]="showCropper ? null : 'none'"></image-cropper>
     </div>
+    <!-- <img [src]="croppedImage" /> -->
+    <!-- <div class="form__image-preview"
+         *ngIf="croppedImage">
+      <img [src]="croppedImage"
+           [alt]="postForm.value.title">
+    </div> -->
     <!-- image error message -->
     <div class="form__error-messages">
       <div *ngIf="imageErrorRequired  && image.touched"

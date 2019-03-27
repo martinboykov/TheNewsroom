@@ -36,10 +36,12 @@ const getPostsTotalCount = async (req, res, next) => {
     { $group: { _id: null, count: { $sum: 1 } } },
     { $project: { _id: 0 } },
   ]);
-  const postsCount = posts[0].count;
+  let totalCount;
+  if (posts[0]) totalCount = posts[0].count || 0;
+  if (!posts[0]) totalCount = 0;
   res.status(200).json({
     message: 'Total posts count fetched successfully',
-    data: postsCount,
+    data: totalCount,
   });
 };
 

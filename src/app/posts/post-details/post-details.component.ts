@@ -14,6 +14,7 @@ import { concatMap } from 'rxjs/operators';
 
 import { PaginationInstance } from 'ngx-pagination';
 import { ScrollToService } from './../../shared/scrollTo.service';
+import { Subscription } from 'rxjs';
 
 const APP_URL = environment.appUrl;
 @Component({
@@ -33,7 +34,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   post: Post; // strict Post model !?!
 
   postContent;
-  mainImage: string;
+  mainImage;
   relatedPosts: any[];
 
   commentForm: FormGroup;
@@ -58,6 +59,13 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     screenReaderPageLabel: 'Page',
     screenReaderCurrentLabel: `You're on page`
   };
+
+  offset = 100;
+  defaultimage = '/assets/images/main/posts/item/pixelation.jpg';
+
+  // windowReference;
+  isMobileResolution: boolean;
+  private isMobileResolutionSubscription: Subscription;
 
   constructor(
     private headerService: HeaderService,
@@ -98,14 +106,32 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
           this.postContent = this.sanitizer.bypassSecurityTrustHtml(this.post.content);
           this.paginator.totalItems = response.totalCommentsCount;
           this.isPaginationRequired = this.showIfPaginationRequired(this.paginator.itemsPerPage, this.paginator.totalItems);
-          this.mainImage = `url(${this.post.imageMainPath})`;
+          this.isMobileResolution = this.windowRef.isMobile;
+          if (this.isMobileResolution) { this.mainImage = this.post.imageMainPath; }
+          if (!this.isMobileResolution) { this.mainImage = this.post.imageMainPath + '_280w'; }
           // third request
           return this.postService.getRelatedPosts(this.post);
         })
       )
-      .subscribe((data) => {
-        this.relatedPosts = data || [];
+      .pipe(
+        concatMap((data) => {
+          this.relatedPosts = data || [];
+          return this.windowRef.checkIfMobileUpdateListener();
+        })
+      )
+      .subscribe((isMobile) => {
+        this.isMobileResolution = isMobile;
+        if (this.isMobileResolution) { this.mainImage = this.post.imageMainPath; }
+        if (!this.isMobileResolution) { this.mainImage = this.post.imageMainPath + '_280w'; }
       });
+
+    // this.windowRef.checkIfMobile();
+    // this.isMobileResolutionSubscription = this.windowRef.checkIfMobileUpdateListener()
+    //   .subscribe((isMobile) => {
+    //     this.isMobileResolution = isMobile;
+    //     // if (this.isMobileResolution) { this.mainImage = this.post.imageMainPath; }
+    //     // if (!this.isMobileResolution) { this.mainImage = this.post.imageMainPath + '_180w'; }
+    //   });
 
     this.windowRef.scrollToTop(0); // consistency for user expirience
     this.changeDetectorRef.detectChanges();
@@ -206,6 +232,6 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   }
 
   ngOnDestroy() {
-
+    // this.isMobileResolutionSubscription.unsubscribe();
   }
 }

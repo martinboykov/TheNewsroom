@@ -27,7 +27,9 @@ export class PostItemComponent implements OnInit {
 
   ngOnInit() {
     const post = this.post;
-    this.image = this.post.imageMainPath;
+    // this.image = this.post.imageMainPath;
+    if (this.isMobileResolution) { this.image = this.post.imageMainPath; }
+    if (!this.isMobileResolution) { this.image = this.post.imageMainPath + '_280w'; }
     this.postContent = this.sanitizer.bypassSecurityTrustHtml(post.content);
     this.postLink = this.helper.createRoute(post);
   }

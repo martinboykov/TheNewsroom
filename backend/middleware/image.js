@@ -24,6 +24,8 @@ const MIME_TYPE_MAP = {
   'image/jpg': 'jpg',
 };
 
+const SIZES = [280, 51];
+
 function getPublicUrl(filename) {
   return `https://storage.googleapis.com/${BUCKET_NAME}/${filename}`;
 }
@@ -43,13 +45,17 @@ function sendUploadToGCS(req, res, next) {
     .replace(/\s+|(jpg)|(png)|(jpeg)/ig, '')
     .toLowerCase();
 
+  const timestamp = Date.now();
   // uploadAllSizes(980, originalName, req.file, next);
-  uploadAllSizes(280, originalName, req.file, next);
-  uploadAllSizes(180, originalName, req.file, next);
-  uploadAllSizes(51, originalName, req.file, next);
+  SIZES.forEach((size) => {
+    uploadAllSizes(size, originalName, timestamp, req.file, next);
+  });
+  // uploadAllSizes(SIZES[0], originalName, timestamp, req.file, next);
+  // uploadAllSizes(SIZES[1], originalName, timestamp, req.file, next);
+  // uploadAllSizes(SIZES[2], originalName, timestamp, req.file, next);
 
   const gcsname =
-    Date.now() + '_' + originalName + MIME_TYPE_MAP[req.file.mimetype];
+    timestamp + '_' + originalName + MIME_TYPE_MAP[req.file.mimetype];
 
   const file = bucket.file(gcsname);
 
@@ -85,14 +91,12 @@ function sendUploadToGCS(req, res, next) {
     .toBuffer()
     .then((data) => stream.end(data))
     .catch((err) => console.log(err));
-
   return null;
 }
 
-function uploadAllSizes(size, originalName, reqFile, next) {
+function uploadAllSizes(size, originalName, timestamp, reqFile, next) {
   const gcsname =
-    `resized-${size}` + '_' +
-    Date.now() + '_' + originalName + MIME_TYPE_MAP[reqFile.mimetype];
+    `${timestamp}_${originalName}${MIME_TYPE_MAP[reqFile.mimetype]}_${size}w`;
 
   const file = bucket.file(gcsname);
 
@@ -132,10 +136,20 @@ function uploadAllSizes(size, originalName, reqFile, next) {
 
 const deleteImg = async function(filename) {
   try {
-    await storage
-      .bucket(BUCKET_NAME)
-      .file(filename)
-      .delete();
+    await Promise.all([
+      storage
+        .bucket(BUCKET_NAME)
+        .file(filename)
+        .delete(),
+      storage
+        .bucket(BUCKET_NAME)
+        .file(`${filename}_${SIZES[0]}w`)
+        .delete(),
+      storage
+        .bucket(BUCKET_NAME)
+        .file(`${filename}_${SIZES[1]}w`)
+        .delete(),
+    ]);
     console.log(`gs://${bucket}/${filename} deleted.`);
   } catch (error) {
     console.log(error);

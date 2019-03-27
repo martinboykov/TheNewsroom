@@ -542,11 +542,14 @@
             grid-column: 1/2;
             grid-row: 1/2;
 
-            min-height: $app-min-width - 40px;
+            min-height: 35vw;
             min-width: 180px;
 
             margin-bottom: 0px;
-
+            background-size: cover;
+            // background-size: contain;
+            // background-repeat: no-repeat;
+            background-position: 100% 20%;
             &__category {
               max-width: $app-min-width - 10px;
               &--name {

@@ -85,7 +85,9 @@ const getSubcategoryPostsTotalCount = async (req, res, next) => {
     { $match: { name: req.params.name } },
     { $project: { count: { $size: '$posts' } } },
   ]);
-  const totalCount = posts[0].count;
+  let totalCount;
+  if (posts[0]) totalCount = posts[0].count || 0;
+  if (!posts[0]) totalCount = 0;
   // const subcategoryPosts = await Subcategory
   //   .findOne({ name: req.params.name });
   // const totalCount = subcategoryPosts.posts.length;
@@ -184,14 +186,14 @@ const updateSubcategory = async (req, res, next) => {
       },
     });
   // if (subcategory.name !== updatedSubcategory.name) {
-    task.update('posts', {
-      'subcategory._id': subcategory._id,
-    }, {
-        $set: {
-          'subcategory.name': DOMPurify.sanitize(updatedSubcategory.name),
-          isVisible: updatedSubcategory.isVisible,
-        },
-      }).options({ multi: true });
+  task.update('posts', {
+    'subcategory._id': subcategory._id,
+  }, {
+      $set: {
+        'subcategory.name': DOMPurify.sanitize(updatedSubcategory.name),
+        isVisible: updatedSubcategory.isVisible,
+      },
+    }).options({ multi: true });
   // }
 
   return task.run({ useMongoose: true })

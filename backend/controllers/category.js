@@ -116,7 +116,9 @@ const getCategoryPostsTotalCount = async (req, res, next) => {
     { $match: { name: req.params.name } },
     { $project: { count: { $size: '$posts' } } },
   ]);
-  const totalCount = posts[0].count;
+  let totalCount;
+  if (posts[0]) totalCount = posts[0].count || 0;
+  if (!posts[0]) totalCount = 0;
   // const categoryPosts = await Category
   //   .findOne({ name: req.params.name });
   // const totalCount = categoryPosts.posts.length;
