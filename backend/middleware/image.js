@@ -30,7 +30,7 @@ function getPublicUrl(filename) {
   return `https://storage.googleapis.com/${BUCKET_NAME}/${filename}`;
 }
 
-function sendUploadToGCS(req, res, next) {
+async function sendUploadToGCS(req, res, next) {
   if (!req.file) {
     return next();
   }
@@ -46,88 +46,97 @@ function sendUploadToGCS(req, res, next) {
 
   const timestamp = Date.now(); // the timestamp must be the same far all sizes
 
+  // uploadAllSizes(SIZES[0], originalName, timestamp, req.file, next);
+  // uploadAllSizes(SIZES[1], originalName, timestamp, req.file, next);
+  const promiseArr = [];
   SIZES.forEach((size) => {
-    uploadAllSizes(size, originalName, timestamp, req.file, next);
+    promiseArr.push(uploadAllSizes(size, originalName, timestamp, req.file, next));
   });
+  const promise = new Promise((resolve, reject) => {
+    const gcsname =
+      timestamp + '_' + originalName + MIME_TYPE_MAP[req.file.mimetype];
 
-  const gcsname =
-    timestamp + '_' + originalName + MIME_TYPE_MAP[req.file.mimetype];
+    const file = bucket.file(gcsname);
 
-  const file = bucket.file(gcsname);
-
-  const stream = file.createWriteStream({
-    metadata: {
-      contentType: req.file.mimetype,
-    },
-    resumable: false,
-  });
-
-  stream.on('error', (err) => {
-    req.file.cloudStorageError = err;
-    next(err);
-  });
-
-  stream.on('finish', () => {
-    req.file.cloudStorageObject = gcsname;
-    file.makePublic().then(() => {
-      req.file.cloudStoragePublicUrl = getPublicUrl(gcsname);
-      next();
+    const stream = file.createWriteStream({
+      metadata: {
+        contentType: req.file.mimetype,
+      },
+      resumable: false,
     });
-  });
 
-  sharp(req.file.buffer)
-    .resize({
-      width: 980,
-      fit: sharp.fit.inside,
-      withoutEnlargement: true,
-    })
-    .jpeg({
-      quality: 80,
-    })
-    .toBuffer()
-    .then((data) => stream.end(data))
+    stream.on('error', (err) => {
+      req.file.cloudStorageError = err;
+      reject(err);
+      // next(err);
+    });
+
+    stream.on('finish', () => {
+      req.file.cloudStorageObject = gcsname;
+      file.makePublic().then(() => {
+        req.file.cloudStoragePublicUrl = getPublicUrl(gcsname);
+        resolve();
+      });
+    });
+
+    sharp(req.file.buffer)
+      .resize({
+        width: 980,
+        fit: sharp.fit.inside,
+        withoutEnlargement: true,
+      })
+      .jpeg({
+        quality: 80,
+      })
+      .toBuffer()
+      .then((data) => stream.end(data))
+      .catch((err) => reject(err));
+  });
+  promiseArr.push(promise);
+  return await Promise.all(promiseArr)
+    .then(() => next())
     .catch((err) => next(err));
-  return null;
 }
 
 function uploadAllSizes(size, originalName, timestamp, reqFile, next) {
-  const gcsname =
-    `${timestamp}_${originalName}${MIME_TYPE_MAP[reqFile.mimetype]}_${size}w`;
+  return new Promise((resolve, reject) => {
+    const gcsname =
+      `${timestamp}_${originalName}${MIME_TYPE_MAP[reqFile.mimetype]}_${size}w`;
 
-  const file = bucket.file(gcsname);
+    const file = bucket.file(gcsname);
 
-  const stream = file.createWriteStream({
-    metadata: {
-      contentType: reqFile.mimetype,
-    },
-    resumable: false,
-  });
-
-  stream.on('error', (err) => {
-    reqFile.cloudStorageError = err;
-    next(err);
-  });
-
-  stream.on('finish', () => {
-    reqFile.cloudStorageObject = gcsname;
-    file.makePublic().then(() => {
-      // console.log(getPublicUrl(gcsname));
-      // next();
+    const stream = file.createWriteStream({
+      metadata: {
+        contentType: reqFile.mimetype,
+      },
+      resumable: false,
     });
-  });
 
-  sharp(reqFile.buffer)
-    .resize({
-      width: size,
-      fit: sharp.fit.inside,
-      withoutEnlargement: true,
-    })
-    .jpeg({
-      quality: 80,
-    })
-    .toBuffer()
-    .then((data) => stream.end(data))
-    .catch((err) => next(err));
+    stream.on('error', (err) => {
+      reqFile.cloudStorageError = err;
+      reject(err);
+    });
+
+    stream.on('finish', () => {
+      reqFile.cloudStorageObject = gcsname;
+      file.makePublic().then(() => {
+        resolve();
+      });
+    });
+
+    sharp(reqFile.buffer)
+      .resize({
+        width: size,
+        fit: sharp.fit.inside,
+        withoutEnlargement: true,
+      })
+      .jpeg({
+        quality: 80,
+      })
+      .toBuffer()
+      .then((data) => stream.end(data))
+      .catch((err) => reject(err));
+  });
 }
 
 const deleteImg = async function(filename) {
