@@ -130,7 +130,8 @@ export class PostListComponent implements OnInit, OnDestroy {
   // On comment page change scroll to top of comments.
   // (consistency with mobile version)
   scrollToAnkor(element) {
-    this.scrollService.scrollTo(element, 1, 0);
+    // this.scrollService.scrollTo(element, 1, 0);
+    this.windowRef.scrollToTop(1); // scrollToTop feels better
   }
 
   getUrl(params) {

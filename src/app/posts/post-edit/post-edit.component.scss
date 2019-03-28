@@ -31,7 +31,7 @@
         }
       }
     }
-    image-cropper{
+    image-cropper {
       margin-bottom: 5px;
     }
     &__image-preview {
@@ -61,7 +61,7 @@
       padding: 5px;
       border: 1px solid $light-grey;
       margin-bottom: 5px;
-     color: $text-edit-mode;
+      color: $text-edit-mode;
     }
     .form__title {
       ::placeholder {
@@ -117,6 +117,7 @@
       text-decoration: none;
       text-shadow: 0px 1px 0px #ffffff;
       outline: 0;
+      min-width: 120px;
     }
     &__submit-button {
       margin-bottom: 50px;
@@ -132,6 +133,15 @@
       &:active {
         position: relative;
         top: 1px;
+      }
+      .loader-wrapper {
+        .loader {
+          margin: 0 auto;
+          border-top: 2px solid rgba(0, 0, 0, 0.2);
+          border-right: 2px solid rgba(0, 0, 0, 0.2);
+          border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+          border-left: 2px solid black;
+        }
       }
     }
     &__submit-button:disabled {
@@ -155,7 +165,7 @@
           }
         }
       }
-      image-cropper{
+      image-cropper {
         max-width: 400px;
       }
       &__image-preview {
@@ -183,7 +193,7 @@
           }
         }
       }
-      image-cropper{
+      image-cropper {
         min-width: 300px;
       }
       &__image-preview {

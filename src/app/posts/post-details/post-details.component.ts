@@ -43,7 +43,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   // Pagination comments
   isPaginationRequired: boolean;
   defaultPaginator = {
-    itemsPerPage: 10,
+    itemsPerPage: 15,
     currentPage: 1,
   };
   paginator: PaginationInstance = {
@@ -63,6 +63,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   offset = 100;
   defaultimage = '/assets/images/main/posts/item/pixelation.jpg';
 
+  loading: boolean;
   // windowReference;
   isMobileResolution: boolean;
   private isMobileResolutionSubscription: Subscription;

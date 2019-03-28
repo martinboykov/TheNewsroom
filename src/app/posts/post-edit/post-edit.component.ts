@@ -9,6 +9,7 @@ import { mimeType } from './mime-type.validator';
 import { Subscription, timer, Subject, Observable, concat, of, from } from 'rxjs';
 import { tap, delay, concatMap, debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
+import { WindowRef } from 'src/app/shared/winref.service';
 
 @Component({
   selector: 'app-post-edit',
@@ -29,9 +30,10 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   contentTextOnly = '';
   tagsArray: Observable<any[]>;
   loading: boolean;
+  loadingPosts = false;
   searchedTag = '';
   tagsInput = new Subject<string>();
-
+  isIEOrEdge;
   private categoriesSubscription: Subscription;
   jodiConfig = {
     // defaultMode: '3',
@@ -62,10 +64,12 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     private categoryService: CategoryService,
     public route: ActivatedRoute,
     private renderer: Renderer2,
+    private windowRef: WindowRef,
   ) { }
 
   ngOnInit() {
     // throw new Error('My Pretty Error'); // for teting
+    this.isIEOrEdge = /msie\s|trident\/|edge\//i.test(this.windowRef.nativeWindow.navigator.userAgent);
     this.postForm = new FormGroup({
       image: new FormControl('', {
         validators: [Validators.required],
@@ -170,6 +174,8 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
       // -------------------------
     }
+
+
   }
   ngAfterContentInit() {
   }
@@ -318,7 +324,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     // post.subcategory = subcategory;
     if (subcategory) { post.subcategory = subcategory; }
     if (_id) { post._id = _id; }
-
+    this.loadingPosts = true;
     this.postService.editPost(post, this.mode);
     // this.postForm.reset();
   }
@@ -337,33 +343,37 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     this.imageChangedEvent = event;
     const file = (event.target as HTMLInputElement).files[0];
     this.fileName = file.name;
-    //  console.log(file);
-    // const isValidType = this.fileTypeCheck(file.type); // my checker
-    // if(!isValidType) console.log('not valid'); // my checker
     console.log(file);
-    // this.postForm.patchValue({ image: file });
     this.image.updateValueAndValidity();
 
+    if (this.isIEOrEdge) {
+      this.convertImgToDataUrl(file);
+      this.postForm.patchValue({ image: file });
+    }
+  }
+  public convertImgToDataUrl(file) {
     // convert image to data url
     // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
-    // const reader = new FileReader();
-    // reader.onload = () => {
-    //   // get the img src="imagePreview"
-    //   this.imagePreview = reader.result;
-    //   // console.log(reader);
+    const reader = new FileReader();
+    reader.onload = () => {
+      // get the img src="imagePreview"
+      this.imagePreview = reader.result;
+      // console.log(reader);
 
-    // };
-    // reader.readAsDataURL(file);
-
+    };
+    reader.readAsDataURL(file);
   }
   fileChangeEvent(event: any): void {
+    if (this.isIEOrEdge) { return; }
     this.imageChangedEvent = event;
   }
   imageCropped(event: ImageCroppedEvent) {
-    console.log(event);
+    // this.croppedImage = event.base64;
+    // const blobRes = await fetch(event.base64);
+    // const blobValue = await blobRes.blob();
+    // const file = this.blobToFile(blobValue, this.fileName);
     this.croppedImage = event.base64;
     const file = this.blobToFile(event.file, this.fileName);
-    // const file = new File([event.file], this.fileName, { lastModified: Date.now() });
     this.postForm.patchValue({ image: file });
     console.log(this.image.value);
   }

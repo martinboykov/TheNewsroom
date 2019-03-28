@@ -6,6 +6,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-category-edit',
@@ -32,7 +33,7 @@ export class CategoryEditComponent implements OnInit {
     private categoryService: CategoryService,
     public route: ActivatedRoute,
     private helper: HelperService,
-    private postService:PostService,
+    private postService: PostService,
   ) { }
 
   ngOnInit() {
@@ -189,10 +190,15 @@ export class CategoryEditComponent implements OnInit {
     const more = this.categoryPosts.slice(len, this.bufferSize + len);
     this.loadingPosts = true;
     // using timeout here to simulate backend API delay
-    setTimeout(() => {
+    const tiemout = timer(200);
+    tiemout.subscribe(() => {
       this.loadingPosts = false;
       this.categoryPostsBuffer = this.categoryPostsBuffer.concat(more);
-    }, 200);
+    });
+    // setTimeout(() => {
+    //   this.loadingPosts = false;
+    //   this.categoryPostsBuffer = this.categoryPostsBuffer.concat(more);
+    // }, 200);
   }
 
 }

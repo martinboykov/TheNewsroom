@@ -7,6 +7,7 @@ import { Location } from '@angular/common';
 import { SubcategoryService } from '../subcategory.service';
 import { Subcategory } from '../subcategory.model';
 import { PostService } from 'src/app/posts/post.service';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-subcategory-edit',
@@ -203,9 +204,14 @@ export class SubcategoryEditComponent implements OnInit {
     const more = this.subcategoryPosts.slice(len, this.bufferSize + len);
     this.loading = true;
     // using timeout here to simulate backend API delay
-    setTimeout(() => {
+    const tiemout = timer(200);
+    tiemout.subscribe(() => {
       this.loading = false;
       this.subcategoryPostsBuffer = this.subcategoryPostsBuffer.concat(more);
-    }, 200);
+    });
+    // setTimeout(() => {
+    //   this.loading = false;
+    //   this.subcategoryPostsBuffer = this.subcategoryPostsBuffer.concat(more);
+    // }, 200);
   }
 }
