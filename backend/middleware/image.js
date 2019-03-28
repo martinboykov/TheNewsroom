@@ -45,14 +45,11 @@ function sendUploadToGCS(req, res, next) {
     .replace(/\s+|(jpg)|(png)|(jpeg)/ig, '')
     .toLowerCase();
 
-  const timestamp = Date.now();
-  // uploadAllSizes(980, originalName, req.file, next);
+  const timestamp = Date.now(); // the timestamp must be the same far all sizes
+
   SIZES.forEach((size) => {
     uploadAllSizes(size, originalName, timestamp, req.file, next);
   });
-  // uploadAllSizes(SIZES[0], originalName, timestamp, req.file, next);
-  // uploadAllSizes(SIZES[1], originalName, timestamp, req.file, next);
-  // uploadAllSizes(SIZES[2], originalName, timestamp, req.file, next);
 
   const gcsname =
     timestamp + '_' + originalName + MIME_TYPE_MAP[req.file.mimetype];

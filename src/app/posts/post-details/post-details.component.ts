@@ -93,17 +93,18 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
         concatMap((paramMap: ParamMap) => {
           this.headerService.setRouterParameters(paramMap);
           const _id = paramMap.get('_id');
-          // second request
-
           this.postService.updatePopularity(_id);
+          // second request
           return this.postService.getPost(_id, this.paginator.itemsPerPage, this.paginator.currentPage);
         })
       )
       .pipe(
         concatMap((response) => {
           this.post = response.post;
+          this.mainImage = this.post.imageMainPath;
           this.comments = [...this.post.comments];
           this.postContent = this.sanitizer.bypassSecurityTrustHtml(this.post.content);
+
           this.paginator.totalItems = response.totalCommentsCount;
           this.isPaginationRequired = this.showIfPaginationRequired(this.paginator.itemsPerPage, this.paginator.totalItems);
           this.isMobileResolution = this.windowRef.isMobile;
@@ -124,14 +125,6 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
         if (this.isMobileResolution) { this.mainImage = this.post.imageMainPath; }
         if (!this.isMobileResolution) { this.mainImage = this.post.imageMainPath + '_280w'; }
       });
-
-    // this.windowRef.checkIfMobile();
-    // this.isMobileResolutionSubscription = this.windowRef.checkIfMobileUpdateListener()
-    //   .subscribe((isMobile) => {
-    //     this.isMobileResolution = isMobile;
-    //     // if (this.isMobileResolution) { this.mainImage = this.post.imageMainPath; }
-    //     // if (!this.isMobileResolution) { this.mainImage = this.post.imageMainPath + '_180w'; }
-    //   });
 
     this.windowRef.scrollToTop(0); // consistency for user expirience
     this.changeDetectorRef.detectChanges();
@@ -227,6 +220,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   ngAfterViewChecked() {
     // to prevent error ExpressionChangedAfterItHasBeenCheckedError
     // https://blog.angularindepth.com/everything-you-need-to-know-about-the-expressionchangedafterithasbeencheckederror-error-e3fd9ce7dbb4
+
     this.changeDetectorRef.detectChanges();
 
   }
