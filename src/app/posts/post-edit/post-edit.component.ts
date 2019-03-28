@@ -23,8 +23,8 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   postForm: FormGroup;
   imagePreview: any;
   post: Post;
-  categories: any[] = []; // the data is not strict category !?!?, but with populate subcategories name
-  subcategories: any[] = []; // the data is not strict category !?!?, but with populate subcategories name
+  categories: any[] = [];
+  subcategories: any[] = [];
   categoryselected;
   contentTextOnly = '';
   tagsArray: Observable<any[]>;

@@ -1,4 +1,5 @@
-<div class="wrapper">
+<div class="wrapper"
+     #ankor>
   <!-- <app-aside-right-tripple *ngIf="isAsideRequired || !isMobileResolution"></app-aside-right-tripple> -->
 
   <!-- MOBILE - INFINITI SCROLLER -->
@@ -17,8 +18,7 @@
   <div *ngIf="!isMobileResolution"
        class="posts desktop">
     <app-post-item *ngFor="let post of postsPagination | paginate: paginator"
-                   [post]="post"
-                   ></app-post-item>
+                   [post]="post"></app-post-item>
   </div>
 
   <!-- DESCTOP - PAGINATION -->
@@ -31,7 +31,8 @@
          class="pagination-previous desktop">
       <a class="pagination-previous--link"
          *ngIf="!p.isFirstPage()"
-         (click)="p.previous()">
+         (click)="p.previous()"
+         (click)="scrollToAnkor(ankor)">
         &laquo;
       </a>
       <span class="pagination-previous--span"
@@ -44,7 +45,8 @@
       <div *ngFor="let page of p.pages">
         <a class="pagination-current--link"
            *ngIf="p.getCurrent() !== page.value"
-           (click)="p.setCurrent(page.value)">
+           (click)="p.setCurrent(page.value)"
+           (click)="scrollToAnkor(ankor)">
           {{ page.label }}
         </a>
         <span class="pagination-current--span"
@@ -57,7 +59,8 @@
          class="pagination-next desktop">
       <a class="pagination-next--link"
          *ngIf="!p.isLastPage()"
-         (click)="p.next()">
+         (click)="p.next()"
+         (click)="scrollToAnkor(ankor)">
         &raquo;
       </a>
       <span class="pagination-next--span"

@@ -32,7 +32,7 @@
       }
     }
     image-cropper{
-      max-width: 600px;
+      margin-bottom: 5px;
     }
     &__image-preview {
       display: grid;
@@ -78,19 +78,15 @@
         color: #333333;
       }
     }
-
     &__category {
       border-radius: none;
       display: inline-block;
       margin: 0 10px 5px 0;
-      width: 200px;
     }
     &__subcategory {
       border-radius: none;
-
       display: inline-block;
       margin-bottom: 5px;
-      width: 200px;
     }
     &__tags {
       border-radius: none;
@@ -159,9 +155,18 @@
           }
         }
       }
+      image-cropper{
+        max-width: 400px;
+      }
       &__image-preview {
         img {
         }
+      }
+      &__category {
+        width: 400px;
+      }
+      &__subcategory {
+        width: 400px;
       }
       &__title {
       }
@@ -177,6 +182,9 @@
           &:active {
           }
         }
+      }
+      image-cropper{
+        min-width: 300px;
       }
       &__image-preview {
         img {

@@ -31,7 +31,6 @@ function getPublicUrl(filename) {
 }
 
 function sendUploadToGCS(req, res, next) {
-  console.log(req.file);
   if (!req.file) {
     return next();
   }
@@ -87,7 +86,7 @@ function sendUploadToGCS(req, res, next) {
     })
     .toBuffer()
     .then((data) => stream.end(data))
-    .catch((err) => console.log(err));
+    .catch((err) => next(err));
   return null;
 }
 
@@ -112,7 +111,7 @@ function uploadAllSizes(size, originalName, timestamp, reqFile, next) {
   stream.on('finish', () => {
     reqFile.cloudStorageObject = gcsname;
     file.makePublic().then(() => {
-      console.log(getPublicUrl(gcsname));
+      // console.log(getPublicUrl(gcsname));
       // next();
     });
   });
@@ -128,12 +127,12 @@ function uploadAllSizes(size, originalName, timestamp, reqFile, next) {
     })
     .toBuffer()
     .then((data) => stream.end(data))
-    .catch((err) => console.log(err));
+    .catch((err) => next(err));
 }
 
 const deleteImg = async function(filename) {
   try {
-    await Promise.all([
+    const result = await Promise.all([
       storage
         .bucket(BUCKET_NAME)
         .file(filename)
@@ -147,7 +146,9 @@ const deleteImg = async function(filename) {
         .file(`${filename}_${SIZES[1]}w`)
         .delete(),
     ]);
-    console.log(`gs://${bucket}/${filename} deleted.`);
+    result.forEach((value) => {
+      console.log(`${value[0].request.href} deleted.`);
+    });
   } catch (error) {
     console.log(error);
   }

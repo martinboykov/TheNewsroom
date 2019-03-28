@@ -2,11 +2,12 @@ import { WindowRef } from './../../shared/winref.service';
 import { Post } from './../post.model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { HeaderService } from './../../header/header.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PostService } from '../post.service';
 import { PaginationInstance } from 'ngx-pagination';
 import { throttleTime } from 'rxjs/operators';
+import { ScrollToService } from 'src/app/shared/scrollTo.service';
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
@@ -53,10 +54,13 @@ export class PostListComponent implements OnInit, OnDestroy {
   isMobileResolution: boolean;
   private isMobileResolutionSubscription: Subscription;
 
-  constructor(private headerService: HeaderService,
+  constructor(
+    private headerService: HeaderService,
     private postService: PostService,
     private windowRef: WindowRef,
-    public route: ActivatedRoute) {
+    private scrollService: ScrollToService,
+    public route: ActivatedRoute
+  ) {
   }
 
   ngOnInit() {
@@ -123,7 +127,11 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.paginator.currentPage = page;
     return this.postService.getPosts(this.url, this.paginator.itemsPerPage, this.paginator.currentPage);
   }
-
+  // On comment page change scroll to top of comments.
+  // (consistency with mobile version)
+  scrollToAnkor(element) {
+    this.scrollService.scrollTo(element, 1, 0);
+  }
 
   getUrl(params) {
 
