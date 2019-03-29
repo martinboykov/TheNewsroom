@@ -4,29 +4,82 @@
     <form [formGroup]="signupForm"
           (ngSubmit)="onSignup()"
           class="signup__form">
-      <h1 class="signup__header">Signup</h1>
+      <h1 class="signup__header">Signup form</h1>
       <input class="form__email"
              formControlName="name"
              type="text"
              placeholder="Name"
-             autofocus>
+             autofocus
+             autocomplete="name">
+      <div class="form__error-messages">
+        <div *ngIf="nameErrorRequired && name.touched"
+             class="error-block">*Please provide a name</div>
+        <div *ngIf="nameErrorLengthMin && name.touched"
+             class="error-block">*Name is too short</div>
+        <div *ngIf="nameErrorLengthMax && name.touched"
+             class="error-block">*Name is too long</div>
+      </div>
       <input class="form__email"
              formControlName="email"
              type="email"
-             placeholder="Email">
+             placeholder="Email"
+             autocomplete="email">
+      <div class="form__error-messages">
+        <div *ngIf="emailErrorRequired && email.touched"
+             class="error-block">*Please provide an email</div>
+        <div *ngIf="emailErrorValidEmail && email.touched"
+             class="error-block">*Not a valid email</div>
+        <div *ngIf="emailErrorLengthMax && email.touched"
+             class="error-block">*Email is too long</div>
+      </div>
       <input class="form__password"
              formControlName="password"
              type="password"
-             placeholder="Password">
+             placeholder="Password"
+             autocomplete="current-password">
+      <div class="form__error-messages">
+        <div *ngIf="passwordErrorRequired && password.touched"
+             class="error-block">*Please provide a password</div>
+        <div *ngIf="passwordErrorLengthMin && password.touched"
+             class="error-block">*Password is too short</div>
+        <div *ngIf="passwordErrorLengthMax && password.touched"
+             class="error-block">*Password is too long</div>
+      </div>
       <input class="form__submit-button"
              type="submit"
-             value="Submit">
+             value="signup"
+             [disabled]="!signupForm.valid"
+             *ngIf="!isLoading">
+      <div class="form__submit-button loader-wrapper"
+           *ngIf="isLoading">
+        <div class="loader"
+             *ngIf="isLoading">
+        </div>
+      </div>
+      <div class="login">
+        <a class="login__link"
+           routerLink="/auth/login">
+          Already have an account?
+        </a>
+      </div>
     </form>
-    <div class="login">
-      <a class="login__link"
-         routerLink="/auth/login">
-        Already have an account?
-      </a>
+
+    <div class="dev-check"
+         style="max-width: 500px;overflow-wrap: break-word;">
+      <p>Form Status: {{ signupForm.status }}</p>
+      <p>Form Values: {{ signupForm.value | json}}</p>
+      <p>Errors:</p>
+      <ul>
+        <li>
+          <p>Image Errors: {{ name.errors | json}}</p>
+        </li>
+        <li>
+          <p>Title Errors: {{ email.errors | json}}</p>
+        </li>
+        <li>
+          <p>Content Errors: {{ password.errors | json}}</p>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

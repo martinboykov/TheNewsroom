@@ -1,5 +1,5 @@
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -26,32 +26,21 @@ export class SignupComponent implements OnInit {
       ]),
       email: new FormControl('', [
         Validators.required,
-        Validators.email,
+        this.emailValidator,
         Validators.maxLength(255),
       ]),
       password: new FormControl('', [
         Validators.required,
+        Validators.minLength(6),
         Validators.maxLength(1024),
       ]),
     });
   }
 
   onSignup() {
-    // this.authService.signup(this.form.value.email, this.form.value.password)
-    //   .then(() => {
-    //     const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-    //     this.router.navigate([returnUrl || '/recipes']);
-    //   });
     this.isLoading = true;
-
-    // this.authService.signup(this.email.value, this.password.value)
-    //   .then(() => {
-    //     const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-    //     this.router.navigate([returnUrl || '/']);
-    //   });
-    this.isLoading = false;
-    // this.form.reset();
-
+    // this.authService.signup(this.name.value, this.email.value, this.password.value);
+    // this.router.navigate(['/']);
   }
 
 
@@ -96,7 +85,7 @@ export class SignupComponent implements OnInit {
   }
   get emailErrorValidEmail() {
     if (this.email.errors) {
-      if (this.email.errors.email) {
+      if (this.email.errors.validEmailError) {
         return true;
       }
     } else {
@@ -135,6 +124,21 @@ export class SignupComponent implements OnInit {
       if (this.password.errors.maxlength) {
         return true;
       }
+    } else {
+      return null;
+    }
+  }
+  private emailValidator(control: AbstractControl): { [key: string]: boolean } {
+    let validityIndicator = false;
+    const regex = /^(.)+@(.)+.(.)+$/;
+    const email = control.value;
+    if (email.length > 0) {
+      if (!regex.test(email)) {
+        validityIndicator = true;
+      } else {
+        validityIndicator = false;
+      }
+      return validityIndicator ? { validEmailError: true } : null;
     } else {
       return null;
     }

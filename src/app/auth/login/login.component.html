@@ -4,25 +4,66 @@
     <form [formGroup]="loginForm"
           (ngSubmit)="onLogin()"
           class="login__form">
-      <h1 class="login__header">Log in</h1>
+      <h1 class="login__header">Login Form</h1>
       <input class="form__email"
              formControlName="email"
              type="email"
              placeholder="Email"
-             autofocus>
+             autofocus
+             autocomplete="email">
+      <div class="form__error-messages">
+        <div *ngIf="emailErrorRequired && email.touched"
+             class="error-block">*Please provide an email</div>
+        <div *ngIf="emailErrorValidEmail && email.touched"
+             class="error-block">*Not a valid email</div>
+        <div *ngIf="emailErrorLengthMax && email.touched"
+             class="error-block">*Email is too long</div>
+      </div>
       <input class="form__password"
              formControlName="password"
              type="password"
-             placeholder="Password">
+             placeholder="Password"
+             autocomplete="current-password">
+      <div class="form__error-messages">
+        <div *ngIf="passwordErrorRequired && password.touched"
+             class="error-block">*Please provide a password</div>
+        <div *ngIf="passwordErrorLengthMin && password.touched"
+             class="error-block">*Password is too short</div>
+        <div *ngIf="passwordErrorLengthMax && password.touched"
+             class="error-block">*Password is too long</div>
+      </div>
       <input class="form__submit-button"
+             *ngIf="!isLoading"
+             [disabled]="!loginForm.valid"
              type="submit"
-             value="Submit">
+             value="login">
+      <div class="form__submit-button loader-wrapper"
+           *ngIf="isLoading">
+        <div class="loader"
+             *ngIf="isLoading">
+        </div>
+      </div>
+      <div class="signup">
+        <a class="signup__link"
+           routerLink="/auth/signup">
+          Don't have an account?
+        </a>
+      </div>
     </form>
-    <div class="signup">
-      <a class="signup__link"
-         routerLink="/auth/signup">
-        Dont have an account?
-      </a>
+
+    <div class="dev-check"
+         style="max-width: 500px;overflow-wrap: break-word;">
+      <p>Form Status: {{ loginForm.status }}</p>
+      <p>Form Values: {{ loginForm.value | json}}</p>
+      <p>Errors:</p>
+      <ul>
+        <li>
+          <p>Title Errors: {{ email.errors | json}}</p>
+        </li>
+        <li>
+          <p>Content Errors: {{ password.errors | json}}</p>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

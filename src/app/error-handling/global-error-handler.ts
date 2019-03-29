@@ -1,8 +1,8 @@
+import { NotificationService } from './../shared/notification.service';
 import { Router } from '@angular/router';
 import { ErrorHandler, Injectable, Injector, NgZone, Inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpError } from './httpError.model';
-import { NotificationService } from './notification.service';
 import { ErrorService } from './error.service';
 import { SlackErrorLoggingService } from './slack-logging.service';
 // import { SentryErrorLoggingService } from './sentry-error.service';

@@ -49,7 +49,6 @@
         background: #fff;
         border-color: $light-grey;
         color: $grey;
-
       }
 
       .form__email:focus,
@@ -58,18 +57,32 @@
       }
 
       .form__submit-button {
+        background: linear-gradient(to bottom, $gold 5%, darken($gold, 20%) 100%);
         background: darken($gold, 20%);
         border-color: transparent;
-        color: white;
+        color: #fff;
         cursor: pointer;
         text-transform: uppercase;
       }
       .form__submit-button:hover {
-        background: darken($gold, 40%);
+        background: linear-gradient(to bottom, darken($gold, 20%) 5%, $gold 100%);
       }
 
-      .form__submit-button:focus {
-        background: darken($gold, 50%);
+      .form__submit-button:active {
+        background: linear-gradient(to bottom, $gold 5%, darken($gold, 20%) 100%);
+      }
+      .form__submit-button:disabled,
+      .form__submit-button:disabled:hover,
+      .form__submit-button:disabled:active {
+        background: lighten($gold, 0%);
+        position: relative;
+        top: 0px;
+        cursor: default;
+      }
+      .loader-wrapper {
+        .loader {
+          margin: 0 auto;
+        }
       }
     }
     .signup {
@@ -85,13 +98,16 @@
         color: $grey;
       }
     }
+    .form__error-messages > div{
+      padding: 5px 0;
+    }
   }
 }
 @media (min-width: $desctop) {
   .wrapper {
     .login {
       min-height: 600px;
-      min-width: 400px;
+      width: 400px;
       margin-top: 60px;
       &__form {
         padding: 12px;

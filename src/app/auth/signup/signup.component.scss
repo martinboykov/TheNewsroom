@@ -57,6 +57,7 @@
       }
 
       .form__submit-button {
+        background: linear-gradient(to bottom, $gold 5%, darken($gold, 20%) 100%);
         background: darken($gold, 20%);
         border-color: transparent;
         color: #fff;
@@ -64,11 +65,24 @@
         text-transform: uppercase;
       }
       .form__submit-button:hover {
-        background: darken($gold, 40%);
+        background: linear-gradient(to bottom, darken($gold, 20%) 5%, $gold 100%);
       }
 
-      .form__submit-button:focus {
-        background: darken($gold, 50%);
+      .form__submit-button:active {
+        background: linear-gradient(to bottom, $gold 5%, darken($gold, 20%) 100%);
+      }
+      .form__submit-button:disabled,
+      .form__submit-button:disabled:hover,
+      .form__submit-button:disabled:active {
+        background: lighten($gold, 0%);
+        position: relative;
+        top: 0px;
+        cursor: default;
+      }
+      .loader-wrapper {
+        .loader {
+          margin: 0 auto;
+        }
       }
     }
     .login {

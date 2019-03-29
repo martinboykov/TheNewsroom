@@ -22,8 +22,8 @@ const signup = async (req, res, next) => {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(req.body.password, salt);
     await user.save();
-    res.status(201).json({
-      message: 'User created',
+    return res.status(201).json({
+      message: 'Signup successfuly',
       data: { _id: user._id, name: user.name, email: user.email },
     });
   } catch (error) {
@@ -31,12 +31,13 @@ const signup = async (req, res, next) => {
       message: error.message,
     });
   }
+  return null;
 };
 
 const login = async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    return res.status('404').json({
+    return res.status(404).json({
       message: 'Authentication failed',
     });
   }
@@ -51,7 +52,7 @@ const login = async (req, res, next) => {
   const token = user.generateAuthToken();
   console.log(`${user.name} logged in successfuly`);
   return res.status(200).json({
-    message: 'Login was successful.',
+    message: 'Logged in successfuly',
     data: {
       token: token,
       expiresIn: 3600,
