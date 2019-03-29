@@ -3,15 +3,18 @@
      appOutsideAside>
   <div class="type-selector">
     <div class="latest"
-         [appSelectType]="'.latest-posts'">
+         [appSelectType]="'.latest-posts'"
+         (click)="fakeScroll()">
       <h1 class="latest__heading">latest</h1>
     </div>
     <div class="popular"
-         [appSelectType]="'.popular-posts'">
+         [appSelectType]="'.popular-posts'"
+         (click)="fakeScroll()">
       <h1 class="popular__heading">Popular</h1>
     </div>
     <div class="commented"
-         [appSelectType]="'.commented-posts'">
+         [appSelectType]="'.commented-posts'"
+         (click)="fakeScroll()">
       <h1 class="commented__heading">Commented</h1>
     </div>
   </div>

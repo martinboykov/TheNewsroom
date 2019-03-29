@@ -68,6 +68,13 @@ export class WindowRef {
     }, 15);
     window.scrollTo(0, 0);
   }
+  simulateScroll() {
+    const window = this.nativeWindow;
+    const scrollHeight = window.scrollY;
+    const scrollwidht = window.scrollX;
+    window.scrollTo(scrollwidht, (scrollHeight + 100));
+    window.scrollTo(scrollwidht, (scrollHeight - 100));
+  }
   checkIfMobileUpdateListener() { // as we set postUpdate as private
     return this.isMobileResolutionUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }

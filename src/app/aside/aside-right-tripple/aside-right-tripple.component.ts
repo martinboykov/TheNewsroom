@@ -73,6 +73,10 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
       });
 
   }
+  fakeScroll() {
+    // this.windowRef.simulateScroll();
+    // test in production if needed
+  }
   onPostSelected(post) {
     const postRoute = this.helper.createRoute(post);
     this.router.navigateByUrl(postRoute);
