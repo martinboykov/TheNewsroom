@@ -5,9 +5,15 @@ const router = express.Router();
 
 const tagController = require('../controllers/tag');
 
-router.get('/', tagController.getTags);
+router.get(
+  '/',
+  tagController.getTags
+);
 
-router.get('/:name/posts', tagController.getTagPosts);
+router.get(
+  '/:name/posts',
+  tagController.getTagPosts
+);
 
 router.get(
   '/:name/posts/totalCount',

@@ -50,7 +50,9 @@ async function sendUploadToGCS(req, res, next) {
   // uploadAllSizes(SIZES[1], originalName, timestamp, req.file, next);
   const promiseArr = [];
   SIZES.forEach((size) => {
-    promiseArr.push(uploadAllSizes(size, originalName, timestamp, req.file, next));
+    promiseArr.push(
+      uploadAllSizes(size, originalName, timestamp, req.file, next)
+    );
   });
   const promise = new Promise((resolve, reject) => {
     const gcsname =
