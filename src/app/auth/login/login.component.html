@@ -1,0 +1,28 @@
+<div class="wrapper">
+  <div class="login">
+
+    <form [formGroup]="loginForm"
+          (ngSubmit)="onLogin()"
+          class="login__form">
+      <h1 class="login__header">Log in</h1>
+      <input class="form__email"
+             formControlName="email"
+             type="email"
+             placeholder="Email"
+             autofocus>
+      <input class="form__password"
+             formControlName="password"
+             type="password"
+             placeholder="Password">
+      <input class="form__submit-button"
+             type="submit"
+             value="Submit">
+    </form>
+    <div class="signup">
+      <a class="signup__link"
+         routerLink="/auth/signup">
+        Dont have an account?
+      </a>
+    </div>
+  </div>
+</div>

@@ -16,13 +16,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    minlength: 3,
     maxlength: 255,
   },
   password: {
     type: String,
     required: true,
-    minlength: 3,
+    minlength: 6,
     maxlength: 1024,
   },
   isAdmin: {
@@ -51,8 +50,8 @@ userSchema.index({ email: 1 }); // schema level
 function validateUser(user) {
   const schema = Joi.object({
     name: Joi.string().alphanum().min(2).max(30).required(), // alphanumeric characters 2-30
-    email: Joi.string().min(3).max(255).email({ minDomainAtoms: 2 }), // must have two domain parts e.g. example.com
-    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/), // alphanumeric characters 3-30
+    email: Joi.string().max(255).email({ minDomainAtoms: 2 }), // must have two domain parts e.g. example.com
+    password: Joi.string().regex(/^[a-zA-Z0-9]{6,30}$/), // alphanumeric characters 6-30
   });
 
   return Joi.validate(user, schema);

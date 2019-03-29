@@ -9,6 +9,7 @@ const routes: Routes = [
   // { path: 'authors/author/:name/:_id/posts', component: PostListComponent }, // after have authorization
   { path: 'tags/:tag', component: PostListComponent },
   { path: 'search/:searchQuery', component: PostListComponent },
+  { path: 'auth', loadChildren: './auth/auth.module#AuthModule' },
   { path: 'edit', loadChildren: './posts/post-edit/post-edit.module#PostEditModule' },
   { path: 'admin', loadChildren: './admin/admin.module#AdminModule' },
   { path: ':category', component: PostListComponent },

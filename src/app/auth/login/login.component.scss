@@ -1,0 +1,114 @@
+@import "./partials/variables";
+@import "./partials/mixins";
+@import "./vendor/ng-select/default.theme";
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  width: 100%;
+  .login {
+    background: transparent;
+
+    &__header {
+      // margin-top: 0;
+      // margin-bottom: 0;
+      background: darken($gold, 10%);
+      padding: 20px;
+      font-size: 14px;
+      font-weight: normal;
+      text-align: center;
+      text-transform: uppercase;
+      color: white;
+      font-family: $font-default;
+    }
+    &__form {
+      // background: #ebebeb;
+      background: transparent;
+
+      // box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 1) inset;
+      // border: 5px solid #efefef;
+
+      .form__email,
+      .form__password,
+      .form__submit-button {
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        padding: 16px;
+        outline: 0;
+        font-family: $font-default;
+        border-width: 1px;
+        border-style: solid;
+        // font-size: 0.95em;
+      }
+
+      .form__email,
+      .form__password {
+        background: #fff;
+        border-color: $light-grey;
+        color: $grey;
+
+      }
+
+      .form__email:focus,
+      .form__password:focus {
+        border-color: $dark-grey;
+      }
+
+      .form__submit-button {
+        background: darken($gold, 20%);
+        border-color: transparent;
+        color: white;
+        cursor: pointer;
+        text-transform: uppercase;
+      }
+      .form__submit-button:hover {
+        background: darken($gold, 40%);
+      }
+
+      .form__submit-button:focus {
+        background: darken($gold, 50%);
+      }
+    }
+    .signup {
+      padding: 10px 0;
+      &__link {
+        color: white;
+      }
+      &__link:hover,
+      &__link:active {
+        text-decoration: underline;
+      }
+      &__link:active {
+        color: $grey;
+      }
+    }
+  }
+}
+@media (min-width: $desctop) {
+  .wrapper {
+    .login {
+      min-height: 600px;
+      min-width: 400px;
+      margin-top: 60px;
+      &__form {
+        padding: 12px;
+      }
+    }
+  }
+}
+
+@media (max-width: $mobile) {
+  .wrapper {
+    .login {
+      width: 100%;
+      max-width: 500px;
+      margin-top: 60px;
+      &__form {
+        padding: 0px;
+      }
+    }
+  }
+}

@@ -134,6 +134,18 @@ export class SmallNavComponent implements OnInit {
           link: `admin/${this.category}/subcategory-new`
         });
       }
+      if (this.location.path().indexOf('login') >= 0) {
+        this.routes.push({
+          name: `login`,
+          link: `auth/login`
+        });
+      }
+      if (this.location.path().indexOf('signup') >= 0) {
+        this.routes.push({
+          name: `signup`,
+          link: `auth/signup`
+        });
+      }
     });
   }
 

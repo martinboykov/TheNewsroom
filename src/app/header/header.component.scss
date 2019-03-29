@@ -151,6 +151,7 @@
   }
   .admin {
     align-self: center;
+    margin-right: 10px;
     &__link {
       height: 100%;
       display: flex;
@@ -171,8 +172,36 @@
       }
     }
   }
-  .admin:active {
-    .admin__link {
+  .auth:active {
+    .auth {
+      position: relative;
+      top: 1px;
+    }
+  }
+  .auth {
+    align-self: center;
+    &__link {
+      height: 100%;
+      display: flex;
+      svg {
+        path {
+          fill: $gold;
+        }
+      }
+    }
+  }
+  .auth:hover,
+  .auth:active {
+    .auth__link {
+      svg {
+        path {
+          fill: darken(saturate($gold, 100%), 10%);
+        }
+      }
+    }
+  }
+  .auth:active {
+    .auth__link {
       position: relative;
       top: 1px;
     }
@@ -317,6 +346,13 @@
         }
       }
       .admin {
+        justify-self: end;
+        svg {
+          height: 18px;
+          width: 18px;
+        }
+      }
+      .auth {
         justify-self: end;
         svg {
           height: 18px;

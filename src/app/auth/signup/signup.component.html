@@ -1,0 +1,32 @@
+<div class="wrapper">
+  <div class="signup">
+
+    <form [formGroup]="signupForm"
+          (ngSubmit)="onSignup()"
+          class="signup__form">
+      <h1 class="signup__header">Signup</h1>
+      <input class="form__email"
+             formControlName="name"
+             type="text"
+             placeholder="Name"
+             autofocus>
+      <input class="form__email"
+             formControlName="email"
+             type="email"
+             placeholder="Email">
+      <input class="form__password"
+             formControlName="password"
+             type="password"
+             placeholder="Password">
+      <input class="form__submit-button"
+             type="submit"
+             value="Submit">
+    </form>
+    <div class="login">
+      <a class="login__link"
+         routerLink="/auth/login">
+        Already have an account?
+      </a>
+    </div>
+  </div>
+</div>

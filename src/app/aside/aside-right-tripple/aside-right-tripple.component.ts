@@ -47,7 +47,8 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
     this.router.events.subscribe(() => {
       const isOnEditRoute = this.location.path().indexOf('edit') >= 0;
       const isOnAdminRoute = this.location.path().indexOf('admin') >= 0;
-      if (isOnEditRoute || isOnAdminRoute) {
+      const isOnAuthRoute = this.location.path().indexOf('auth') >= 0;
+      if (isOnEditRoute || isOnAdminRoute || isOnAuthRoute) {
         this.isAsideRequired = false;
       } else {
         this.isAsideRequired = true;
