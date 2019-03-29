@@ -1,4 +1,4 @@
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, throwError, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -105,11 +105,27 @@ export class AuthService {
     const authData: AuthData = {
       name: name, email: email, password: password
     };
-    this.http.post<{ message: string, userData: AuthData }>(BACKEND_URL + route, authData)
-      .subscribe((response) => {
-        // console.log(response);
-        this.notifier.showSuccess(response.message);
-        this.userId = response.userData.id; // authorization
+    return this.http.post<{ message: string, data: AuthData }>(BACKEND_URL + route, authData)
+      .toPromise()
+      .then(
+        (response) => {
+          console.log(response);
+          this.userId = response.data._id; // authorization
+          this.notifier.showSuccess('response.message');
+          this.router.navigate(['/auth/login']);
+        }
+      )
+      .catch((response) => {
+        if (response.status === 500) {
+          this.notifier.showError('Internal Server error', 'Something went wrong');
+          return this.router.navigate(['/']);
+        }
+        if (response.status === 400) {
+          this.notifier.showError('Email is already used');
+          return;
+        }
+        this.notifier.showError('Something went wrong');
+        this.router.navigate(['/']);
       });
   }
   login(email: string, password: string) {

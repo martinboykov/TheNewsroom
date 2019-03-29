@@ -40,13 +40,14 @@ export class GlobalErrorHandler implements ErrorHandler {
         this.loggerSlack.logError(message, stackTrace);
         // this.loggerSentry.logError(error);
         console.log(httpErrorCode);
+        console.log(error);
 
         switch (httpErrorCode) {
           case HttpError.ERR_CONNECTION_REFUSED: // 0
             this.notifier.showError('There is no connection to the server', 'Server down');
             break;
           case HttpError.BAD_REQUEST: // 400
-            this.notifier.showError('App is recovering from crash', this.DEFAULT_ERROR_TITLE);
+            this.notifier.showError(message, this.DEFAULT_ERROR_TITLE);
             break;
           case HttpError.UNAUTHORIZED: // 401
             this.notifier.showError('Please, login!', 'Unauthenticated attempt');
@@ -75,7 +76,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         stackTrace = this.errorService.getClientStack(error);
         this.loggerSlack.logError(message, stackTrace);
         // this.loggerSentry.logError(error);
-        this.notifier.showError(message, this.DEFAULT_ERROR_TITLE);
+        this.notifier.showError(this.DEFAULT_ERROR_TITLE);
       }
       this.router.navigate(['/']);
     });

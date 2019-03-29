@@ -1,3 +1,4 @@
+import { AuthService } from './../auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
@@ -12,7 +13,7 @@ export class SignupComponent implements OnInit {
   isLoading = false;
   signupForm: FormGroup;
   constructor(
-    // private authService: AuthService,
+    private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -39,8 +40,10 @@ export class SignupComponent implements OnInit {
 
   onSignup() {
     this.isLoading = true;
-    // this.authService.signup(this.name.value, this.email.value, this.password.value);
-    // this.router.navigate(['/']);
+    this.authService.signup(this.name.value, this.email.value, this.password.value)
+      .then(() => {
+        this.isLoading = false;
+      });
   }
 
 
