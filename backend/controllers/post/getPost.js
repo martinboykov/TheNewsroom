@@ -50,6 +50,7 @@ const getPost = async (req, res, next) => {
   const pageSize = parseInt(req.query.pageSize, 10);
   const currentPage = parseInt(req.query.page, 10);
   const post = await Post.findOne({ _id: _id });
+  if (!post) return res.status(404).json({ message: 'No such post!' });
   const totalCommentsCount = post.comments.length;
   const postWithLastComments = await Post.populate(post,
     {
@@ -60,7 +61,6 @@ const getPost = async (req, res, next) => {
         limit: pageSize,
       },
     });
-  if (!post) return res.status(400).json({ message: 'No such post.' });
 
   return res.status(200).json({
     message: `Post with _id: ${post._id} fetched successfully`,
@@ -76,7 +76,7 @@ const getPostComments = async (req, res, next) => {
   const pageSize = parseInt(req.query.pageSize, 10);
   const currentPage = parseInt(req.query.page, 10);
   const post = await Post.findOne({ _id: _id });
-  if (!post) return res.status(400).json({ message: 'No such post.' });
+  if (!post) return res.status(404).json({ message: 'No such post!' });
 
   const postPopulatedComments = await Post.populate(post,
     {

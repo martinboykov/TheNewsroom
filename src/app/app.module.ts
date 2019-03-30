@@ -20,6 +20,7 @@ import { PostListComponent } from './posts/post-list/post-list.component';
 import { PostItemComponent } from './posts/post-item/post-item.component';
 import { MainNavComponent } from './header/main-nav/main-nav.component';
 import { SmallNavComponent } from './header/small-nav/small-nav.component';
+import { NotFoundComponent } from './error-handling/not-found.component';
 
 import { ToggleNavigationDirective } from './header/toggleNavigation.directive';
 import { ToggleSubNavigationDirective } from './header/toggleSubNavigation.directive';
@@ -52,7 +53,7 @@ import { GlobalErrorHandler } from './error-handling/global-error-handler';
     OutsideAsideDirective,
     SelectorsAsideDirective,
     TimeAgoPipe,
-
+    NotFoundComponent
 
   ],
   imports: [

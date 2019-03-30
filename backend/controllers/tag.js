@@ -24,6 +24,8 @@ const getTags = async (req, res, next) => {
 
 const getTagPosts = async (req, res, next) => {
   const tagName = req.params.name;
+  const tag = await Tag.findOne({ name: tagName });
+  if (!tag) return res.status(404).json({ message: 'No such tag!' });
   const pageSize = parseInt(req.query.pageSize, 10);
   const currentPage = parseInt(req.query.page, 10);
 
@@ -48,7 +50,7 @@ const getTagPosts = async (req, res, next) => {
     // console.log(post);
     return post;
   });
-  res.status(200).json({
+  return res.status(200).json({
     message: `Posts of Category with name: ${req.params.name} fetched successfully`, // eslint-disable-line max-len
     // data: postAllComments[0].posts,
     data: posts,
@@ -56,10 +58,17 @@ const getTagPosts = async (req, res, next) => {
 };
 
 const getTagPostsTotalCount = async (req, res, next) => {
-  const tagPosts = await Tag
-    .findOne({ name: req.params.name });
-  if (!tagPosts) return res.status(400).json({ message: 'No such Tag.' });
-  const totalCount = tagPosts.posts.length;
+  const posts = await Tag.aggregate([
+    { $match: { name: req.params.name } },
+    { $project: { count: { $size: '$posts' } } },
+  ]);
+  let totalCount;
+  if (posts[0]) totalCount = posts[0].count || 0;
+  if (!posts[0]) totalCount = 0;
+  // const tagPosts = await Tag
+  //   .findOne({ name: req.params.name });
+  // if (!tagPosts) return res.status(404).json({ message: 'No such Page!' });
+  // const totalCount = tagPosts.posts.length;
   return res.status(200).json({
     message: 'Total posts count fetched successfully',
     data: totalCount,

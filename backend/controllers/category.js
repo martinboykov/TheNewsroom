@@ -65,6 +65,8 @@ const getCategoriesFull = async (req, res, next) => {
 
 const getCategoryPosts = async (req, res, next) => {
   const categoryName = req.params.name;
+  const category = await Category.findOne({ name: req.params.name });
+  if (!category) return res.status(404).json({ message: 'No such Category!' });
   const pageSize = parseInt(req.query.pageSize, 10);
   const currentPage = parseInt(req.query.page, 10);
 
@@ -89,7 +91,7 @@ const getCategoryPosts = async (req, res, next) => {
     return post;
   });
 
-  res.status(200).json({
+  return res.status(200).json({
     message: `Posts of Category with name: ${req.params.name} fetched successfully`, // eslint-disable-line max-len
     data: posts,
   });
@@ -103,7 +105,7 @@ const getCategoryPostsPartial = async (req, res, next) => {
     .populate('posts', 'category.name subcategory.name title isVisible');
   console.log(category);
   if (!category) {
-    return res.status(400).json({ message: 'No such subcategory.' });
+    return res.status(400).json({ message: 'No such category.' });
   }
   return res.status(200).json({
     message: 'Subcategory fetched successfully',

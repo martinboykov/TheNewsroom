@@ -116,16 +116,10 @@ export class AuthService {
         }
       )
       .catch((response) => {
-        if (response.status === 500) {
-          this.notifier.showError('Internal Server error', 'Something went wrong');
-          return this.router.navigate(['/']);
-        }
         if (response.status === 400) {
-          this.notifier.showError('Email is already used');
-          return;
+          return this.notifier.showError(response.error.message, 'Signup failed');
         }
-        this.notifier.showError('Something went wrong');
-        this.router.navigate(['/']);
+        throw new Error(response);
       });
   }
   login(email: string, password: string) {
@@ -159,12 +153,10 @@ export class AuthService {
         }
       })
       .catch((response) => {
-        if (response.status === 500) {
-          this.notifier.showError('Internal Server error', 'Something went wrong');
-          this.router.navigate(['/']);
-        } else {
-          this.notifier.showError('Wrong email or password', 'Authentication failed');
+        if (response.status === 400 || response.status === 404) {
+          return this.notifier.showError(response.error.message, 'Authentication failed');
         }
+        throw new Error(response);
       });
   }
 }

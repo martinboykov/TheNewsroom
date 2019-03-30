@@ -37,7 +37,7 @@ const login = async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
     return res.status(404).json({
-      message: 'Authentication failed',
+      message: 'No user with this email.',
     });
   }
   const validPassword = await bcrypt.compare(
@@ -45,7 +45,7 @@ const login = async (req, res, next) => {
     user.password);
   if (!validPassword) {
     return res.status(400).json({
-      message: 'Invalid email or password.',
+      message: 'Invalid password.',
     });
   }
   const token = user.generateAuthToken();

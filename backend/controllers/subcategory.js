@@ -48,6 +48,10 @@ const getSubcategories = async (req, res, next) => {
 
 const getSubcategoryPosts = async (req, res, next) => {
   const subcategoryName = req.params.name;
+  const subcategory = await Subcategory.findOne({ name: subcategoryName });
+  if (!subcategory) {
+    return res.status(404).json({ message: 'No such subcategory!' });
+  }
   const pageSize = parseInt(req.query.pageSize, 10);
   const currentPage = parseInt(req.query.page, 10);
   const postQuery = Post.find({ 'subcategory.name': subcategoryName });
@@ -74,7 +78,7 @@ const getSubcategoryPosts = async (req, res, next) => {
     return post;
   });
 
-  res.status(200).json({
+  return res.status(200).json({
     message: `Posts of Subcategory with name: ${req.params.name} fetched successfully`, // eslint-disable-line max-len
     data: posts,
   });
