@@ -99,10 +99,13 @@
     grid-column: 1/2;
     grid-row: 1/2;
 
-    &__label {
-      display: inline-block;
-    }
     &__list {
+      .label {
+        display: inline-block;
+        font-size: 24px;
+        margin-bottom: 10px;
+        text-decoration: underline;
+      }
       .category__item {
         margin: 1px 0;
         .item__link {
@@ -176,6 +179,15 @@
       }
     }
     .new-category {
+    }
+  }
+  .users {
+    margin-top: 20px;
+    .label {
+      display: inline-block;
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-decoration: underline;
     }
   }
 }

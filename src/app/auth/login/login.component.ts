@@ -32,11 +32,11 @@ export class LoginComponent implements OnInit {
     });
   }
   onLogin() {
-    // this.isLoading = true;
+    this.isLoading = true;
     this.authService.login(this.email.value, this.password.value)
-      // .then(() => {
-      //   this.isLoading = false;
-      // });
+      .then(() => {
+        this.isLoading = false;
+      });
   }
   get email() { return this.loginForm.get('email'); }
   get password() { return this.loginForm.get('password'); }

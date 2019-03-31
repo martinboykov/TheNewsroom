@@ -2,6 +2,62 @@
 const { User, validateUser } = require('../models/user');
 const bcrypt = require('bcrypt');
 
+const getUserById = async (req, res, next) => {
+  const user = await User.findOne({
+    _id: req.params._id,
+  });
+  if (!user) return res.status(404).json({ message: 'No such user!' });
+  return res.status(200).json({
+    message: 'Reader users fetched successfully',
+    data: user,
+  });
+};
+
+const getSearchedUser = async (req, res, next) => {
+  const searchString = req.params.searchQuery;
+  const user = await User
+    .findOne({
+      $text: {
+        $search: searchString,
+      },
+    })
+    .select(
+      '-_password');
+  if (!user) return res.status(404).json({ message: 'No such user!' });
+  return res.status(200).json({
+    message: 'Posts fetched successfully',
+    data: user,
+  });
+};
+
+const getUsersReaders = async (req, res, next) => {
+  const users = await User.find({
+    'roles.isReader': true,
+  });
+  return res.status(200).json({
+    message: 'Reader users fetched successfully',
+    data: users,
+  });
+};
+const getUsersWriters = async (req, res, next) => {
+  const users = await User.find({
+    'roles.isWriter': true,
+  });
+  return res.status(200).json({
+    message: 'Writer users fetched successfully',
+    data: users,
+  });
+};
+const getUsersAdmins = async (req, res, next) => {
+  const users = await User.find({
+    'roles.isAdmin': true,
+  });
+  return res.status(200).json({
+    message: 'Admin users fetched successfully',
+    data: users,
+  });
+};
+
 const signup = async (req, res, next) => {
   const userExists = await User.findOne({ email: req.body.email });
   if (userExists) {
@@ -13,15 +69,17 @@ const signup = async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    // isAdmin: false, // authorization
+    // 'roles.isAdmin': false, // authorization
   });
   const { error } = validateUser(req.body);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
-  console.log('AFTER JOI');
   const usersCount = await User.estimatedDocumentCount();
-  if (usersCount === 0) user.isAdmin = true;
+  if (usersCount === 0) {
+    user.roles.isAdmin = true;
+    user.roles.isWriter = true;
+  }
 
   // Encrypting the password bofore saving to db
   const salt = await bcrypt.genSalt(10);
@@ -55,12 +113,22 @@ const login = async (req, res, next) => {
     data: {
       token: token,
       expiresIn: 3600,
-      userId: user._id, // authorization
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        roles: user.roles,
+      }, // authorization
     },
   });
 };
 
 module.exports = {
+  getUserById,
+  getSearchedUser,
+  getUsersReaders,
+  getUsersWriters,
+  getUsersAdmins,
   signup,
   login,
 };

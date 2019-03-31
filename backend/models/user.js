@@ -24,10 +24,21 @@ const userSchema = new mongoose.Schema({
     minlength: 6,
     maxlength: 1024,
   },
-  isAdmin: {
-    type: Boolean,
-    default: false,
+  roles: {
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    isWriter: {
+      type: Boolean,
+      default: false,
+    },
+    isReader: {
+      type: Boolean,
+      default: true,
+    },
   },
+
 });
 
 userSchema.plugin(uniqueValidator);
@@ -37,7 +48,7 @@ userSchema.method({
     // secret must be aded predeployment with config or process.env.CUSTOM_VARIABLE
     const token =
       jwt.sign(
-        { _id: this._id, isAdmin: this.isAdmin },
+        { _id: this._id, roles: this.roles },
         JWT_SECRET,
         { expiresIn: '1h' }
       ); // 1 hour duration
@@ -46,6 +57,7 @@ userSchema.method({
 });
 
 userSchema.index({ email: 1 }); // schema level
+userSchema.index({ name: 'text', email: 'text' }); // schema level
 
 function validateUser(user) {
   const schema = Joi.object({

@@ -9,7 +9,7 @@
   <div class="category group">
     <ul class="category__list list">
       <span class="label">
-        Select Category:
+        Site Structure:
       </span>
       <li class="category__item item "
           *ngFor="let category of categories; let i = index">
@@ -65,7 +65,7 @@
                 [style.color]="subcategory.isVisible === true ? '#2c2c2c' : '#a1a1a1'">
 
               <span class="subcategory__name name">
-                  <!-- (click)="onCategorySelected(i)" -->
+                <!-- (click)="onCategorySelected(i)" -->
                 <span class="link__arrows">
                   <svg xmlns="http://www.w3.org/2000/svg"
                        xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -101,7 +101,7 @@
                   hidden
                 </span>
                 <button class="subcategory__edit edit"
-                [disabled]="!category?.isVisible"
+                        [disabled]="!category?.isVisible"
                         (click)="onEditSubcategory(subcategory)">
                   Edit
                 </button>
@@ -128,6 +128,24 @@
         Add Category
       </button>
     </div>
+  </div>
+  <div class="users">
+    <span class="label">
+      Users:
+    </span>
+    <!-- <ng-select class="post__list"
+               *ngIf="loadedUsers"
+               [items]="usersRegular"
+               [virtualScroll]="true"
+               [loading]="loadingUsers"
+               [dropdownPosition]="'bottom'"
+               bindLabel="title"
+               (change)="onSelect($event)"
+               placeholder="Go to Post..."
+               (scroll)="onScroll($event)"
+               (scrollToEnd)="onScrollToEnd()"
+               [(ngModel)]="selectedUser">
+    </ng-select> -->
   </div>
 
 

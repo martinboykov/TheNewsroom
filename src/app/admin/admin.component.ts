@@ -29,7 +29,8 @@ export class AdminComponent implements OnInit, OnDestroy {
         // console.log(this.categories);
       });
   }
-
+  // STRUCTURE
+  // ------------------
   onCategorySelected(index) {
     if (this.previousIndex === index) {
       this.previousIndex = null;
@@ -57,6 +58,57 @@ export class AdminComponent implements OnInit, OnDestroy {
   addSubcategroy() {
     this.router.navigateByUrl(`admin/${this.selectedCategory.name}/subcategory-new`);
   }
+
+  // USERS
+  // ------------------
+
+  // onLoadPosts() {
+  //   this.loadingUsers = true;
+  //   this.loadedUsers = true;
+  //   this.categoryService.getCategoryPostsPartial(this.categoryName)
+  //     .subscribe((response) => {
+  //       this.loadingUsers = false;
+  //       this.categoryPosts = response.data.posts;
+  //       console.log(this.categoryPosts);
+  //     });
+  // }
+
+  // onSelect(post) {
+  //   const postLink = this.helper.createRoute(post);
+  //   this.router.navigateByUrl(postLink);
+  // }
+
+  // onScrollToEnd() {
+  //   this.fetchMore();
+  // }
+
+  // onScroll({ end }) {
+  //   if (this.loadingPosts || this.categoryPosts.length === this.categoryPostsBuffer.length) {
+  //     return;
+  //   }
+
+  //   if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.categoryPostsBuffer.length) {
+  //     this.fetchMore();
+  //   }
+  // }
+
+  // private fetchMore() {
+  //   const len = this.categoryPostsBuffer.length;
+  //   const more = this.categoryPosts.slice(len, this.bufferSize + len);
+  //   this.loadingPosts = true;
+  //   // using timeout here to simulate backend API delay
+  //   const tiemout = timer(200);
+  //   tiemout.subscribe(() => {
+  //     this.loadingPosts = false;
+  //     this.categoryPostsBuffer = this.categoryPostsBuffer.concat(more);
+  //   });
+  //   // setTimeout(() => {
+  //   //   this.loadingPosts = false;
+  //   //   this.categoryPostsBuffer = this.categoryPostsBuffer.concat(more);
+  //   // }, 200);
+  // }
+
+
   ngOnDestroy() {
 
   }

@@ -12,7 +12,6 @@ export class GlobalErrorHandler implements ErrorHandler {
 
   public readonly DEFAULT_ERROR_TITLE: string = 'Something went wrong';
 
-
   constructor(
     @Inject(NgZone) private ngZone,
     @Inject(Injector) private injector: Injector,
