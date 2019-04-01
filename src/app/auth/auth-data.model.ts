@@ -3,5 +3,9 @@ export interface AuthData {
   name?: string;
   email: string;
   password: string;
-  roles?: object;
+  roles?: {
+    isAdmin?: boolean,
+    isWriter?: boolean,
+    isReader?: boolean,
+  };
 }

@@ -1,0 +1,41 @@
+<div class="wrapper">
+  <form class="form"
+        [formGroup]="userForm"
+        (ngSubmit)="onSaveUser()">
+    <div class="form__roles">
+      <div class="label">
+        Roles:
+      </div>
+      <div class="role link">
+        <input class="role__input"
+               formControlName="isAdmin"
+               type="checkbox"
+               [value]="isAdmin?.value">Admin
+      </div>
+      <div class="role link">
+        <input class="role__input"
+               formControlName="isWriter"
+               type="checkbox"
+               [value]="isWriter?.value">Writer
+      </div>
+      <div class="role link">
+        <input class="role__input"
+               formControlName="isReader"
+               type="checkbox"
+               [value]="isReader?.value">Reader
+      </div>
+    </div>
+
+
+    <button class="save-button button"
+            [disabled]="!isUserLoaded || !isAdminTotalCount"
+            type="submit">
+      Save
+      <div class="loader-wrapper"
+           *ngIf="loading">
+        <div class="loader"
+             *ngIf="loading"></div>
+      </div>
+    </button>
+  </form>
+</div>

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { SubcategoryEditComponent } from './subcategory-edit/subcategory-edit.component';
+import { UserComponent } from './user/user.component';
 
 const routes: Routes = [
   { path: '', component: AdminComponent },
@@ -10,6 +11,7 @@ const routes: Routes = [
   { path: ':categoryName/subcategory-new', component: SubcategoryEditComponent },
   { path: 'category-update/:name', component: CategoryEditComponent },
   { path: 'subcategory-update/:subcategoryName', component: SubcategoryEditComponent },
+  { path: 'user/:_id', component: UserComponent },
 ];
 
 @NgModule({

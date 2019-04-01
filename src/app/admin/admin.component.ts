@@ -1,6 +1,9 @@
+import { HelperService } from './../shared/helper.service';
+import { UserService } from './user.service';
+import { AuthData } from './../auth/auth-data.model';
 import { HeaderService } from './../header/header.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { Category } from './category.model';
 import { Subcategory } from './subcategory.model';
 import { CategoryService } from './category.service';
@@ -13,23 +16,75 @@ import { Router } from '@angular/router';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit, OnDestroy {
+
+  // site structure variables
   categories: Category[] = []; // the data is not strict category !?!?, but with populate subcategories name
   selectedCategory: Category = null;
   isSelected = false;
   previousIndex;
   noSubcategories = false;
+
+  // users variables
+  userRoles = [];
+  adminUsers: AuthData[] = [];
+  writerUsers: AuthData[] = [];
+  readerUsers: AuthData[] = [];
+  noRoleUsers: AuthData[] = [];
+  adminUsersTotalCount: number;
+  writerUsersTotalCount: number;
+  readerUsersTotalCount: number;
+  noRoleUsersTotalCount: number;
+  selectedUserRole: string;
+  loadingUsers = false;
+  users: AuthData[] = [];
+  usersBuffer: AuthData[] = [];
+  bufferSize = 50;
+  numberOfItemsFromEndBeforeFetchingMore = 10;
+  selectedUser: AuthData;
   constructor(
     private categoryService: CategoryService,
+    private userService: UserService,
+    private helper: HelperService,
     private router: Router) { }
 
   ngOnInit() {
+    // SITE STRUCTURE
+    // ------------------
     this.categoryService.getCategoriesFull()
       .subscribe((categories: Category[]) => {
         this.categories = categories;
         // console.log(this.categories);
       });
+
+    // USERS
+    // ------------------
+    this.userRoles = this.userService.getUserRoles();
+    this.userService.getUsersByType('Admin').subscribe((response) => {
+      this.adminUsers = response.data;
+      this.adminUsersTotalCount = this.adminUsers.length;
+      console.log(this.adminUsers);
+      console.log(this.adminUsersTotalCount);
+    });
+    this.userService.getUsersByType('Writer').subscribe((response) => {
+      this.writerUsers = response.data;
+      this.writerUsersTotalCount = this.writerUsers.length;
+      console.log(this.writerUsers);
+      console.log(this.writerUsersTotalCount);
+    });
+    this.userService.getUsersByType('Reader').subscribe((response) => {
+      this.readerUsers = response.data;
+      this.readerUsersTotalCount = this.readerUsers.length;
+      console.log(this.readerUsers);
+      console.log(this.readerUsersTotalCount);
+    });
+    this.userService.getUsersByType('No Role').subscribe((response) => {
+      this.noRoleUsers = response.data;
+      this.noRoleUsersTotalCount = this.noRoleUsers.length;
+      console.log(this.noRoleUsers);
+      console.log(this.noRoleUsersTotalCount);
+    });
   }
-  // STRUCTURE
+  // SITE STRUCTURE
   // ------------------
   onCategorySelected(index) {
     if (this.previousIndex === index) {
@@ -61,52 +116,56 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   // USERS
   // ------------------
+  onUserRoleSelected(i) {
+    this.users = [];
+    this.selectedUser = null;
+    this.selectedUserRole = this.userRoles[i];
+    if (this.selectedUserRole === 'Admin') {
+      this.users = [...this.adminUsers];
+    }
+    if (this.selectedUserRole === 'Writer') {
+      this.users = [...this.writerUsers];
+    }
+    if (this.selectedUserRole === 'Reader') {
+      this.users = [...this.readerUsers];
+    }
+    if (this.selectedUserRole === 'No Role') {
+      this.users = [...this.noRoleUsers];
+    }
+    console.log(this.selectedUserRole);
+  }
 
-  // onLoadPosts() {
-  //   this.loadingUsers = true;
-  //   this.loadedUsers = true;
-  //   this.categoryService.getCategoryPostsPartial(this.categoryName)
-  //     .subscribe((response) => {
-  //       this.loadingUsers = false;
-  //       this.categoryPosts = response.data.posts;
-  //       console.log(this.categoryPosts);
-  //     });
-  // }
+  onSelect(user) {
+    this.selectedUser = user;
+    // console.log(this.selectedUser);
+    this.router.navigateByUrl(`admin/user/${user._id}`);
+  }
 
-  // onSelect(post) {
-  //   const postLink = this.helper.createRoute(post);
-  //   this.router.navigateByUrl(postLink);
-  // }
+  onScrollToEnd() {
+    this.fetchMore();
+  }
 
-  // onScrollToEnd() {
-  //   this.fetchMore();
-  // }
+  onScroll({ end }) {
+    if (this.loadingUsers || this.users.length === this.usersBuffer.length) {
+      return;
+    }
 
-  // onScroll({ end }) {
-  //   if (this.loadingPosts || this.categoryPosts.length === this.categoryPostsBuffer.length) {
-  //     return;
-  //   }
+    if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.usersBuffer.length) {
+      this.fetchMore();
+    }
+  }
 
-  //   if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.categoryPostsBuffer.length) {
-  //     this.fetchMore();
-  //   }
-  // }
-
-  // private fetchMore() {
-  //   const len = this.categoryPostsBuffer.length;
-  //   const more = this.categoryPosts.slice(len, this.bufferSize + len);
-  //   this.loadingPosts = true;
-  //   // using timeout here to simulate backend API delay
-  //   const tiemout = timer(200);
-  //   tiemout.subscribe(() => {
-  //     this.loadingPosts = false;
-  //     this.categoryPostsBuffer = this.categoryPostsBuffer.concat(more);
-  //   });
-  //   // setTimeout(() => {
-  //   //   this.loadingPosts = false;
-  //   //   this.categoryPostsBuffer = this.categoryPostsBuffer.concat(more);
-  //   // }, 200);
-  // }
+  private fetchMore() {
+    const len = this.usersBuffer.length;
+    const more = this.users.slice(len, this.bufferSize + len);
+    this.loadingUsers = true;
+    // using timeout here to simulate backend API delay
+    const tiemout = timer(300);
+    tiemout.subscribe(() => {
+      this.loadingUsers = false;
+      this.usersBuffer = this.usersBuffer.concat(more);
+    });
+  }
 
 
   ngOnDestroy() {

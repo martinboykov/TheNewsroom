@@ -20,13 +20,14 @@
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
+
     .order {
       display: flex;
       // flex-flow: column nowrap;
       justify-content: center;
       align-items: center;
       height: 20px;
-      width: 60px;
+      padding: 0 5px;
       background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
       margin-right: 3px;
     }
@@ -36,7 +37,7 @@
       align-items: center;
       // flex-flow: column nowrap;
       height: 20px;
-      width: 45px;
+      padding: 0 5px;
       background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
       margin-right: 3px;
       cursor: default;
@@ -44,6 +45,17 @@
     .edit {
       height: 20px;
       // width: 50px;
+    }
+    .count {
+      display: flex;
+      // flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+      height: 20px;
+      // width: 100px;
+      padding: 0 5px;
+      background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+      margin-right: 3px;
     }
   }
 }
@@ -96,8 +108,8 @@
   grid-template-columns: min-content;
   padding: 30px 0;
   .category {
-    grid-column: 1/2;
-    grid-row: 1/2;
+    // grid-column: 1/2;
+    // grid-row: 1/2;
 
     &__list {
       .label {
@@ -181,13 +193,54 @@
     .new-category {
     }
   }
-  .users {
+  .user-role {
     margin-top: 20px;
     .label {
       display: inline-block;
       font-size: 24px;
       margin-bottom: 10px;
       text-decoration: underline;
+    }
+    &__list {
+      .user-role__item {
+        margin: 1px 0;
+        .user-role__link {
+          height: 30px;
+          .user-role__name {
+            .user-role--toggle-btn {
+              cursor: pointer;
+
+              svg {
+                transform: scale(1, 1);
+              }
+            }
+            .user-role--toggle-btn.pushed {
+              svg {
+                transform: scale(1, -1);
+              }
+            }
+          }
+          .user-role__functionalities {
+            .user-role__total-count {
+
+            }
+          }
+        }
+        .user-role__users {
+          background: lighten($gold, 10%);
+
+          display: none;
+          ng-select {
+            margin: 0;
+          }
+        }
+        .user-role__users.open {
+          display: block;
+          ng-select {
+            margin: 0;
+          }
+        }
+      }
     }
   }
 }
@@ -212,6 +265,12 @@
       }
       // }
     }
+    .user-role {
+      min-width: 600px;
+      .user-role__users {
+        min-width: 100%;
+      }
+    }
   }
 }
 @media (max-width: $mobile) {
@@ -224,10 +283,16 @@
       .subcategory {
         .subcategory__list {
           .subcategory__item.link {
-            min-width: 350px;
+            min-width: auto;
             background: lighten($gold, 10%);
           }
         }
+      }
+    }
+    .user-role {
+      min-width: auto;
+      .user-role__users {
+        min-width: auto;
       }
     }
   }

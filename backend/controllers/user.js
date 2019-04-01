@@ -2,59 +2,68 @@
 const { User, validateUser } = require('../models/user');
 const bcrypt = require('bcrypt');
 
-const getUserById = async (req, res, next) => {
-  const user = await User.findOne({
-    _id: req.params._id,
-  });
-  if (!user) return res.status(404).json({ message: 'No such user!' });
+const getUsersByType = async (req, res, next) => {
+  const userType = req.query.userType;
+  let usersQuery;
+  switch (userType) {
+    case 'Admin':
+      usersQuery = User
+        .find({ 'roles.isAdmin': true })
+        .select('-password');
+      break;
+    case 'Writer':
+      usersQuery = User
+        .find({ 'roles.isWriter': true })
+        .select('-password');
+      break;
+    case 'Reader':
+      usersQuery = User
+        .find({ 'roles.isReader': true })
+        .select('-password');
+      break;
+    default:
+      usersQuery = User
+        .find({
+          'roles.isAdmin': false,
+          'roles.isWriter': false,
+          'roles.isReader': false,
+        })
+        .select('-password');
+      break;
+  }
+  const users = await usersQuery;
   return res.status(200).json({
-    message: 'Reader users fetched successfully',
-    data: user,
+    message: 'Users fetched successfully',
+    data: users,
   });
 };
 
-const getSearchedUser = async (req, res, next) => {
-  const searchString = req.params.searchQuery;
+const getUserById = async (req, res, next) => {
   const user = await User
     .findOne({
-      $text: {
-        $search: searchString,
-      },
+      _id: req.params._id,
     })
-    .select(
-      '-_password');
+    .select('-password');
   if (!user) return res.status(404).json({ message: 'No such user!' });
   return res.status(200).json({
-    message: 'Posts fetched successfully',
+    message: 'Reader users fetched successfully',
     data: user,
   });
 };
 
-const getUsersReaders = async (req, res, next) => {
-  const users = await User.find({
-    'roles.isReader': true,
-  });
-  return res.status(200).json({
-    message: 'Reader users fetched successfully',
-    data: users,
-  });
-};
-const getUsersWriters = async (req, res, next) => {
-  const users = await User.find({
-    'roles.isWriter': true,
-  });
-  return res.status(200).json({
-    message: 'Writer users fetched successfully',
-    data: users,
-  });
-};
-const getUsersAdmins = async (req, res, next) => {
-  const users = await User.find({
-    'roles.isAdmin': true,
-  });
-  return res.status(200).json({
-    message: 'Admin users fetched successfully',
-    data: users,
+const updateUserRole = async (req, res, next) => {
+  const _id = req.params._id;
+  const userUpdated = req.body;
+  const user = await User.findOne(
+    { _id: _id },
+  );
+  console.log(user);
+  if (!user) return res.status(404).json({ message: 'No such user!' });
+  user.roles = userUpdated.roles;
+  await user.save();
+  return res.status(201).json({
+    message: 'Post popularity updated successfully',
+    data: user.roles,
   });
 };
 
@@ -125,10 +134,8 @@ const login = async (req, res, next) => {
 
 module.exports = {
   getUserById,
-  getSearchedUser,
-  getUsersReaders,
-  getUsersWriters,
-  getUsersAdmins,
+  getUsersByType,
+  updateUserRole,
   signup,
   login,
 };

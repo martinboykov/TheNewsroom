@@ -16,6 +16,7 @@ export class SmallNavComponent implements OnInit {
   name;
   tag;
   _id;
+  userId;
   routes: any[] = [];
   // currentRoute: any;
 
@@ -132,6 +133,15 @@ export class SmallNavComponent implements OnInit {
         this.routes.push({
           name: `subcategory-new`,
           link: `admin/${this.category}/subcategory-new`
+        });
+      }
+      if (this.location.path().indexOf('user') >= 0) {
+        const indexId = this.location.path().indexOf('user');
+        const userId = this.location.path().substring(indexId + 5);
+        console.log(userId);
+        this.routes.push({
+          name: `user: ${userId}`,
+          link: `admin/user/${userId}`
         });
       }
       if (this.location.path().indexOf('login') >= 0) {

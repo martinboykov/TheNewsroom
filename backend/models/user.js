@@ -57,7 +57,6 @@ userSchema.method({
 });
 
 userSchema.index({ email: 1 }); // schema level
-userSchema.index({ name: 'text', email: 'text' }); // schema level
 
 function validateUser(user) {
   const schema = Joi.object({
