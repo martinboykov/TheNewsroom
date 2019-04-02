@@ -51,7 +51,7 @@ export class GlobalErrorHandler implements ErrorHandler {
             return this.router.navigateByUrl('/auth/login');
             break;
           case HttpError.FORBIDDEN: // 403
-            this.notifier.showError(message, 'Access denied!');
+            this.notifier.showError('Oooops', 'Access denied!');
             return this.router.navigateByUrl('/auth/login');
             // this.notifier.showError('You are not authorized to perform this action', 'Access denied!');
             break;
@@ -78,7 +78,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         stackTrace = this.errorService.getClientStack(error);
         this.loggerSlack.logError(message, stackTrace);
         // this.loggerSentry.logError(error);
-        this.notifier.showError(this.DEFAULT_ERROR_TITLE);
+        this.notifier.showError(this.DEFAULT_ERROR_TITLE, 'Ooops!');
       }
       this.router.navigate(['/']);
     });

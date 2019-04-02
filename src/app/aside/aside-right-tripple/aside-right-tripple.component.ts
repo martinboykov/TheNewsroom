@@ -75,7 +75,7 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
 
   }
   fakeScroll() {
-    // this.windowRef.simulateScroll();
+    this.windowRef.simulateScroll();
     // test in production if needed
   }
   onPostSelected(post) {

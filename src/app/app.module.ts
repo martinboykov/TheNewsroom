@@ -72,9 +72,9 @@ import { GlobalErrorHandler } from './error-handling/global-error-handler';
     ToastrModule.forRoot({
       timeOut: 10000,
       positionClass: 'toast-top-right',
-      preventDuplicates: true,
+      maxOpened: 3,
       countDuplicates: true,
-      maxOpened: 5,
+      preventDuplicates: true,
     }),
   ],
   providers: [

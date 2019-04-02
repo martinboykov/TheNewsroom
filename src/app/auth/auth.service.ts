@@ -1,6 +1,6 @@
 import { catchError, map } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject, throwError, of, timer } from 'rxjs';
+import { Subject, throwError, of, timer, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthData } from './auth-data.model';
@@ -13,9 +13,9 @@ const BACKEND_URL = environment.apiUrl;
 export class AuthService {
   private token: string;
   private user: AuthData;
-  private userListener = new Subject<AuthData>();
+  private userListener = new BehaviorSubject<AuthData>(null);
   private isAuthenticated = false;
-  private authStatusListener = new Subject<boolean>();
+  private authStatusListener = new BehaviorSubject<boolean>(false);
   // private tokenTimer: NodeJS.Timer;
   // add [node] in  tsconfig.app.json "types": [] see
   // https://stackoverflow.com/questions/42940954/cannot-find-namespace-nodejs-after-webpack-upgrade

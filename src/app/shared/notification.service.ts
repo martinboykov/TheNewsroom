@@ -12,6 +12,10 @@ export class NotificationService {
     this.toastr.success(message, title, { onActivateTick: true });
   }
 
+  showInfo(message?: string, title?: string): void {
+    this.toastr.info(message, title, { onActivateTick: true });
+  }
+
   showError(message?: string, title?: string): void {
     this.toastr.error(message, title, { onActivateTick: true });
     // onActivateTick: true ->

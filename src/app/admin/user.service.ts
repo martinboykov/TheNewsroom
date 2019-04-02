@@ -1,3 +1,4 @@
+import { Role } from './user-roles';
 import { AuthData } from './../auth/auth-data.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -10,12 +11,14 @@ const BACKEND_URL = environment.apiUrl;
   providedIn: 'root',
 })
 export class UserService {
-  private userRoles = ['Admin', 'Writer', 'Reader', 'No Role'];
+  private userRoles: Role[];
   constructor(
     private http: HttpClient,
     private router: Router,
     private notifier: NotificationService,
-  ) { }
+  ) {
+    this.userRoles = Object.keys(Role).map(key => Role[key]);
+  }
   getUserRoles() {
     return this.userRoles;
   }

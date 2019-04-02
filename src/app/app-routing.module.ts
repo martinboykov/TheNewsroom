@@ -1,6 +1,7 @@
+import { AuthGuard } from './auth/auth-guard.service';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
+import { Role } from './admin/user-roles';
 import { PostDetailsComponent } from './posts/post-details/post-details.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { NotFoundComponent } from './error-handling/not-found.component';
@@ -11,8 +12,19 @@ const routes: Routes = [
   { path: 'tags/:tag', component: PostListComponent },
   { path: 'search/:searchQuery', component: PostListComponent },
   { path: 'auth', loadChildren: './auth/auth.module#AuthModule' },
-  { path: 'edit', loadChildren: './posts/post-edit/post-edit.module#PostEditModule' },
-  { path: 'admin', loadChildren: './admin/admin.module#AdminModule' },
+  {
+    path: 'edit',
+    loadChildren: './posts/post-edit/post-edit.module#PostEditModule',
+    canActivate: [AuthGuard],
+    data: { role: Role.Writer }
+  },
+  {
+    path: 'admin',
+    loadChildren:
+      './admin/admin.module#AdminModule',
+    canActivate: [AuthGuard],
+    data: { role: Role.Admin }
+  },
   { path: 'not-found', component: NotFoundComponent },
   { path: ':category', component: PostListComponent },
   { path: ':category/post/:_id/:title', component: PostDetailsComponent },

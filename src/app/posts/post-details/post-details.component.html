@@ -124,7 +124,8 @@
           </ul>
         </section>
       </section>
-      <div class="post__modification">
+      <div class="post__modification"
+           *ngIf="currentUser?.roles?.isAdmin===true || (currentUser?.roles?.isWriter && currentUser?._id === post?.author?._id)">
         <button class="modification__button--edit button"
                 (click)="onEdit()">
           EDIT

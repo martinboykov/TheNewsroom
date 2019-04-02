@@ -1,3 +1,4 @@
+import { AuthData } from './../../auth/auth-data.model';
 import { AuthService } from './../../auth/auth.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HelperService } from './../../shared/helper.service';
@@ -16,6 +17,7 @@ import { concatMap } from 'rxjs/operators';
 import { PaginationInstance } from 'ngx-pagination';
 import { ScrollToService } from './../../shared/scrollTo.service';
 import { Subscription } from 'rxjs';
+import { NotificationService } from 'src/app/shared/notification.service';
 
 const APP_URL = environment.appUrl;
 @Component({
@@ -31,7 +33,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   //   avatar: '/assets/images/main/posts/details/avatar.svg',
   // };
 
-  currentUrl: string; // for sharing the post
+  // currentUrl: string; // for sharing the post
   post: Post; // strict Post model !?!
 
   postContent;
@@ -68,11 +70,14 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   // windowReference;
   isMobileResolution: boolean;
   private isMobileResolutionSubscription: Subscription;
+  private currentUserSubscribtion: Subscription;
+  currentUser: AuthData;
 
   constructor(
     private headerService: HeaderService,
     private postService: PostService,
     private authService: AuthService,
+    private notifier: NotificationService,
     public route: ActivatedRoute,
     private router: Router,
     private helper: HelperService,
@@ -88,7 +93,14 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
       content: new FormControl(null, [Validators.required, Validators.minLength(20), Validators.maxLength(2000)]),
     });
 
-    this.currentUrl = APP_URL + this.route.url;
+
+    this.currentUserSubscribtion = this.authService.getUserListener()
+      .subscribe((userData) => {
+        this.currentUser = userData;
+        console.log(this.currentUser);
+      });
+
+    // this.currentUrl = APP_URL + this.route.url;
 
     // first request
     this.route.paramMap
@@ -183,7 +195,17 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   onAddComment() {
     if (this.commentForm.invalid) { return; }
     const user = this.authService.getUser();
-    const author = { _id: user._id, name: user.name, avatar: user.avatar};
+    if (!user) {
+      this.notifier.showInfo('Must login first', 'Unauthenticated attempt');
+      return this.router.navigateByUrl('/auth/login');
+    }
+    if (user.roles.isReader === false) {
+      this.notifier.showInfo(
+        'You dont have permission to post a comment. Please consult with a Site Administrator',
+        'Unauthorized attempt');
+      return;
+    }
+    const author = { _id: user._id, name: user.name, avatar: user.avatar };
     const postId = this.post._id;
     const content = this.commentForm.value.content;
     const newComment = { postId, author, content };
@@ -230,5 +252,6 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
 
   ngOnDestroy() {
     // this.isMobileResolutionSubscription.unsubscribe();
+    this.currentUserSubscribtion.unsubscribe();
   }
 }
