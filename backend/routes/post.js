@@ -7,6 +7,13 @@ const postController = require('../controllers/post');
 
 const images = require('../middleware/image');
 
+const auth = require('../middleware/auth');
+
+const authEditPost = require('../middleware/authEditPost');
+const authAdmin = require('../middleware/authAdmin');
+const authWriter = require('../middleware/authWriter');
+const authReader = require('../middleware/authReader');
+
 router.get('/',
   postController.getPosts);
 
@@ -31,19 +38,32 @@ router.get('/:_id/comments', postController.getPostComments);
 router.get('/:_id/related/', postController.getRelatedPosts);
 
 router.post('/',
+  auth,
+  authWriter,
   images.multer.single('imageMainPath'),
   images.sendUploadToGCS,
   postController.addPost);
 
 router.put('/:_id',
+  auth,
+  authWriter,
+  authEditPost,
   images.multer.single('imageMainPath'),
   images.sendUploadToGCS,
   postController.updatePost);
 
-router.put('/:_id/popularity', postController.popularityIncrease);
+router.put('/:_id/popularity',
+  postController.popularityIncrease);
 
-router.put('/:_id/comments/', postController.addComment);
+router.put('/:_id/comments/',
+  auth,
+  authReader,
+  postController.addComment);
 
-router.delete('/:_id', postController.deletePost);
+router.delete('/:_id',
+  auth,
+  authWriter,
+  authEditPost,
+  postController.deletePost);
 
 module.exports = router;

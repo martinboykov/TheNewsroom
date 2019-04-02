@@ -1,3 +1,4 @@
+import { AuthInterceptor } from './auth/auth-interceptor';
 import { ServerErrorInterceptor } from './error-handling/server-error.interceptor';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -69,14 +70,18 @@ import { GlobalErrorHandler } from './error-handling/global-error-handler';
     }),
     BrowserAnimationsModule,
     ToastrModule.forRoot({
-    timeOut: 10000,
-    positionClass: 'toast-top-right',
-    preventDuplicates: true,
-  }),
+      timeOut: 10000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+      countDuplicates: true,
+      maxOpened: 5,
+    }),
   ],
   providers: [
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    // multi : true -> dont overwrite existing interceptors
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

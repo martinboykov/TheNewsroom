@@ -5,6 +5,8 @@ const router = express.Router();
 
 const subcategoryController = require('../controllers/subcategory');
 
+const auth = require('../middleware/auth');
+
 router.get(
   '/',
   subcategoryController.getSubcategories);
@@ -28,14 +30,17 @@ router.get(
 
 router.post(
   '/',
+  auth,
   subcategoryController.addSubcategory);
 
 router.put(
   '/:_id',
+  auth,
   subcategoryController.updateSubcategory);
 
 router.delete(
   '/:_id',
+  auth,
   subcategoryController.deleteSubcategory);
 
 module.exports = router;

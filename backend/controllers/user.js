@@ -57,7 +57,7 @@ const updateUserRole = async (req, res, next) => {
   const user = await User.findOne(
     { _id: _id },
   );
-  console.log(user);
+  // console.log(user);
   if (!user) return res.status(404).json({ message: 'No such user!' });
   user.roles = userUpdated.roles;
   await user.save();
@@ -127,6 +127,7 @@ const login = async (req, res, next) => {
         name: user.name,
         email: user.email,
         roles: user.roles,
+        avatar: user.avatar,
       }, // authorization
     },
   });

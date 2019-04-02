@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
+import { NotificationService } from '../shared/notification.service';
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({
@@ -18,6 +19,7 @@ export class CategoryService {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private notifier: NotificationService,
   ) { }
 
   getCategory(name) {
@@ -84,7 +86,8 @@ export class CategoryService {
       .delete<{ message: string, data: Category }>(BACKEND_URL + route)
       .subscribe(() => {
         this.getCategories();
-        this.router.navigateByUrl('admin');
+        this.notifier.showSuccess('Category was deleted successfully');
+        this.router.navigateByUrl('/admin');
       });
   }
 

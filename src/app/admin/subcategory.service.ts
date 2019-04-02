@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 import { Subcategory } from './subcategory.model';
+import { NotificationService } from '../shared/notification.service';
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({
@@ -16,6 +17,7 @@ export class SubcategoryService {
     private http: HttpClient,
     private router: Router,
     private categoryService: CategoryService,
+    private notifier: NotificationService,
   ) { }
 
   getSubcategory(name) {
@@ -63,7 +65,8 @@ export class SubcategoryService {
       .delete<{ message: string, post: Subcategory }>(BACKEND_URL + route)
       .subscribe(() => {
         this.categoryService.getCategories();
-        this.router.navigateByUrl('admin');
+        this.notifier.showSuccess('Subcategory was deleted successfully');
+        this.router.navigateByUrl('/admin');
       });
   }
 }

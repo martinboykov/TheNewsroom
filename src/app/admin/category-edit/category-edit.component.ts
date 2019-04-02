@@ -7,6 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { timer } from 'rxjs';
+import { NotificationService } from 'src/app/shared/notification.service';
 
 @Component({
   selector: 'app-category-edit',
@@ -34,6 +35,7 @@ export class CategoryEditComponent implements OnInit {
     public route: ActivatedRoute,
     private helper: HelperService,
     private postService: PostService,
+    private notifier: NotificationService,
   ) { }
 
   ngOnInit() {
@@ -143,6 +145,7 @@ export class CategoryEditComponent implements OnInit {
         this.postService.getlatestPosts();
         this.postService.getPopularPosts();
         this.postService.getCommentedPosts();
+        this.notifier.showSuccess('Category was updated successfully');
         this.router.navigateByUrl('admin');
         this.categoryForm.reset();
       });

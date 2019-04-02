@@ -333,10 +333,23 @@
         .search__form.desktop {
           display: none;
         }
-        svg {
-          height: 24px;
-          width: 24px;
-        }
+       .search__form--activation{
+         min-width: 30px;
+         .activation__button--off{
+          svg {
+            height: 20px;
+            width: 20px;
+          }
+         }
+         .activation__button--on{
+          svg {
+            height: 24px;
+            width: 24px;
+          }
+         }
+
+       }
+
       }
       .edit {
         justify-self: end;

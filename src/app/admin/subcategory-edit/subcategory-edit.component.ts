@@ -8,6 +8,7 @@ import { SubcategoryService } from '../subcategory.service';
 import { Subcategory } from '../subcategory.model';
 import { PostService } from 'src/app/posts/post.service';
 import { timer } from 'rxjs';
+import { NotificationService } from 'src/app/shared/notification.service';
 
 @Component({
   selector: 'app-subcategory-edit',
@@ -37,6 +38,7 @@ export class SubcategoryEditComponent implements OnInit {
     private helper: HelperService,
     private categoryService: CategoryService,
     private postService: PostService,
+    private notifier: NotificationService,
   ) { }
 
   ngOnInit() {
@@ -161,6 +163,7 @@ export class SubcategoryEditComponent implements OnInit {
         this.postService.getPopularPosts();
         this.postService.getCommentedPosts();
         this.loading = false;
+        this.notifier.showSuccess('Subcategory was updated successfully');
         this.router.navigateByUrl('admin');
       });
   }

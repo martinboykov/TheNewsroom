@@ -2,6 +2,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { environment } from './../../environments/environment';
+const SLACK_WEBHOOK = environment.SLACK_WEBHOOK;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,7 +23,7 @@ export class SlackErrorLoggingService {
     }
     console.log(this.logHistory.entries());
     const router = this.injector.get(Router);
-    const webHook = 'https://hooks.slack.com/services/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';
+    const webHook = SLACK_WEBHOOK;
     const messageObj = {
       channel: '#thenewsroom',
       text: message, // error.message

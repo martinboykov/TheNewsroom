@@ -5,6 +5,8 @@ const router = express.Router();
 
 const categoryController = require('../controllers/category');
 
+const auth = require('../middleware/auth');
+
 router.get('/',
  categoryController.getCategories);
 
@@ -25,11 +27,17 @@ router.get(
   categoryController.getCategoryPostsTotalCount,
 );
 
-router.post('/', categoryController.addCategory);
+router.post('/',
+auth,
+categoryController.addCategory);
 
-router.put('/:_id', categoryController.updateCategory);
+router.put('/:_id',
+auth,
+categoryController.updateCategory);
 
-router.delete('/:_id', categoryController.deleteCategory);
+router.delete('/:_id',
+auth,
+categoryController.deleteCategory);
 
 
 module.exports = router;

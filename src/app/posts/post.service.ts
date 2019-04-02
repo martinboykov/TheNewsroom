@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from '../../environments/environment';
+import { NotificationService } from '../shared/notification.service';
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({
@@ -36,6 +37,7 @@ export class PostService {
     private http: HttpClient,
     private router: Router,
     private helper: HelperService,
+    private notifier: NotificationService
   ) { }
 
 
@@ -175,6 +177,7 @@ export class PostService {
           this.posts.push(newPost);
           this.postsUpdated.next([...this.posts]);
           this.getlatestPosts();
+          this.notifier.showSuccess('Post was created successfully');
           this.router.navigate(['/']);
         });
     }
@@ -189,6 +192,7 @@ export class PostService {
           const newPost = response.data;
           this.posts.push(newPost);
           this.postsUpdated.next([...this.posts]);
+          this.notifier.showSuccess('Post was updated successfully');
           const postLink = this.helper.createRoute(newPost);
           this.router.navigateByUrl(postLink);
         });
@@ -203,6 +207,7 @@ export class PostService {
         this.getlatestPosts();
         this.getPopularPosts();
         this.getCommentedPosts();
+        this.notifier.showSuccess('Post was deleted successfully');
         this.router.navigateByUrl('/');
       });
   }

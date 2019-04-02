@@ -38,7 +38,10 @@ const userSchema = new mongoose.Schema({
       default: true,
     },
   },
-
+  avatar: {
+    type: String,
+    default: '/assets/images/main/posts/details/avatar.svg',
+  },
 });
 
 userSchema.plugin(uniqueValidator);
@@ -48,7 +51,12 @@ userSchema.method({
     // secret must be aded predeployment with config or process.env.CUSTOM_VARIABLE
     const token =
       jwt.sign(
-        { _id: this._id, roles: this.roles },
+        {
+          _id: this._id,
+          name: this.name,
+          roles: this.roles,
+          avatar: this.avatar,
+        },
         JWT_SECRET,
         { expiresIn: '1h' }
       ); // 1 hour duration

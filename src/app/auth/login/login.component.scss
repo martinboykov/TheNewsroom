@@ -119,6 +119,7 @@
 @media (max-width: $mobile) {
   .wrapper {
     .login {
+      min-height: 300px;
       width: 100%;
       max-width: 500px;
       margin-top: 60px;

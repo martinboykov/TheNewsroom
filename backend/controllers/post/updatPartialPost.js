@@ -3,6 +3,8 @@ const HOST_ADDRESS = process.env.HOST_ADDRESS;
 
 const { Post } = require('../../models/post');
 
+const { User } = require('../../models/user');
+
 const { Comment, validateComment } = require('../../models/comment');
 
 const client = require('./../../middleware/redis').client;
@@ -14,7 +16,7 @@ const popularityIncrease = async (req, res, next) => {
   const post = await Post.findOne(
     { _id: _id },
   );
-  console.log(post);
+  // console.log(post);
   if (!post) return res.status(404).json({ message: 'No such post!' });
   post.popularity += 1;
   await post.save();
@@ -40,6 +42,9 @@ const addComment = async (req, res, next) => {
     return res.status(400).json({ message: error.details[0].message });
     // return res.status(400).json({ message: 'Invalid request data' });
   }
+  const user = await User.findOne({ _id: comment.author._id });
+  if (!user) return res.status(400).json({ message: 'No such user.' });
+
 
   const newComment = createNewComment(comment);
   const savedComment = await newComment.save();

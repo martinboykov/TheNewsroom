@@ -48,14 +48,15 @@ export class GlobalErrorHandler implements ErrorHandler {
           case HttpError.UNAUTHORIZED: // 401
             this.notifier.showError(message, 'Unauthenticated attempt');
             // this.notifier.showError('Please, login!', 'Unauthenticated attempt');
-            return this.router.navigateByUrl('/login');
+            return this.router.navigateByUrl('/auth/login');
             break;
           case HttpError.FORBIDDEN: // 403
             this.notifier.showError(message, 'Access denied!');
+            return this.router.navigateByUrl('/auth/login');
             // this.notifier.showError('You are not authorized to perform this action', 'Access denied!');
             break;
           case HttpError.NOT_FOUND: // 404
-            this.notifier.showError(message);
+            this.notifier.showError(message, 'Not found!');
             break;
           case HttpError.TIMEOUT: // 408
             this.notifier.showError('Too much time has elapsed', 'Not fount in time!');

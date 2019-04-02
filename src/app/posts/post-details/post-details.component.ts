@@ -1,3 +1,4 @@
+import { AuthService } from './../../auth/auth.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HelperService } from './../../shared/helper.service';
 import { WindowRef } from './../../shared/winref.service';
@@ -24,11 +25,11 @@ const APP_URL = environment.appUrl;
 })
 export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy {
   // remove once users are incorporated
-  fakeAuthor = {
-    name: 'fakeName',
-    _id: '111111111111111111111111',
-    avatar: '/assets/images/main/posts/details/avatar.svg',
-  };
+  // fakeAuthor = {
+  //   name: 'fakeName',
+  //   _id: '111111111111111111111111',
+  //   avatar: '/assets/images/main/posts/details/avatar.svg',
+  // };
 
   currentUrl: string; // for sharing the post
   post: Post; // strict Post model !?!
@@ -71,6 +72,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   constructor(
     private headerService: HeaderService,
     private postService: PostService,
+    private authService: AuthService,
     public route: ActivatedRoute,
     private router: Router,
     private helper: HelperService,
@@ -180,8 +182,8 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   // add comment to Post
   onAddComment() {
     if (this.commentForm.invalid) { return; }
-    // const userId = this.authService.getUserId();
-    const author = this.fakeAuthor;
+    const user = this.authService.getUser();
+    const author = { _id: user._id, name: user.name, avatar: user.avatar};
     const postId = this.post._id;
     const content = this.commentForm.value.content;
     const newComment = { postId, author, content };

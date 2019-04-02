@@ -62,23 +62,5 @@
         </a>
       </div>
     </form>
-
-    <div class="dev-check"
-         style="max-width: 500px;overflow-wrap: break-word;">
-      <p>Form Status: {{ signupForm.status }}</p>
-      <p>Form Values: {{ signupForm.value | json}}</p>
-      <p>Errors:</p>
-      <ul>
-        <li>
-          <p>Image Errors: {{ name.errors | json}}</p>
-        </li>
-        <li>
-          <p>Title Errors: {{ email.errors | json}}</p>
-        </li>
-        <li>
-          <p>Content Errors: {{ password.errors | json}}</p>
-        </li>
-      </ul>
-    </div>
   </div>
 </div>

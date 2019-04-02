@@ -8,4 +8,5 @@ export interface AuthData {
     isWriter?: boolean,
     isReader?: boolean,
   };
+  avatar?: string;
 }
