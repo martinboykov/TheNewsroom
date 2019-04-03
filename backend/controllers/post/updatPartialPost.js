@@ -7,7 +7,7 @@ const { User } = require('../../models/user');
 
 const { Comment, validateComment } = require('../../models/comment');
 
-const client = require('./../../middleware/redis').client;
+const { client } = require('./../../middleware/redis');
 
 // PUT
 // -----------------------------------------------------
@@ -20,6 +20,9 @@ const popularityIncrease = async (req, res, next) => {
   if (!post) return res.status(404).json({ message: 'No such post!' });
   post.popularity += 1;
   await post.save();
+
+  // save post to redis
+
   // const post = await Post.findOneAndUpdate(
   //   { _id: _id },
   //   { $inc: { popularity: 1 } },
@@ -67,7 +70,7 @@ const addComment = async (req, res, next) => {
 
   // if there is no connection to redis -> return response directly
   if (client.connected) {
-    handleRedisState(_id, postAllComments, pageSize, totalCommentsCount);
+    redisHandler(_id, postAllComments, pageSize, totalCommentsCount);
   }
 
   const commentsFirstPage = postAllComments.comments.slice(0, pageSize);
@@ -98,7 +101,7 @@ function createNewComment(comment) {
   return newComment;
 }
 
-async function handleRedisState(_id, allComments, pageSize, totalCount) {
+async function redisHandler(_id, allComments, pageSize, totalCount) {
   const baseUrl = HOST_ADDRESS + `/api/posts/${_id}/comments`;
   const patternComments = baseUrl + '*';
   const keysComments = await client.keysAsync(patternComments);

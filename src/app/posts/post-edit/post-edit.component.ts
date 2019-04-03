@@ -190,9 +190,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   get image() { return this.postForm.get('image'); }
 
   get titleErrorRequired() {
-    // const activated = this.username.errors.required;
     if (this.title.errors) {
-      // console.log(this.title.errors);
       if (this.title.errors.required) {
         return true;
       }
@@ -343,7 +341,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     this.imageChangedEvent = event;
     const file = (event.target as HTMLInputElement).files[0];
     this.fileName = file.name;
-    console.log(file);
     this.image.updateValueAndValidity();
 
     if (this.isIEOrEdge) {
@@ -356,10 +353,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
     const reader = new FileReader();
     reader.onload = () => {
-      // get the img src="imagePreview"
       this.imagePreview = reader.result;
-      // console.log(reader);
-
     };
     reader.readAsDataURL(file);
   }
@@ -375,17 +369,13 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     this.croppedImage = event.base64;
     const file = this.blobToFile(event.file, this.fileName);
     this.postForm.patchValue({ image: file });
-    console.log(this.image.value);
   }
   imageLoaded() {
     this.showCropper = true;
-    // console.log('Image loaded');
   }
   cropperReady() {
-    // console.log('Cropper ready');
   }
   loadImageFailed() {
-    // console.log('Load failed');
   }
   public blobToFile(blobData, fileName: string) {
     const fd = new FormData();

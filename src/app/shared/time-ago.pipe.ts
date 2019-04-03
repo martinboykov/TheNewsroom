@@ -24,7 +24,7 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
         return window.setTimeout(() => {
           this.ngZone.run(() => {
             this.changeDetectorRef.markForCheck();
-            console.log('checked');
+            // console.log('checked');
           });
         }, 1000); // updates every second (attempt to fix ExpressionChangedAfterItHasBeenCheckedError in detail.component)
         // }, timeToUpdate);

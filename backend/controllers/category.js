@@ -149,6 +149,9 @@ const addCategory = async (req, res, next) => {
   if (req.body.isVisible) category.isVisible = req.body.isVisible;
 
   await category.save();
+
+  //
+
   return res.status(201).json({
     message: 'Category added successfully',
     data: category,

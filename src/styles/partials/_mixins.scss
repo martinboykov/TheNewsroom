@@ -63,3 +63,19 @@
   border-image: url("/assets/images/main/posts/item/border.png") round;
   border-image-slice: 30%;
 }
+
+@mixin gradient-footer() {
+  background: #111011;
+  background: linear-gradient(
+    to right,
+    rgba(24, 24, 25, 1) 0%,
+    rgba(28, 28, 28, 1) 6%,
+    rgba(31, 31, 29, 1) 7%,
+    rgba(44, 44, 44, 1) 21%,
+    rgba(44, 44, 44, 1) 79%,
+    rgba(31, 31, 29, 1) 93%,
+    rgba(29, 29, 31, 1) 94%,
+    rgba(28, 28, 28, 1) 95%,
+    rgba(21, 21, 22, 1) 100%
+  );
+}

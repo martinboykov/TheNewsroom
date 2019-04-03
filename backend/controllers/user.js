@@ -116,7 +116,7 @@ const login = async (req, res, next) => {
     });
   }
   const token = user.generateAuthToken();
-  console.log(`${user.name} logged in successfuly`);
+  // console.log(`${user.name} logged in successfuly`);
   return res.status(200).json({
     message: 'Logged in successfuly',
     data: {

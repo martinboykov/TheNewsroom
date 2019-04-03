@@ -10,6 +10,8 @@ const Fawn = require('Fawn');
 
 const deleteImg = require('../../middleware/image').deleteImg;
 
+const { client } = require('./../../middleware/redis');
+
 const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 const window = (new JSDOM('')).window;
@@ -236,6 +238,9 @@ const updatePost = async (req, res, next) => {
               'Post and (Tag(s)) added successfully. Category, Subcategory and Tags updated succesfully', // eslint-disable-line max-len
             data: result[result.length - 1],
           });
+
+          // redis state update
+          // client.
         })
         .catch((err) => {
           throw new Error(err);

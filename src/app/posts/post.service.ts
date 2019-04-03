@@ -48,7 +48,6 @@ export class PostService {
     const pageSize = commentsPerPage;
     const page = currentPage;
     const queryParams = `?pageSize=${pageSize}&page=${page}`;
-    // console.log(BACKEND_URL + url + queryParams);
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams)
       .subscribe((postData) => {
@@ -88,26 +87,8 @@ export class PostService {
     const pageSize = commentsPerPage;
     const page = currentPage;
     const queryParams = `?pageSize=${pageSize}&page=${page}`;
-    // console.log(BACKEND_URL + url + queryParams);
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams);
-  }
-
-  // dafaultPaginater argument is added, so the Application can adopt pagesize as needed
-  addComment(newComment, defaultPaginator) {
-    const _id = newComment.postId;
-    const pageSize = defaultPaginator.itemsPerPage;
-    const page = defaultPaginator.currentPage;
-    const queryParams = `?pageSize=${pageSize}&page=${page}`;
-    const route = `/posts/${_id}/comments${queryParams}`;
-    const comment: Comment = {
-      author: newComment.author,
-      content: newComment.content,
-      postId: newComment.postId,
-    };
-    return this.http.put<{ message: string, data: { commentsFirstPage: Comment[], totalCommentsCount: number } }>(
-      BACKEND_URL + route,
-      comment);
   }
 
   getRelatedPosts(post: Post) {
@@ -150,11 +131,28 @@ export class PostService {
       });
   }
 
+  // dafaultPaginater argument is added, so the Application can adopt pagesize as needed
+  addComment(newComment, defaultPaginator) {
+    const _id = newComment.postId;
+    const pageSize = defaultPaginator.itemsPerPage;
+    const page = defaultPaginator.currentPage;
+    const queryParams = `?pageSize=${pageSize}&page=${page}`;
+    const route = `/posts/${_id}/comments${queryParams}`;
+    const comment: Comment = {
+      author: newComment.author,
+      content: newComment.content,
+      postId: newComment.postId,
+    };
+    return this.http.put<{ message: string, data: { commentsFirstPage: Comment[], totalCommentsCount: number } }>(
+      BACKEND_URL + route,
+      comment);
+  }
+
   updatePopularity(_id: string) {
     const route = `/posts/${_id}/popularity`;
     return this.http.put<{ message: string, data: number }>(
       BACKEND_URL + route, {})
-      .subscribe(() => { });
+      .subscribe();
   }
 
   editPost(post, mode: string) {
@@ -172,7 +170,6 @@ export class PostService {
           BACKEND_URL + route,
           postData)
         .subscribe((response) => {
-          // console.log(response);
           const newPost = response.post;
           this.posts.push(newPost);
           this.postsUpdated.next([...this.posts]);
@@ -188,7 +185,6 @@ export class PostService {
           BACKEND_URL + route,
           postData)
         .subscribe((response) => {
-          console.log(response);
           const newPost = response.data;
           this.posts.push(newPost);
           this.postsUpdated.next([...this.posts]);
@@ -213,7 +209,6 @@ export class PostService {
   }
 
   getTagNames(name?) {
-    console.log(name);
     let route;
 
     route = `/tags?namesOnly=true&name=${name}`;

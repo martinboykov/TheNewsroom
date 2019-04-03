@@ -33,7 +33,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   //   avatar: '/assets/images/main/posts/details/avatar.svg',
   // };
 
-  // currentUrl: string; // for sharing the post
+  currentUrl: string; // for sharing the post
   post: Post; // strict Post model !?!
 
   postContent;
@@ -100,7 +100,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
         console.log(this.currentUser);
       });
 
-    // this.currentUrl = APP_URL + this.route.url;
+     this.currentUrl = APP_URL + this.route.url;
 
     // first request
     this.route.paramMap

@@ -4,10 +4,7 @@
   min-height: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: minmax(1120px, 1fr) 100px;
-  // margin-right: 20px;
-  // grid-template-rows: minmax(740px, 1fr) 100px;
-  // grid-column-gap: 20px;
+  grid-template-rows: minmax(1120px, 1fr) minmax(20px, auto);
   .posts {
     grid-column: 1/2;
     grid-row: 1/2;
@@ -20,11 +17,6 @@
       max-height: 360px;
     }
   }
-  // app-aside-right-tripple {
-  //   grid-column: 2/3;
-  //   grid-row: 1/2;
-  //   background: transparent;
-  // }
   .pagination {
     grid-column: 1/2;
     grid-row: 2/3;
@@ -145,12 +137,6 @@
           min-width: 230px;
         }
       }
-    }
-    app-aside-right-tripple {
-      // display: none;
-      // height: 600px;
-      // grid-column: 1/2;
-      // grid-row: 1/2;
     }
   }
 }
