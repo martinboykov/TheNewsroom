@@ -137,10 +137,13 @@
   .main-nav {
     // display: flex;
     // flex-flow: column nowrap;
-
+    height: 100%;
     z-index: 999;
     .toggle {
       width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
       .toggle-button {
         display: block;
         width: 30px;
@@ -178,7 +181,7 @@
       overflow: hidden;
       position: relative;
       width: 100%;
-      margin-top: 15px;
+      margin-top: 25px;
       opacity: 0;
       transition-property: all;
       transition-duration: 0.3s;

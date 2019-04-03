@@ -44,9 +44,9 @@ export class AuthService {
     const token = localStorage.getItem('token');
     const expirationDate = localStorage.getItem('expirationDate');
     const user = JSON.parse(localStorage.getItem('user')); // authorization
-    console.log(token);
-    console.log(expirationDate);
-    console.log(user);
+    // console.log(token);
+    // console.log(expirationDate);
+    // console.log(user);
     if (!token || !expirationDate) { return; }
     return {
       token: token,

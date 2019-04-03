@@ -44,6 +44,7 @@ export class AuthGuard implements CanActivate {
           return true;
         }
         this.notifier.showInfo('You dont have authorization for this route', 'Unauthorized attempt');
+        this.router.navigate(['/']);
         return false;
       }
       // authorised so return true

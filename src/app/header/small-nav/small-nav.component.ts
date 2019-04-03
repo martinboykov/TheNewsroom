@@ -1,6 +1,6 @@
 import { HeaderService } from './../header.service';
 import { ParamMap, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Location } from '@angular/common';
 @Component({
@@ -8,21 +8,23 @@ import { Location } from '@angular/common';
   templateUrl: './small-nav.component.html',
   styleUrls: ['./small-nav.component.scss']
 })
-export class SmallNavComponent implements OnInit {
+export class SmallNavComponent implements OnInit, OnDestroy {
   routerParameters: ParamMap;
   routerParametersSubscription: Subscription;
-  category;
-  subcategory;
-  name;
-  tag;
-  _id;
-  userId;
+  category: string;
+  subcategory: string;
+  name: string;
+  tag: string;
+  _id: string;
+  userId: string;
+  searchQuery: string;
   routes: any[] = [];
   // currentRoute: any;
 
   constructor(private headerService: HeaderService,
     private router: Router,
     private location: Location,
+    private changeDetectorRef: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
@@ -67,17 +69,17 @@ export class SmallNavComponent implements OnInit {
         if (this.routerParameters.has('tag')) {
           this.tag = this.routerParameters.get('tag');
           this.routes.push({
-            name: `${this.tag}`,
+            name: `tag: ${this.tag}`,
             link: `tags/${this.tag}`
           });
         }
 
         // on search selected
-        if (this.routerParameters.has('search')) {
-          this.tag = this.routerParameters.get('tag');
+        if (this.routerParameters.has('searchQuery')) {
+          this.searchQuery = this.routerParameters.get('searchQuery');
           this.routes.push({
-            name: `${this.tag}`,
-            link: `tags/${this.tag}`
+            name: `search: ${this.searchQuery}`,
+            link: `search/${this.searchQuery}`
           });
         }
       });
@@ -88,12 +90,23 @@ export class SmallNavComponent implements OnInit {
           name: `edit`,
           link: `edit`
         });
+        return;
       }
       if (this.location.path().indexOf('admin') >= 0) {
         this.routes.push({
           name: `admin`,
           link: `admin`
         });
+        return;
+      }
+      if (this.location.path().indexOf('search') >= 0) {
+        const index = this.location.path().indexOf('search');
+        const searchQuery = this.location.path().substring(index + 7);
+        this.routes.push({
+          name: `search: ${searchQuery}`,
+          link: `search/${searchQuery}`
+        });
+        return;
       }
       if (this.location.path().indexOf('category-update') >= 0 &&
         this.location.path().indexOf('subcategory-update') < 0) {
@@ -103,6 +116,7 @@ export class SmallNavComponent implements OnInit {
           name: `category-update: ${this.category}`,
           link: `admin/category/${this.category}`
         });
+        return;
       }
       if (this.location.path().indexOf('subcategory-update') >= 0) {
         const index = this.location.path().indexOf('subcategory-update');
@@ -111,6 +125,7 @@ export class SmallNavComponent implements OnInit {
           name: `subcategory-update: ${this.subcategory}`,
           link: `admin/subcategory/${this.subcategory}`
         });
+        return;
       }
       if (this.location.path().indexOf('category-new') >= 0 &&
         this.location.path().indexOf('subcategory-new') < 0) {
@@ -120,6 +135,7 @@ export class SmallNavComponent implements OnInit {
           name: `category-new`,
           link: `admin/category/${this.category}`
         });
+        return;
       }
       if (this.location.path().indexOf('subcategory-new') >= 0) {
         const indexSubcategory = this.location.path().indexOf('subcategory-new') - 1;
@@ -134,29 +150,36 @@ export class SmallNavComponent implements OnInit {
           name: `subcategory-new`,
           link: `admin/${this.category}/subcategory-new`
         });
+        return;
       }
       if (this.location.path().indexOf('user') >= 0) {
         const indexId = this.location.path().indexOf('user');
         const userId = this.location.path().substring(indexId + 5);
-        console.log(userId);
         this.routes.push({
           name: `user: ${userId}`,
           link: `admin/user/${userId}`
         });
+        return;
       }
       if (this.location.path().indexOf('login') >= 0) {
         this.routes.push({
           name: `login`,
           link: `auth/login`
         });
+        return;
       }
       if (this.location.path().indexOf('signup') >= 0) {
         this.routes.push({
           name: `signup`,
           link: `auth/signup`
         });
+        return;
       }
     });
   }
-
+  ngOnDestroy(): void {
+    // Called once, before the instance is destroyed.
+    // Add 'implements OnDestroy' to the class.
+    this.routerParametersSubscription.unsubscribe();
+  }
 }

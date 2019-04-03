@@ -97,7 +97,6 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     this.currentUserSubscribtion = this.authService.getUserListener()
       .subscribe((userData) => {
         this.currentUser = userData;
-        console.log(this.currentUser);
       });
 
      this.currentUrl = APP_URL + this.route.url;
