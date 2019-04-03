@@ -230,9 +230,13 @@ const updatePost = async (req, res, next) => {
       task.update(postOld, postUpdated)
         .options({ viaSave: true });
       return task.run({ useMongoose: true })
-        .then((result) => {
+        .then(async (result) => {
           // if image is changed and everything is updated succesfully -> delete old image from cloud
           if (filename) deleteImg(filename);
+
+          // delete entire redis db
+          await client.flushdbAsync();
+
           res.status(200).json({
             message:
               'Post and (Tag(s)) added successfully. Category, Subcategory and Tags updated succesfully', // eslint-disable-line max-len

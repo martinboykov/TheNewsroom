@@ -10,6 +10,8 @@ const Fawn = require('Fawn');
 
 const deleteImg = require('../../middleware/image').deleteImg;
 
+const { client } = require('./../../middleware/redis');
+
 const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 const window = (new JSDOM('')).window;
@@ -115,7 +117,10 @@ const addPost = async (req, res, next) => {
       // saving new post to db
       task.save('posts', post);
       return task.run({ useMongoose: true })
-        .then((result) => {
+        .then(async (result) => {
+          // delete entire redis db
+          await client.flushdbAsync();
+
           res.status(200).json({
             message:
               'Post and Tag(s) added successfully. Category and Subcategory updated succesfully', // eslint-disable-line max-len

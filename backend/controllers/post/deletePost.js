@@ -10,6 +10,8 @@ const Fawn = require('Fawn');
 
 const deleteImg = require('../../middleware/image').deleteImg;
 
+const { client } = require('./../../middleware/redis');
+
 // DELETE
 const deletePost = async (req, res, next) => {
   const post = await Post.findOne({ _id: req.params._id });
@@ -66,7 +68,10 @@ const deletePost = async (req, res, next) => {
       // saving new post to db
       task.remove(post);
       return task.run({ useMongoose: true })
-        .then((result) => {
+        .then(async (result) => {
+          // flush redis db
+          await client.flushdbAsync();
+
           const filename = post.imageMainPath.split('https://storage.googleapis.com/thenewsroom-images-storage-bucket/')[1];
           // if post is deleted succesfully from db -> delete the image from cloud
           deleteImg(filename);

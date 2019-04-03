@@ -3,6 +3,8 @@ const { Post } = require('../models/post');
 
 const Fawn = require('Fawn');
 
+const { client } = require('./../middleware/redis');
+
 const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 const window = (new JSDOM('')).window;
@@ -150,7 +152,8 @@ const addCategory = async (req, res, next) => {
 
   await category.save();
 
-  //
+  // delete entire redis db
+  await client.flushdbAsync();
 
   return res.status(201).json({
     message: 'Category added successfully',
@@ -214,7 +217,10 @@ const updateCategory = async (req, res, next) => {
       },
     }).options({ multi: true });
   return task.run({ useMongoose: true })
-    .then(() => {
+    .then(async () => {
+      // delete all db
+      await client.flushdbAsync();
+
       res.status(200).json({
         message: 'Category (and Post(s)) updated successfully',
         data: category,
@@ -235,6 +241,10 @@ const deleteCategory = async (req, res, next) => {
     });
   }
   const categoryRemoved = await category.remove();
+
+   // delete entire redis db
+   await client.flushdbAsync();
+
   return res.status(201).json({
     message: 'Category deleted successfully',
     data: categoryRemoved,

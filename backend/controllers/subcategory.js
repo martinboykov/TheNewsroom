@@ -6,6 +6,8 @@ const { Subcategory, validateSubcategory } = require('../models/subcategory');
 
 const Fawn = require('Fawn');
 
+const { client } = require('./../middleware/redis');
+
 const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 const window = (new JSDOM('')).window;
@@ -142,7 +144,10 @@ const addSubcategory = async (req, res, next) => {
       $push: { subcategories: newSubcategory._id },
     });
   return task.run({ useMongoose: true })
-    .then((result) => {
+    .then(async (result) => {
+      // delete entire redis db
+      await client.flushdbAsync();
+
       res.status(200).json({
         message:
           'Subcategory added successfully and Category updated succesfully',
@@ -201,7 +206,10 @@ const updateSubcategory = async (req, res, next) => {
   // }
 
   return task.run({ useMongoose: true })
-    .then((result) => {
+    .then(async (result) => {
+      // delete entire redis db
+      await client.flushdbAsync();
+
       res.status(200).json({
         message: 'Subcategory (and Post(s)) updated successfully',
         data: subcategory,
@@ -230,7 +238,10 @@ const deleteSubcategory = async (req, res, next) => {
     });
   task.remove(subcategory);
   return task.run({ useMongoose: true })
-    .then((result) => {
+    .then(async (result) => {
+      // delete entire redis db
+      await client.flushdbAsync();
+
       return res.status(201).json({
         message: 'Subcategory deleted successfully',
         subcategory: subcategory,

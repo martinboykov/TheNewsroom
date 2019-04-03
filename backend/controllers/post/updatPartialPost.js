@@ -21,8 +21,6 @@ const popularityIncrease = async (req, res, next) => {
   post.popularity += 1;
   await post.save();
 
-  // save post to redis
-
   // const post = await Post.findOneAndUpdate(
   //   { _id: _id },
   //   { $inc: { popularity: 1 } },
