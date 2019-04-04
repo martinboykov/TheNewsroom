@@ -1,7 +1,7 @@
 const { Category, validateCategory } = require('../models/category');
 const { Post } = require('../models/post');
 
-const Fawn = require('Fawn');
+const Fawn = require('fawn');
 
 const { client } = require('./../middleware/redis');
 

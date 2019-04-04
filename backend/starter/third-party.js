@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 module.exports = ((app) => {
-  const Fawn = require('Fawn');
+  const Fawn = require('fawn');
 
   Fawn.init(mongoose, 'fawn_transaction');
   app.use(bodyParser.json());

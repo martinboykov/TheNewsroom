@@ -6,7 +6,7 @@ const { Subcategory } = require('../../models/subcategory');
 
 const { Tag } = require('../../models/tag');
 
-const Fawn = require('Fawn');
+const Fawn = require('fawn');
 
 const deleteImg = require('../../middleware/image').deleteImg;
 
