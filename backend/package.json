@@ -1,0 +1,29 @@
+{
+  "name": "mean-app",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@google-cloud/storage": "^2.4.3",
+    "bcrypt": "^3.0.5",
+    "bluebird": "^3.5.3",
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "core-js": "^2.5.4",
+    "debug": "^4.1.1",
+    "dompurify": "^1.0.10",
+    "express": "^4.16.4",
+    "express-async-errors": "^3.1.1",
+    "fawn": "^2.1.5",
+    "helmet": "^3.15.0",
+    "joi": "^14.3.1",
+    "jsdom": "^14.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.4.4",
+    "mongoose-unique-validator": "^2.0.2",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.1",
+    "redis": "^2.8.0",
+    "sharp": "^0.22.0",
+    "winston": "2.4.4"
+  }
+}

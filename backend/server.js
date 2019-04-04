@@ -1,6 +1,6 @@
 /* eslint-disable no-process-env*/
 const http = require('http');
-const app = require('./backend/app');
+const app = require('./app');
 const debug = require('debug')('debug');
 
 const normalizePort = (val) => { // checks if env ports are valid numbers
