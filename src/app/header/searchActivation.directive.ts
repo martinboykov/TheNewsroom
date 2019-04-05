@@ -1,6 +1,7 @@
 import { Subscription } from 'rxjs';
 import { Directive, ElementRef, OnInit, HostListener, Renderer2, Input, OnDestroy } from '@angular/core';
 import { WindowRef } from '../shared/winref.service';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Directive({
   selector: '[appSearchActivation]'
@@ -10,13 +11,21 @@ export class SearchActivationDirective implements OnInit, OnDestroy {
   offButton;
   searchForm;
   document;
-
   isMobile: boolean;
+  deviceInfo = null;
+  isDesktopDevice: boolean;
   private isMobileResolutionSubscription: Subscription;
 
-  constructor(private el: ElementRef, private renderer: Renderer2, private windRef: WindowRef) {
+  constructor(
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private windRef: WindowRef,
+    private deviceService: DeviceDetectorService,
+  ) {
   }
   ngOnInit() {
+    this.deviceInfo = this.deviceService.getDeviceInfo();
+    this.isDesktopDevice = this.deviceService.isDesktop();
     this.document = this.windRef.nativeWindow.document;
     this.offButton = this.document.querySelector('.activation__button--off');
     this.onButton = this.document.querySelector('.activation__button--on');
@@ -29,24 +38,33 @@ export class SearchActivationDirective implements OnInit, OnDestroy {
     if (this.isMobile) {
       this.searchForm = this.document.querySelector('.search__form.mobile');
       this.renderer.setStyle(this.document.querySelector('.search__form.desctop'), 'display', 'none');
+
+
     } else {
       this.searchForm = this.document.querySelector('.search__form.desctop');
       this.renderer.setStyle(this.document.querySelector('.search__form.mobile'), 'display', 'none');
     }
-    this.windRef.checkIfMobile();
-    this.isMobileResolutionSubscription = this.windRef.checkIfMobileUpdateListener()
-      .subscribe((isMobile) => {
-        this.isMobile = isMobile;
-        this.renderer.setStyle(this.onButton, 'display', 'flex');
-        this.renderer.setStyle(this.offButton, 'display', 'none');
-        this.renderer.setStyle(this.document.querySelector('.search__form.desctop'), 'display', 'none');
-        this.renderer.setStyle(this.document.querySelector('.search__form.mobile'), 'display', 'none');
-        if (this.isMobile) {
-          this.searchForm = this.document.querySelector('.search__form.mobile');
-        } else {
-          this.searchForm = this.document.querySelector('.search__form.desctop');
-        }
-      });
+    if (this.isDesktopDevice) {
+      // console.log('desktop');
+
+      this.windRef.checkIfMobile();
+      this.isMobileResolutionSubscription = this.windRef.checkIfMobileUpdateListener()
+        .subscribe((isMobile) => {
+          this.isMobile = isMobile;
+          this.renderer.setStyle(this.onButton, 'display', 'flex');
+          this.renderer.setStyle(this.offButton, 'display', 'none');
+          this.renderer.setStyle(this.document.querySelector('.search__form.desctop'), 'display', 'none');
+          this.renderer.setStyle(this.document.querySelector('.search__form.mobile'), 'display', 'none');
+          if (this.isMobile) {
+            this.searchForm = this.document.querySelector('.search__form.mobile');
+          } else {
+            this.searchForm = this.document.querySelector('.search__form.desctop');
+          }
+        });
+    } else {
+      // console.log('mobile');
+    }
+
   }
 
   @HostListener('click') open() {

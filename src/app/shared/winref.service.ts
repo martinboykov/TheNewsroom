@@ -14,6 +14,8 @@ export class WindowRef {
   private isMobileResolution: boolean;
   private isMobileResolutionUpdated = new Subject<boolean>();
   private subscribtionExists = false;
+
+  deviceInfo = null;
   get nativeWindow(): any {
     return _window();
   }

@@ -9,6 +9,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { LazyLoadImageModule, intersectionObserverPreset } from 'ng-lazyload-image';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { DeviceDetectorModule } from 'ngx-device-detector';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -76,6 +77,7 @@ import { GlobalErrorHandler } from './error-handling/global-error-handler';
       countDuplicates: true,
       preventDuplicates: true,
     }),
+    DeviceDetectorModule.forRoot()
   ],
   providers: [
     { provide: ErrorHandler, useClass: GlobalErrorHandler },

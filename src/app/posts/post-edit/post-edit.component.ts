@@ -35,22 +35,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   tagsInput = new Subject<string>();
   isIEOrEdge;
   private categoriesSubscription: Subscription;
-  jodiConfig = {
-    // defaultMode: '3',
-    height: 450,
-    autofocus: true,
-    enter: 'DIV',
-    // uploader: {
-    //   insertImageAsBase64URI: true,
-    // },
-    defaultActionOnPaste: 'insert_only_text',
-    buttons: `source,
-     |,bold,strikethrough,underline,italic,
-     |,superscript,subscript,align,|,outdent,indent,|,ul,ol,
-     |,font,fontsize,brush,paragraph,|,table,link,
-     |,undo,redo,\n,cut,hr,eraser,copyformat,
-     |,symbol,selectall,print`
-  };
+  jodiConfig = this.getJoditConfig();
 
   @ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent;
   imageChangedEvent: any = '';
@@ -539,6 +524,43 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     } else {
       return null;
     }
+  }
+
+  private getJoditConfig() {
+    return {
+      // defaultMode: '3',
+      height: 450,
+      autofocus: true,
+      enter: 'DIV',
+      // uploader: {
+      //   insertImageAsBase64URI: true,
+      // },
+      defaultActionOnPaste: 'insert_only_text',
+      buttons: `source,
+        |,bold,strikethrough,underline,italic,
+       |,superscript,subscript,align,|,outdent,indent,|,ul,ol,
+       |,font,fontsize,brush,paragraph,|,image,link,table,
+       |,undo,redo,\n,cut,hr,eraser,copyformat,
+       |,symbol,selectall,print`,
+      buttonsMD: `source,
+      |,bold,strikethrough,underline,italic,
+       |,superscript,subscript,align,|,outdent,indent,|,ul,ol,
+       |,font,fontsize,brush,paragraph,|,image,link,table,
+       |,undo,redo,\n,cut,hr,eraser,copyformat,
+       |,symbol,selectall,print`,
+      buttonsSM: `source,
+       |,bold,strikethrough,underline,italic,
+       |,superscript,subscript,align,|,outdent,indent,|,ul,ol,
+       |,font,fontsize,brush,paragraph,|,image,link,table,
+       |,undo,redo,\n,cut,hr,eraser,copyformat,
+       |,symbol,selectall,print`,
+      buttonsXS: `source,
+       |,bold,strikethrough,underline,italic,
+       |,superscript,subscript,align,|,outdent,indent,|,ul,ol,
+       |,font,fontsize,brush,paragraph,|,image,link,table,
+       |,undo,redo,\n,cut,hr,eraser,copyformat,
+       |,symbol,selectall,print`,
+    };
   }
 
   // fake suvice

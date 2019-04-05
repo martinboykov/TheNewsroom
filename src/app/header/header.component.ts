@@ -17,11 +17,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentUser: AuthData;
   private isMobileResolutionSubscription: Subscription;
   constructor(
+
     private headerService: HeaderService,
     private authService: AuthService,
     private windRef: WindowRef,
     private router: Router) { }
   ngOnInit() {
+
     this.searchForm = new FormGroup({
       content: new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(200)]),
     });
