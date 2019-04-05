@@ -12,30 +12,10 @@ const BACKEND_URL = environment.apiUrl;
 export class HeaderService {
   private routerParameters: ParamMap;
   private routerParametersUpdated = new Subject<ParamMap>();
-  // private categories: any[] = [];
-  // private categoriesUpdated = new BehaviorSubject<any[]>([...this.categories]);
-  // private categorySubscribtionExists = false;
+
   constructor(
     private http: HttpClient,
     private router: Router) { }
-
-  // getCategories() {
-  //   if (this.categorySubscribtionExists) {
-  //     return console.log('exist');
-  //   }
-  //   this.categorySubscribtionExists = true;
-  //   return this.http
-  //     .get<{ message: string, data: any }>(BACKEND_URL + '/categories')
-  //     .subscribe((response) => {
-  //       this.categories = response.data;
-  //       this.categoriesUpdated.next([...this.categories]);
-  //     });
-  // }
-
-  // getCategoriesUpdateListener() { // as we set postUpdate as private
-  //   return this.categoriesUpdated.asObservable(); // returns object to which we can listen, but we cant emit
-  // }
-
 
   setRouterParameters(paramMap: ParamMap) {
     this.routerParameters = paramMap;

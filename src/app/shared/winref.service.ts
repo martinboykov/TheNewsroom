@@ -37,6 +37,7 @@ export class WindowRef {
       .pipe(
         // throttleTime(100),
         // distinctUntilChanged(),
+
       )
       .subscribe((event) => {
         // console.log(this.nativeWindow.innerWidth);
