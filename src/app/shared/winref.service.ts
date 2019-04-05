@@ -37,8 +37,8 @@ export class WindowRef {
         // distinctUntilChanged(),
       )
       .subscribe((event) => {
-        console.log(this.nativeWindow.innerWidth);
-        this.simulateScroll(); // intersectionObserver bug on resize
+        // console.log(this.nativeWindow.innerWidth);
+        // this.simulateScroll(); // intersectionObserver bug on resize
         // output new window width and height
         if (this.nativeWindow.innerWidth <= 979) {
           this.isMobileResolution = true;
