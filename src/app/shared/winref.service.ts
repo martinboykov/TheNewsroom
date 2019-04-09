@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
 import { throttleTime, distinctUntilChanged } from 'rxjs/operators';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 function _window(): any {
   // return the global native browser window object
@@ -16,6 +17,7 @@ export class WindowRef {
   private subscribtionExists = false;
 
   deviceInfo = null;
+  isDesktopDevice: boolean;
   get nativeWindow(): any {
     return _window();
   }
@@ -26,8 +28,10 @@ export class WindowRef {
       return false;
     }
   }
-
-  constructor() { }
+  constructor(private deviceService: DeviceDetectorService) {
+    this.deviceInfo = this.deviceService.getDeviceInfo();
+    this.isDesktopDevice = this.deviceService.isDesktop();
+  }
 
   checkIfMobile() {
     // if there a subscribtion somewhere active => continue without creating new one
@@ -37,11 +41,10 @@ export class WindowRef {
       .pipe(
         // throttleTime(100),
         // distinctUntilChanged(),
-
       )
       .subscribe((event) => {
+        if (this.isDesktopDevice) { this.simulateScroll(); } // intersectionObserver bug on resize
         // console.log(this.nativeWindow.innerWidth);
-        // this.simulateScroll(); // intersectionObserver bug on resize
         // output new window width and height
         if (this.nativeWindow.innerWidth <= 979) {
           this.isMobileResolution = true;

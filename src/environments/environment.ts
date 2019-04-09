@@ -7,6 +7,8 @@ export const environment = {
   appUrl: 'http://localhost:4200',
   apiUrl: 'http://localhost:3000/api',
   SLACK_WEBHOOK: 'https://hooks.slack.com/services/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',
+  // appUrl: 'https://the-newsroom-mean-app.herokuapp.com/',
+  // apiUrl: 'https://the-newsroom-mean-app.herokuapp.com/api',
 };
 
 /*

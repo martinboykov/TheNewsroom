@@ -34,5 +34,5 @@ module.exports = ((app) => {
       debug('Something went wrong ' + err);
     });
   }
-  // app.use(redis);
+  app.use(redis);
 });

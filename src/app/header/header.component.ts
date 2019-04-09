@@ -17,7 +17,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentUser: AuthData;
   private isMobileResolutionSubscription: Subscription;
   constructor(
-
     private headerService: HeaderService,
     private authService: AuthService,
     private windRef: WindowRef,

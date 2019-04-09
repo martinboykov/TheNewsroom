@@ -1,6 +1,6 @@
 <div class="wrapper"
-     [style.display]="isAsideRequired ? 'grid' : 'none'"
-     appOutsideAside>
+     [style.display]="isAsideRequired ? 'grid' : 'none'">
+  <!-- appOutsideAside> -->
   <div class="type-selector">
     <div class="latest"
          [appSelectType]="'.latest-posts'"
@@ -26,13 +26,11 @@
       <a class="latest-post__link"
          (click)="onPostSelected(latestPost)">
         <div class="latest-post__image"
-             [defaultImage]=defaultimage
-             [lazyLoad]="latestPost?.imageMainPath + '_51w'"
+             [lazyLoad]="latestPost?.imageMainPath + '_100w'"
              [offset]="offset">
-          <!-- [lazyLoad]=`resized-51_${latestPost.imageMainPath}` -->
-
-          <!-- [ngStyle]="{'background-image': 'url(' + latestPost.imageMainPath + ')'}" -->
         </div>
+        <!-- [lazyLoad]=`resized-51_${latestPost.imageMainPath}` -->
+        <!-- [ngStyle]="{'background-image': 'url(' + latestPost.imageMainPath + ')'}" -->
         <div class="latest-post__additional-info">
           <div class="additional-info__title">
             {{latestPost?.title}}
@@ -54,12 +52,10 @@
       <a class="popular-post__link"
          (click)="onPostSelected(popularPost)">
         <div class="popular-post__image"
-             [defaultImage]=defaultimage
-             [lazyLoad]="popularPost?.imageMainPath + '_51w'"
+             [lazyLoad]="popularPost?.imageMainPath + '_100w'"
              [offset]="offset">
-
-          <!-- [ngStyle]="{'background-image': 'url(' + popularPost.imageMainPath + ')'}"> -->
         </div>
+        <!-- [ngStyle]="{'background-image': 'url(' + popularPost.imageMainPath + ')'}"> -->
         <div class="popular-post__additional-info">
           <div class="additional-info__title">
             <span class="title--text">{{popularPost?.title}}</span>
@@ -81,11 +77,10 @@
       <a class="commented-post__link"
          (click)="onPostSelected(commentedPost)">
         <div class="commented-post__image"
-             [defaultImage]=defaultimage
-             [lazyLoad]="commentedPost?.imageMainPath + '_51w'"
+             [lazyLoad]="commentedPost?.imageMainPath + '_100w'"
              [offset]="offset">
-          <!-- [ngStyle]="{'background-image': 'url(' + commentedPost.imageMainPath + ')'}"> -->
         </div>
+        <!-- [ngStyle]="{'background-image': 'url(' + commentedPost.imageMainPath + ')'}"> -->
         <div class="commented-post__additional-info">
           <div class="additional-info__title">
             <span class="title--text">{{commentedPost?.title}}</span>

@@ -99,7 +99,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
         this.currentUser = userData;
       });
 
-     this.currentUrl = APP_URL + this.route.url;
+    this.currentUrl = APP_URL + this.router.url;
 
     // first request
     this.route.paramMap
