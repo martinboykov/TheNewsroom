@@ -3,54 +3,48 @@ const debug = require('debug')('debug');
 const redis = require('redis');
 const bluebird = require('bluebird');
 bluebird.promisifyAll(redis);
-// redis REDIS HEROKU
-// ...................
-const client = redis.createClient(process.env.REDIS_URL);
+let client;
+if (process.env.NODE_ENV === 'production') {
+  // redis REDIS HEROKU
+  // ...................
+  // client = redis.createClient(process.env.REDIS_URL);
 
-// redis REDIS LABS
-// ...................
-// const client = redis.createClient(
-//   process.env.REDISCLOUD_URL,
-//   {
-//     no_ready_check: true,
-//   });
+  // redis REDIS LABS
+  // ...................
+  client = redis.createClient(
+    process.env.REDISCLOUD_URL,
+    {
+      no_ready_check: true,
+    });
+}
+if (process.env.NODE_ENV === 'development') {
+  // redis REDIS LOCAL
+  // ...................
+  client = redis.createClient();
+  // client = redis.createClient({
+  //   port: process.env.REDIS_HOST_PORT, // replace with your port
+  //   host: process.env.REDIS_HOST_IP, // replace with your hostanme or IP address');
+  //   retry_strategy: function(options) {
+  //     if (options.error && options.error.code === 'ECONNREFUSED') {
+  //       // End reconnecting on a specific error and flush all commands with
+  //       // a individual error
+  //       return new Error('The server refused the connection');
+  //     }
+  //     if (options.total_retry_time > 1000 * 60 * 60) {
+  //       // End reconnecting after a specific timeout and flush all commands
+  //       // with a individual error
+  //       return new Error('Retry time exhausted');
+  //     }
+  //     if (options.attempt > 10) {
+  //       // End reconnecting with built in error
+  //       return 'undefined';
+  //     }
+  //     // reconnect after
+  //     return Math.min(options.attempt * 100, 3000);
+  //   },
+  // });
+}
 
-// redis REDISTOGO
-// ...................
-// let client;
-// if (process.env.REDISTOGO_URL) {
-//   const rtg = require('url').parse(process.env.REDISTOGO_URL);
-//   client = redis.createClient(rtg.port, rtg.hostname);
-//   client.auth(rtg.auth.split(':')[1]);
-// } else {
-//   client = redis.createClient();
-// }
-
-// redis REDIS LOCAL
-// ...................
-// const client = redis.createClient();
-// const client = redis.createClient({
-//   port: process.env.REDIS_HOST_PORT, // replace with your port
-//   host: process.env.REDIS_HOST_IP, // replace with your hostanme or IP address');
-//   retry_strategy: function(options) {
-//     if (options.error && options.error.code === 'ECONNREFUSED') {
-//       // End reconnecting on a specific error and flush all commands with
-//       // a individual error
-//       return new Error('The server refused the connection');
-//     }
-//     if (options.total_retry_time > 1000 * 60 * 60) {
-//       // End reconnecting after a specific timeout and flush all commands
-//       // with a individual error
-//       return new Error('Retry time exhausted');
-//     }
-//     if (options.attempt > 10) {
-//       // End reconnecting with built in error
-//       return 'undefined';
-//     }
-//     // reconnect after
-//     return Math.min(options.attempt * 100, 3000);
-//   },
-// });
 
 const redisMiddleware = async (req, res, next) => {
   if (!client.connected) return next();

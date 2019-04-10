@@ -1,15 +1,15 @@
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
-import { AuthData } from './../../auth/auth-data.model';
+import { AuthData } from '../../auth/auth-data.model';
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss']
+  templateUrl: './user-edit.component.html',
+  styleUrls: ['./user-edit.component.scss']
 })
-export class UserComponent implements OnInit {
+export class UserEditComponent implements OnInit {
   userForm: FormGroup;
   _id = '';
   email = '';
@@ -40,7 +40,7 @@ export class UserComponent implements OnInit {
           this.isUserLoaded = true;
           this.user = response.data;
           this.isUserAdmin = this.user.roles.isAdmin;
-          console.log(this.user);
+          // console.log(this.user);
           this.userForm.controls.isAdmin.setValue(this.user.roles.isAdmin);
           this.userForm.controls.isWriter.setValue(this.user.roles.isWriter);
           this.userForm.controls.isReader.setValue(this.user.roles.isReader);
@@ -50,8 +50,8 @@ export class UserComponent implements OnInit {
       this.isAdminTotalCount = true;
       this.adminUsers = response.data;
       this.adminUsersTotalCount = this.adminUsers.length;
-      console.log(this.adminUsers);
-      console.log(this.adminUsersTotalCount);
+      // console.log(this.adminUsers);
+      // console.log(this.adminUsersTotalCount);
     });
     this.userForm.valueChanges.subscribe((data) => {
 
@@ -79,7 +79,7 @@ export class UserComponent implements OnInit {
     if (this.isWriter.value === true) { // if the user is writer => he is reader
       this.user.roles.isReader = true;
     }
-    console.log(this.user);
+    // console.log(this.user);
     this.userService.updateUser(this.user);
   }
 

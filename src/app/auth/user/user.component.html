@@ -1,0 +1,36 @@
+<div class="wrapper">
+  <div class="user">
+    <div class="container">
+
+    </div>
+
+    <div class="user__avatar"
+         [ngStyle]="{'background-image': 'url(' + user.avatar + ')'}">
+    </div>
+
+
+    <label class="label"><b>Name:</b></label>
+
+    <div class="user__name link">
+      {{user.name}}
+    </div>
+    <label class="label"><b>Email:</b></label>
+    <div class="user__email link">
+      {{user.email}}
+    </div>
+    <label class="label"><b>Role:</b></label>
+    <div class="user__role link">
+      {{role}}
+    </div>
+
+    <!-- <div class="user__logout">
+      <a class="logout__link"
+         (click)="logout()">
+        <b>Logout</b>
+      </a>
+    </div> -->
+    <button class="user__logout-button button"
+            (click)="logout()"><b>Logout</b></button>
+  </div>
+
+</div>

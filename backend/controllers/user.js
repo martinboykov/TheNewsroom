@@ -1,6 +1,13 @@
 /* eslint new-cap: ["error", { "capIsNew": false }]*/
+/* eslint-disable no-process-env*/
+
 const { User, validateUser } = require('../models/user');
+
 const bcrypt = require('bcrypt');
+
+const { client } = require('./../middleware/redis');
+
+const HOST_ADDRESS = process.env.HOST_ADDRESS;
 
 const getUsersByType = async (req, res, next) => {
   const userType = req.query.userType;
@@ -61,11 +68,25 @@ const updateUserRole = async (req, res, next) => {
   if (!user) return res.status(404).json({ message: 'No such user!' });
   user.roles = userUpdated.roles;
   await user.save();
+
+  if (client.connected) {
+    redisDeleteUserKeys();
+  }
+
   return res.status(201).json({
     message: 'Post popularity updated successfully',
     data: user.roles,
   });
 };
+
+async function redisDeleteUserKeys() {
+  const baseUrl = HOST_ADDRESS + `/api/users`;
+  const patternComments = baseUrl + '*';
+  const keysComments = await client.keysAsync(patternComments);
+  // delete old comments pages from redis... (outdated)
+  if (keysComments.length > 0) await client.delAsync(keysComments);
+  // restores redis db for all comments in the Post
+}
 
 const signup = async (req, res, next) => {
   const userExists = await User.findOne({ email: req.body.email });

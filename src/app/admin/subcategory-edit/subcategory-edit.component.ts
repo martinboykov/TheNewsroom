@@ -54,16 +54,16 @@ export class SubcategoryEditComponent implements OnInit {
     });
     this.subcategoryName = this.route.snapshot.params.subcategoryName;
     this.categoryName = this.route.snapshot.params.categoryName;
-    console.log(this.categoryName);
+    // console.log(this.categoryName);
 
     if (this.subcategoryName) {
-      console.log(this.subcategoryName);
+      // console.log(this.subcategoryName);
       this.mode = 'update';
       this.subcategoryService.getSubcategory(this.subcategoryName)
         .subscribe((response) => {
 
           this.subcategory = response.data;
-          console.log(this.subcategory);
+          // console.log(this.subcategory);
 
           this.subcategoryForm.controls.name.setValue(this.subcategory.name);
           this.subcategoryForm.controls.order.setValue(this.subcategory.order);
@@ -72,7 +72,7 @@ export class SubcategoryEditComponent implements OnInit {
       this.subcategoryService.getSubcategoryPostsTotalCount(this.subcategoryName)
         .subscribe((response) => {
           this.subcategoryPostsTotalCount = response.data;
-          console.log(this.subcategoryPostsTotalCount);
+          // console.log(this.subcategoryPostsTotalCount);
 
         });
     } else {
@@ -153,11 +153,11 @@ export class SubcategoryEditComponent implements OnInit {
       subcategory.categoryName = this.categoryName;
     }
     if (order) { subcategory.order = order; }
-    console.log(subcategory);
+    // console.log(subcategory);
     this.loading = true;
     this.subcategoryService.editSubcategory(subcategory, options)
       .subscribe((response) => {
-        console.log(response);
+        // console.log(response);
         this.categoryService.getCategories();
         this.postService.getlatestPosts();
         this.postService.getPopularPosts();
@@ -175,7 +175,7 @@ export class SubcategoryEditComponent implements OnInit {
       .subscribe((response) => {
         this.subcategoryPosts = response.data.posts;
         this.loadedPosts = true;
-        console.log(this.subcategoryPosts);
+        // console.log(this.subcategoryPosts);
 
       });
   }

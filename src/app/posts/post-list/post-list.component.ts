@@ -146,6 +146,8 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.isAsideRequired = false;
     }
     if (params.has('tag')) {
+   console.log(tag);
+
       url = `/tags/${tag}/posts`; // Remove ASIDE if switch to tags
       this.isAsideRequired = false;
     }

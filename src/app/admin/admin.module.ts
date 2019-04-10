@@ -8,7 +8,7 @@ import { AdminComponent } from './admin.component';
 import { SubcategoryEditComponent } from './subcategory-edit/subcategory-edit.component';
 import { CategoryEditComponent } from './category-edit/category-edit.component';
 import { ToggleSubItemsDirective } from './toggleSubitems.directive';
-import { UserComponent } from './user/user.component';
+import { UserEditComponent } from './user-edit/user-edit.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +17,7 @@ import { UserComponent } from './user/user.component';
     CategoryEditComponent,
     ToggleSubItemsDirective,
     ToggleRolesDirective,
-    UserComponent
+    UserEditComponent
   ],
   imports: [
     CommonModule,

@@ -564,41 +564,41 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   }
 
   // fake suvice
-  private addPosts(options) {
-    const fakePostsCount = 6;
-    let counter = 5;
-    let post;
-    const category = options.category;
-    const subcategory = options.subcategory;
-    const imageUrl = options.imageUrl;
-    if (subcategory) {
-      while (counter < fakePostsCount) {
-        post = {
-          title: `Fake ${subcategory} title ${counter} is above 10 characters`,
-          content: `Fake ${subcategory} content ${counter}  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
-          category: category,
-          subcategory: subcategory,
-          tags: [`${subcategory} ${counter}`],
-          image: imageUrl,
-        };
-        this.postService.editPost(post, this.mode);
-        counter += 1;
-      }
-    } else {
-      while (counter < fakePostsCount) {
-        post = {
-          title: `Fake ${category} title ${counter} is above 10 characters`,
-          content: `Fake ${category} content ${counter}  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
-          category: category,
-          tags: [`${category} ${counter}`],
-          image: imageUrl,
-        };
-        this.postService.editPost(post, this.mode);
-        counter += 1;
-      }
-    }
+  // private addPosts(options) {
+  //   const fakePostsCount = 6;
+  //   let counter = 5;
+  //   let post;
+  //   const category = options.category;
+  //   const subcategory = options.subcategory;
+  //   const imageUrl = options.imageUrl;
+  //   if (subcategory) {
+  //     while (counter < fakePostsCount) {
+  //       post = {
+  //         title: `Fake ${subcategory} title ${counter} is above 10 characters`,
+  //         content: `Fake ${subcategory} content ${counter}  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
+  //         category: category,
+  //         subcategory: subcategory,
+  //         tags: [`${subcategory} ${counter}`],
+  //         image: imageUrl,
+  //       };
+  //       this.postService.editPost(post, this.mode);
+  //       counter += 1;
+  //     }
+  //   } else {
+  //     while (counter < fakePostsCount) {
+  //       post = {
+  //         title: `Fake ${category} title ${counter} is above 10 characters`,
+  //         content: `Fake ${category} content ${counter}  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
+  //         category: category,
+  //         tags: [`${category} ${counter}`],
+  //         image: imageUrl,
+  //       };
+  //       this.postService.editPost(post, this.mode);
+  //       counter += 1;
+  //     }
+  //   }
 
-  }
+  // }
 
 
   ngOnDestroy() {

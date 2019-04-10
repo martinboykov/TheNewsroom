@@ -62,26 +62,18 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.userService.getUsersByType('Admin').subscribe((response) => {
       this.adminUsers = response.data;
       this.adminUsersTotalCount = this.adminUsers.length;
-      console.log(this.adminUsers);
-      console.log(this.adminUsersTotalCount);
     });
     this.userService.getUsersByType('Writer').subscribe((response) => {
       this.writerUsers = response.data;
       this.writerUsersTotalCount = this.writerUsers.length;
-      console.log(this.writerUsers);
-      console.log(this.writerUsersTotalCount);
     });
     this.userService.getUsersByType('Reader').subscribe((response) => {
       this.readerUsers = response.data;
       this.readerUsersTotalCount = this.readerUsers.length;
-      console.log(this.readerUsers);
-      console.log(this.readerUsersTotalCount);
     });
     this.userService.getUsersByType('No Role').subscribe((response) => {
       this.noRoleUsers = response.data;
       this.noRoleUsersTotalCount = this.noRoleUsers.length;
-      console.log(this.noRoleUsers);
-      console.log(this.noRoleUsersTotalCount);
     });
   }
   // SITE STRUCTURE
@@ -132,7 +124,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     if (this.selectedUserRole === 'No Role') {
       this.users = [...this.noRoleUsers];
     }
-    console.log(this.selectedUserRole);
+    // console.log(this.selectedUserRole);
   }
 
   onSelect(user) {

@@ -7,7 +7,7 @@ const winston = require('winston');
 
 module.exports = ((app) => {
   if (process.env.NODE_ENV === 'production') {
-    winston.add(winston.transports.File, { filename: './backend/logfile.log' });
+    winston.add(winston.transports.File, { filename: './logfile.log' });
     const exeptionsLogger = new winston.Logger({
       transports: [
         new winston.transports.Console({
@@ -15,7 +15,7 @@ module.exports = ((app) => {
           json: true,
         }),
         new winston.transports.File({
-          filename: './backend/uncaughtException.log',
+          filename: './uncaughtException.log',
           handleExceptions: true,
           json: true,
         }),
