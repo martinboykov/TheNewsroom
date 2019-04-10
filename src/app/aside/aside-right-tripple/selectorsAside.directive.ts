@@ -1,6 +1,7 @@
 import { WindowRef } from 'src/app/shared/winref.service';
 import { Directive, ElementRef, OnInit, HostListener, Renderer2, Input, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Directive({
   selector: '[appSelectType]'
@@ -15,15 +16,22 @@ export class SelectorsAsideDirective implements OnInit, OnDestroy {
   latestSection;
   popularSection;
   commentedSection;
+
+  deviceInfo = null;
+  isDesktopDevice: boolean;
   isMobileResolution: boolean;
   private isMobileResolutionSubscription: Subscription;
   constructor(
     private el: ElementRef,
     private renderer: Renderer2,
-    private windowRef: WindowRef) {
+    private windowRef: WindowRef,
+    private deviceService: DeviceDetectorService
+  ) {
   }
 
   ngOnInit() {
+    this.deviceInfo = this.deviceService.getDeviceInfo();
+    this.isDesktopDevice = this.deviceService.isDesktop();
     // detect if Moobile resolution < 979px width
     this.currentSelector = document.querySelector(this.selectType);
     this.wrapper = document.querySelector('.wrapper');
@@ -43,26 +51,28 @@ export class SelectorsAsideDirective implements OnInit, OnDestroy {
       this.renderer.addClass(this.latestTypeSelector, 'active');
       this.renderer.addClass(this.latestSection, 'open');
     }
-    this.windowRef.checkIfMobile();
-    this.isMobileResolutionSubscription = this.windowRef.checkIfMobileUpdateListener()
-      .subscribe((isMobile) => {
-        this.isMobileResolution = isMobile;
-        if (this.isMobileResolution) {
-          this.renderer.removeClass(this.latestTypeSelector, 'active');
-          this.renderer.removeClass(this.popularTypeSelector, 'active');
-          this.renderer.removeClass(this.commentedTypeSelector, 'active');
-          this.renderer.removeClass(this.latestSection, 'open');
-          this.renderer.removeClass(this.popularSection, 'open');
-          this.renderer.removeClass(this.commentedSection, 'open');
-        } else {
-          this.renderer.addClass(this.latestTypeSelector, 'active');
-          this.renderer.removeClass(this.popularTypeSelector, 'active');
-          this.renderer.removeClass(this.commentedTypeSelector, 'active');
-          this.renderer.addClass(this.latestSection, 'open');
-          this.renderer.removeClass(this.popularSection, 'open');
-          this.renderer.removeClass(this.commentedSection, 'open');
-        }
-      });
+    if (this.isDesktopDevice) { // check for device
+      this.windowRef.checkIfMobile();
+      this.isMobileResolutionSubscription = this.windowRef.checkIfMobileUpdateListener()
+        .subscribe((isMobileRes) => {
+          this.isMobileResolution = isMobileRes;
+          if (this.isMobileResolution) { // check for resolution on resize
+            this.renderer.removeClass(this.latestTypeSelector, 'active');
+            this.renderer.removeClass(this.popularTypeSelector, 'active');
+            this.renderer.removeClass(this.commentedTypeSelector, 'active');
+            this.renderer.removeClass(this.latestSection, 'open');
+            this.renderer.removeClass(this.popularSection, 'open');
+            this.renderer.removeClass(this.commentedSection, 'open');
+          } else { // check for resolution on resize
+            this.renderer.addClass(this.latestTypeSelector, 'active');
+            this.renderer.removeClass(this.popularTypeSelector, 'active');
+            this.renderer.removeClass(this.commentedTypeSelector, 'active');
+            this.renderer.addClass(this.latestSection, 'open');
+            this.renderer.removeClass(this.popularSection, 'open');
+            this.renderer.removeClass(this.commentedSection, 'open');
+          }
+        });
+    }
   }
 
   @HostListener('click') open() {
@@ -94,8 +104,8 @@ export class SelectorsAsideDirective implements OnInit, OnDestroy {
           this.renderer.removeClass(section, 'open');
         }
       });
-
     }
+
     if (!this.isMobileResolution) {
       allSelectors.forEach((selector) => {
         if (currentSelector === selector) {

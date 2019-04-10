@@ -274,11 +274,11 @@ $types: latest, popular, commented;
   opacity: 1;
   height: 425px;
 }
-.hidden {
-  // display: none;
-  opacity: 0;
-  height: 0;
-}
+// .hidden {
+//   // display: none;
+//   opacity: 0;
+//   height: 0;
+// }
 
 @keyframes fadein {
   from { opacity: 0; }
