@@ -15,23 +15,15 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.authService.getUser();
-    switch (this.user.roles) {
-      case Role.Admin:
-        if (this.user.roles.isAdmin === true) { this.role = Role.Admin; }
-        break;
-      case Role.Writer:
-
-        if (this.user.roles.isWriter === true) { this.role = Role.Writer; }
-        break;
-      case Role.Reader:
-        if (this.user.roles.isReader === true) { this.role = Role.Reader; }
-        break;
-      default:
-      this.role = Role.None;
-    }
+    this.role = this.getUserRole(this.user);
   }
   logout() {
     this.authService.logout();
   }
-
+  getUserRole(user) {
+    if (user.roles.isAdmin === true) { return Role.Admin; }
+    if (user.roles.isWriter === true) { return Role.Writer; }
+    if (user.roles.isReader === true) { return Role.Reader; }
+    return Role.None;
+  }
 }

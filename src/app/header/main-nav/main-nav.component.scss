@@ -146,31 +146,32 @@
       align-items: center;
       justify-content: flex-start;
       .toggle-button {
-        display: block;
         width: 30px;
-        padding: 0;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        &:focus,
-        :active {
-          outline: none;
-        }
-        &__bar {
-          width: 100%;
-          height: 3px;
-          background: $gold;
-          display: block;
-          margin: 7px 0;
-          border-radius: 15px;
-
-          &:nth-child(1) {
-            margin-top: 0px;
-          }
-          &:last-child {
-            margin-bottom: 0px;
-          }
-        }
+        padding-top: 2px;
+      }
+      // https://w3bits.com/animated-menu-icon-css/
+      .toggle-button:after,
+      .toggle-button:before,
+      .toggle-button div {
+        background: $gold;
+        // border-radius: 3px;
+        content: "";
+        display: block;
+        height: 3px;
+        margin: 8px 0;
+        transition: all 0.2s ease-in-out;
+      }
+      .toggle-button.pushed {
+        width: 33px;
+      }
+      .toggle-button.pushed:before {
+        transform: translateY(11px) rotate(135deg);
+      }
+      .toggle-button.pushed:after {
+        transform: translateY(-11px) rotate(-135deg);
+      }
+      .toggle-button.pushed div {
+        transform: scale(0);
       }
     }
     &__items--desktop {

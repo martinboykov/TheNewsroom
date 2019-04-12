@@ -44,9 +44,6 @@ export class AuthService {
     const token = localStorage.getItem('token');
     const expirationDate = localStorage.getItem('expirationDate');
     const user = JSON.parse(localStorage.getItem('user')); // authorization
-    // console.log(token);
-    // console.log(expirationDate);
-    // console.log(user);
     if (!token || !expirationDate) { return; }
     return {
       token: token,
@@ -56,10 +53,12 @@ export class AuthService {
   }
 
   private setAuthTimer(duration: number) {
-    console.log('Setting timer: ' + duration);
     const source = timer(duration * 1000);
-    source.subscribe(() => {
+    source.subscribe((data) => {
+      console.log(data);
       this.logout();
+      this.router.navigate(['auth', 'login']);
+      this.notifier.showInfo('Please, login aggain!', 'Authentication time expired');
     });
   }
   autoAuthUser() {
@@ -99,7 +98,6 @@ export class AuthService {
     this.user = null; // authorization
     this.userListener.next(this.user); // authorization
     this.authStatusListener.next(false);
-    // clearTimeout(this.tokenTimer);
     this.clearAuthData();
     this.router.navigate(['auth', 'login']);
   }
@@ -115,7 +113,6 @@ export class AuthService {
         (response) => {
           // console.log(response);
           this.user = response.data; // authorization
-          console.log(this.user);
           this.notifier.showSuccess(response.message);
           this.router.navigate(['/auth/login']);
         }
@@ -139,17 +136,13 @@ export class AuthService {
         if (this.token) {
           this.user = response.data.user; // authorization
           this.userListener.next(this.user); // authorization
-          console.log(this.user); // authorization
-
           this.isAuthenticated = true;
           this.authStatusListener.next(true);
           // manage token validity duration
           const expiresInDuration = response.data.expiresIn;
           this.setAuthTimer(expiresInDuration);
-          console.log(expiresInDuration);
           const now = new Date();
           const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
-          console.log(expirationDate);
           this.saveAuthData(this.token, expirationDate, this.user);
 
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
