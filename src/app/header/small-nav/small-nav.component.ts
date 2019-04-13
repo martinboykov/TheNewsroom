@@ -39,20 +39,23 @@ export class SmallNavComponent implements OnInit, OnDestroy {
 
           this.routes = [];
 
-          if (this.location.path().indexOf('edit') >= 0) {
+          if (this.location.path().indexOf('edit') >= 0 &&
+          this.location.path().indexOf('returnUrl') < 0) {
             this.routes.push({
               name: `edit`,
               link: `edit`
             });
           }
-          if (this.location.path().indexOf('admin') >= 0) {
+          if (this.location.path().indexOf('admin') >= 0 &&
+          this.location.path().indexOf('returnUrl') < 0) {
             this.routes.push({
               name: `admin`,
               link: `admin`
             });
           }
           if (this.location.path().indexOf('category-update') >= 0 &&
-            this.location.path().indexOf('subcategory-update') < 0) {
+            this.location.path().indexOf('subcategory-update') < 0 &&
+            this.location.path().indexOf('returnUrl') < 0) {
             const index = this.location.path().indexOf('category-update');
             this.category = this.location.path().substring(index).replace('category-update/', '');
             this.routes.push({
@@ -60,7 +63,8 @@ export class SmallNavComponent implements OnInit, OnDestroy {
               link: `admin/category/${this.category}`
             });
           }
-          if (this.location.path().indexOf('subcategory-update') >= 0) {
+          if (this.location.path().indexOf('subcategory-update') >= 0 &&
+          this.location.path().indexOf('returnUrl') < 0) {
             const index = this.location.path().indexOf('subcategory-update');
             this.subcategory = this.location.path().substring(index).replace('subcategory-update/', '');
             this.routes.push({
@@ -69,7 +73,8 @@ export class SmallNavComponent implements OnInit, OnDestroy {
             });
           }
           if (this.location.path().indexOf('category-new') >= 0 &&
-            this.location.path().indexOf('subcategory-new') < 0) {
+            this.location.path().indexOf('subcategory-new') < 0 &&
+            this.location.path().indexOf('returnUrl') < 0) {
             const index = this.location.path().indexOf('category-new');
             this.category = this.location.path().substring(index).replace('category-new/', '');
             this.routes.push({
@@ -77,7 +82,8 @@ export class SmallNavComponent implements OnInit, OnDestroy {
               link: `admin/category/${this.category}`
             });
           }
-          if (this.location.path().indexOf('subcategory-new') >= 0) {
+          if (this.location.path().indexOf('subcategory-new') >= 0 &&
+            this.location.path().indexOf('returnUrl') < 0) {
             const indexSubcategory = this.location.path().indexOf('subcategory-new') - 1;
             const indexAdmin = this.location.path().indexOf('admin') + 6;
             this.subcategory = this.location.path().substring(indexSubcategory).replace('subcategory-new/', '');
@@ -91,7 +97,9 @@ export class SmallNavComponent implements OnInit, OnDestroy {
               link: `admin/${this.category}/subcategory-new`
             });
           }
-          if (this.location.path().indexOf('user') >= 0 && this.location.path().indexOf('admin') >= 0) {
+          if (this.location.path().indexOf('user') >= 0 &&
+            this.location.path().indexOf('admin') >= 0 &&
+            this.location.path().indexOf('returnUrl') < 0) {
             const indexId = this.location.path().indexOf('user');
             const userId = this.location.path().substring(indexId + 5);
             this.routes.push({
@@ -99,7 +107,9 @@ export class SmallNavComponent implements OnInit, OnDestroy {
               link: `admin/user/${userId}`
             });
           }
-          if (this.location.path().indexOf('user') >= 0 && this.location.path().indexOf('admin') < 0) {
+          if (this.location.path().indexOf('user') >= 0 &&
+            this.location.path().indexOf('admin') < 0 &&
+            this.location.path().indexOf('returnUrl') < 0) {
             this.routes.push({
               name: `User info`,
               link: `auth/user`
