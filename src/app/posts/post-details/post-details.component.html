@@ -4,10 +4,8 @@
       <aside class="aside">
         <section class="image-section">
           <div class="image"
-               [defaultImage]=defaultimage
-               [lazyLoad]="mainImage"
-               [offset]="offset"
-               *ngIf="mainImage">
+          [ngStyle]="{'background-image': 'url(' + mainImage + ')'}"
+          *ngIf="mainImage">
             <!-- https://stackoverflow.com/questions/41372332/get-http-localhost4200-null-404-not-found-in-angular2-with-angular-cli -->
           </div>
           <div class="image-section__category text-center">

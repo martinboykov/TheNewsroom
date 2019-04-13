@@ -13,11 +13,11 @@ import { DeviceDetectorModule } from 'ngx-device-detector';
 
 import { AppRoutingModule } from './app-routing.module';
 
+
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { AsideRightTrippleComponent } from './aside/aside-right-tripple/aside-right-tripple.component';
-import { PostDetailsComponent } from './posts/post-details/post-details.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { PostItemComponent } from './posts/post-item/post-item.component';
 import { MainNavComponent } from './header/main-nav/main-nav.component';
@@ -33,7 +33,7 @@ import { OutsideAsideDirective } from './aside/aside-right-tripple/outsideAside.
 import { SelectorsAsideDirective } from './aside/aside-right-tripple/selectorsAside.directive';
 
 
-import { TimeAgoPipe } from './shared/time-ago.pipe';
+
 import { GlobalErrorHandler } from './error-handling/global-error-handler';
 
 @NgModule({
@@ -42,7 +42,6 @@ import { GlobalErrorHandler } from './error-handling/global-error-handler';
     HeaderComponent,
     FooterComponent,
     AsideRightTrippleComponent,
-    PostDetailsComponent,
     PostListComponent,
     MainNavComponent,
     SmallNavComponent,
@@ -54,7 +53,6 @@ import { GlobalErrorHandler } from './error-handling/global-error-handler';
     InsideAsideDirective,
     OutsideAsideDirective,
     SelectorsAsideDirective,
-    TimeAgoPipe,
     NotFoundComponent
 
   ],
