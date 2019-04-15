@@ -1,0 +1,41 @@
+https://medium.com/@asanoop24/deploying-angular-6-app-on-google-app-engine-b6259d4c16c2
+https://stackoverflow.com/questions/39782506/deploying-basic-angular-2-app-to-google-app-engine/44730124#44730124
+
+1. Build your Angular App
+ng build --prod
+
+2. Create Config file
+app.yaml
+
+3. Setting up Google Cloud
+- Assuming that you already have a Google account. Go to the Google Cloud Console and login with your Google account.
+- Create a new project for your angular app deployment e.g. angular-app-gcp
+- In that project, create a Google Storage Bucket. You can search for it in the Search bar provided or just the follow this link.
+- Name your bucket something e.g. angular-app-bucket and leave the rest of things as default and click on create.
+
+4. Deploying the Application using Cloud Shell
+
+- Go to the bucket you just created (angular-app-bucket) on the cloud console
+- Select the Upload Files option there and upload your dist folder as well your app.yaml file. The folder structure inside your bucket should be as follows:
+
+app.yaml
+dist/
+
+- Now, open the Google Cloud Interactive Shell. It is an in-browser terminal window provided by Google for your project
+
+- Once you are connected to the Cloud Shell, Create a directory there for your app e.g. angular-app-gcp
+twrkhanasparukh@cloudshell:~ (thenewsroom-mean-app)$  mkdir thenewsroom-angular-app-gcp
+
+- Now you need to sync your data from your bucket into this directory. Use the following command for that:
+gsutil rsync -r gs://angular-app-bucket ./angular-app-gcp
+twrkhanasparukh@cloudshell:~ (thenewsroom-mean-app)$ gsutil rsync -r gs://thenewsroom-angular-app-bucket ./thenewsroom-angular-app-gcp
+
+- You’re almost done. Now simply deploy your application using the following command:
+twrkhanasparukh@cloudshell:~/thenewsroom-angular-app-gcp (thenewsroom-mean-app)$ gcloud app deploy
+
+- You will be asked for the zone/region where you’d like the App Engine to host your application. Select any zone.
+
+- After that, it will take a couple of minutes to deploy your application and will give you link where you can access it. 
+
+
+
