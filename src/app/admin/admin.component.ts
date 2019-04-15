@@ -53,7 +53,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.categoryService.getCategoriesFull()
       .subscribe((categories: Category[]) => {
         this.categories = categories;
-        // console.log(this.categories);
       });
 
     // USERS
@@ -124,12 +123,10 @@ export class AdminComponent implements OnInit, OnDestroy {
     if (this.selectedUserRole === 'No Role') {
       this.users = [...this.noRoleUsers];
     }
-    // console.log(this.selectedUserRole);
   }
 
   onSelect(user) {
     this.selectedUser = user;
-    // console.log(this.selectedUser);
     this.router.navigateByUrl(`admin/user/${user._id}`);
   }
 

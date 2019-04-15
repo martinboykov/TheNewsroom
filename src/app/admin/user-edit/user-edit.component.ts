@@ -40,7 +40,6 @@ export class UserEditComponent implements OnInit {
           this.isUserLoaded = true;
           this.user = response.data;
           this.isUserAdmin = this.user.roles.isAdmin;
-          // console.log(this.user);
           this.userForm.controls.isAdmin.setValue(this.user.roles.isAdmin);
           this.userForm.controls.isWriter.setValue(this.user.roles.isWriter);
           this.userForm.controls.isReader.setValue(this.user.roles.isReader);
@@ -50,8 +49,6 @@ export class UserEditComponent implements OnInit {
       this.isAdminTotalCount = true;
       this.adminUsers = response.data;
       this.adminUsersTotalCount = this.adminUsers.length;
-      // console.log(this.adminUsers);
-      // console.log(this.adminUsersTotalCount);
     });
     this.userForm.valueChanges.subscribe((data) => {
 
@@ -63,9 +60,6 @@ export class UserEditComponent implements OnInit {
   get isReader() { return this.userForm.get('isReader'); }
 
   onSaveUser() {
-    // console.log(this.userForm.value);
-
-
     this.user.roles = this.userForm.value;
     if (this.isUserAdmin && this.adminUsersTotalCount === 1) { // there must be at any time at least one admin
       this.user.roles.isAdmin = true;
@@ -79,7 +73,6 @@ export class UserEditComponent implements OnInit {
     if (this.isWriter.value === true) { // if the user is writer => he is reader
       this.user.roles.isReader = true;
     }
-    // console.log(this.user);
     this.userService.updateUser(this.user);
   }
 

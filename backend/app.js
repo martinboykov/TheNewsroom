@@ -28,10 +28,11 @@ require('./starter/logging')(app);
 
 require('./starter/routes')(app);
 
-app.use('/', express.static(path.join(__dirname, '/angular')));
+// for one-app on heroku deployment
+// app.use('/', express.static(path.join(__dirname, '/angular')));
 
-app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, 'angular', 'index.html'));
-});
+// app.use((req, res, next) => {
+//   res.sendFile(path.join(__dirname, 'angular', 'index.html'));
+// });
 
 module.exports = app;

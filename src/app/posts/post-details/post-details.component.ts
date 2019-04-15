@@ -26,15 +26,9 @@ const APP_URL = environment.appUrl;
   styleUrls: ['./post-details.component.scss']
 })
 export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy {
-  // remove once users are incorporated
-  // fakeAuthor = {
-  //   name: 'fakeName',
-  //   _id: '111111111111111111111111',
-  //   avatar: '/assets/images/main/posts/details/avatar.svg',
-  // };
 
-  currentUrl: string; // for sharing the post
-  post: Post; // strict Post model !?!
+  currentUrl: string;
+  post: Post;
 
   postContent;
   mainImage;
