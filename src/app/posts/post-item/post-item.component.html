@@ -5,9 +5,21 @@
       <div class="item-top">
         <div class="image"
              [defaultImage]="defaultimage"
-             [useSrcset]="true"
-             [lazyLoad]="image"
-             [offset]="offset">
+             [lazyLoad]="image_400w"
+             [offset]="offset"
+             *ngIf="image_400w && is_400w_Required">
+          <!-- <div class="image"
+             [ngStyle]="{'background-image': 'url(' + image + ')'}"
+             *ngIf="image"> -->
+        </div>
+        <div class="image"
+             [defaultImage]="defaultimage"
+             [lazyLoad]="image_980w"
+             [offset]="offset"
+             *ngIf="image_980w && !is_400w_Required">
+          <!-- <div class="image"
+        [ngStyle]="{'background-image': 'url(' + image + ')'}"
+        *ngIf="image"> -->
         </div>
         <div class="item-top--title"
              *ngIf="isMobileResolution">

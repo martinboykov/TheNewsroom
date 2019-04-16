@@ -13,7 +13,9 @@ function _window(): any {
 })
 export class WindowRef {
   private isMobileResolution: boolean;
+  private is_400w_Required: boolean;
   private isMobileResolutionUpdated = new Subject<boolean>();
+  private is_400w_RequiredUpdated = new Subject<boolean>();
   private subscribtionExists = false;
 
   deviceInfo = null;
@@ -23,6 +25,13 @@ export class WindowRef {
   }
   get isMobile() {
     if (this.nativeWindow.innerWidth <= 979) { // on firefox native.innerWidth is bugged at 980 (skips 981)
+      return true;
+    } else {
+      return false;
+    }
+  }
+  get is_400w() {
+    if (this.nativeWindow.innerWidth <= 400 || this.nativeWindow.innerWidth > 979) {
       return true;
     } else {
       return false;
@@ -43,17 +52,27 @@ export class WindowRef {
         // distinctUntilChanged(),
       )
       .subscribe((event) => {
-        if (this.isDesktopDevice) { this.simulateScroll(); } // intersectionObserver bug on resize
-        // console.log(this.nativeWindow.innerWidth);
-        // output new window width and height
+        // intersectionObserver bug on resize (on mobile cousing aside closing on scroll)
+        if (this.isDesktopDevice) { this.simulateScroll(); }
+
+        // window width
         if (this.nativeWindow.innerWidth <= 979) {
           this.isMobileResolution = true;
         } else {
           this.isMobileResolution = false;
         }
+
+        // images width and height
+        if (this.nativeWindow.innerWidth <= 400 || this.nativeWindow.innerWidth > 979) {
+          this.is_400w_Required = true;
+        } else {
+          this.is_400w_Required = false;
+        }
         this.isMobileResolutionUpdated.next(this.isMobileResolution);
+        this.is_400w_RequiredUpdated.next(this.is_400w_Required);
       });
   }
+
   scrollToTop(duration) {
     const window = this.nativeWindow;
     const scrollDuration = duration || 0;
@@ -74,6 +93,7 @@ export class WindowRef {
     }, 15);
     window.scrollTo(0, 0);
   }
+
   simulateScroll() {
     const window = this.nativeWindow;
     const scrollHeight = window.scrollY;
@@ -81,8 +101,13 @@ export class WindowRef {
     window.scrollTo(scrollwidht, (scrollHeight + 100));
     window.scrollTo(scrollwidht, (scrollHeight - 100));
   }
+
   checkIfMobileUpdateListener() { // as we set postUpdate as private
     return this.isMobileResolutionUpdated.asObservable(); // returns object to which we can listen, but we cant emit
+  }
+
+  checkIs_400w_RequiredUpdateListener() { // as we set postUpdate as private
+    return this.is_400w_RequiredUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }
 
 }

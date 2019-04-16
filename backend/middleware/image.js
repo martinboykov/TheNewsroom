@@ -24,7 +24,7 @@ const MIME_TYPE_MAP = {
   'image/jpg': 'jpg',
 };
 
-const SIZES = [100, 280, 980];
+const SIZES = [100, 400, 980];
 
 function getPublicUrl(filename) {
   return `https://storage.googleapis.com/${BUCKET_NAME}/${filename}`;

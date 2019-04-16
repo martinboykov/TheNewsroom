@@ -51,6 +51,9 @@ export class PostListComponent implements OnInit, OnDestroy {
   // scrollUpDistance = 2;
 
   // windowReference;
+  image;
+  is_400w_Required: boolean;
+  private is_400w_RequiredSubscription: Subscription;
   isMobileResolution: boolean;
   private isMobileResolutionSubscription: Subscription;
 
@@ -98,13 +101,21 @@ export class PostListComponent implements OnInit, OnDestroy {
       });
 
 
-    // detect if Moobile resolution < 979px width
+    // detect if Moobile resolution - 979px width
     this.isMobileResolution = this.windowRef.isMobile;
+    // detect if resolution for desktop or tablet above 980px width and mobile below 400px width
+    // this.is_400w_Required = this.windowRef.is_400w;
     this.windowRef.checkIfMobile();
+    // subscribe to detectection if Moobile resolution - 979px width
     this.isMobileResolutionSubscription = this.windowRef.checkIfMobileUpdateListener()
       .subscribe((isMobile) => {
         this.isMobileResolution = isMobile;
       });
+    // subscribe to detectection if desktop or tablet above 980px width and mobile below 400px width
+    // this.is_400w_RequiredSubscription = this.windowRef.checkIs_400w_RequiredUpdateListener()
+      // .subscribe((is_400w) => {
+        // this.is_400w_Required = is_400w;
+      // });
   }
 
   // SCROLLER
@@ -146,7 +157,7 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.isAsideRequired = false;
     }
     if (params.has('tag')) {
-   console.log(tag);
+      console.log(tag);
 
       url = `/tags/${tag}/posts`; // Remove ASIDE if switch to tags
       this.isAsideRequired = false;
@@ -171,5 +182,6 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.postsSubscription.unsubscribe();
     this.totalPostsSubscription.unsubscribe();
     this.isMobileResolutionSubscription.unsubscribe();
+    // this.is_400w_RequiredSubscription.unsubscribe();
   }
 }

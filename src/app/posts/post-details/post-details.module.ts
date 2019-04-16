@@ -1,3 +1,4 @@
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule , FormsModule} from '@angular/forms';
@@ -17,7 +18,8 @@ import { TimeAgoPipe } from './../../shared/time-ago.pipe';
     ReactiveFormsModule,
     FormsModule,
     PostDetailsRoutingModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    LazyLoadImageModule
   ]
 })
 export class PostDetailsModule { }

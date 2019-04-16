@@ -62,8 +62,8 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
 
   loading: boolean;
   // windowReference;
-  isMobileResolution: boolean;
-  private isMobileResolutionSubscription: Subscription;
+  is400wRequired: boolean;
+  private is400wRequiredSubscription: Subscription;
   private currentUserSubscribtion: Subscription;
   currentUser: AuthData;
 
@@ -115,9 +115,12 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
 
           this.paginator.totalItems = response.totalCommentsCount;
           this.isPaginationRequired = this.showIfPaginationRequired(this.paginator.itemsPerPage, this.paginator.totalItems);
-          this.isMobileResolution = this.windowRef.isMobile;
-          if (this.isMobileResolution) { this.mainImage = this.post.imageMainPath; }
-          if (!this.isMobileResolution) { this.mainImage = this.post.imageMainPath + '_280w'; }
+          this.is400wRequired = this.windowRef.is_400w;
+          if (this.is400wRequired) { // desktop or tablet above 980px width and mobile below 400px width
+            this.mainImage = this.post.imageMainPath + '_400w';
+          } else { // mobile between 400px and 980px width
+            this.mainImage = this.post.imageMainPath;
+          }
           // third request
           return this.postService.getRelatedPosts(this.post);
         })
@@ -125,13 +128,16 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
       .pipe(
         concatMap((data) => {
           this.relatedPosts = data || [];
-          return this.windowRef.checkIfMobileUpdateListener();
+          return this.windowRef.checkIs_400w_RequiredUpdateListener();
         })
       )
-      .subscribe((isMobile) => {
-        this.isMobileResolution = isMobile;
-        if (this.isMobileResolution) { this.mainImage = this.post.imageMainPath; }
-        if (!this.isMobileResolution) { this.mainImage = this.post.imageMainPath + '_280w'; }
+      .subscribe((is_400w) => {
+        this.is400wRequired = is_400w;
+        if (this.is400wRequired) { // desktop or tablet above 980px width and mobile below 400px width
+          this.mainImage = this.post.imageMainPath + '_400w';
+        } else { // mobile between 400px and 980px width
+          this.mainImage = this.post.imageMainPath;
+        }
       });
 
     this.windowRef.scrollToTop(0); // consistency for user expirience
@@ -244,7 +250,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   }
 
   ngOnDestroy() {
-    // this.isMobileResolutionSubscription.unsubscribe();
+    // this.is400wRequiredSubscription.unsubscribe();
     this.currentUserSubscribtion.unsubscribe();
   }
 }
