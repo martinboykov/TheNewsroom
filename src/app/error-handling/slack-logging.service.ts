@@ -37,10 +37,10 @@ export class SlackErrorLoggingService {
         }
       ]
     };
-    const options = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+    // const options = {
+    //   headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
 
-    };
+    // };
     // this.http.post(webHook, messageObj, options).subscribe((response) => {
     // console.log(response);
     // });
