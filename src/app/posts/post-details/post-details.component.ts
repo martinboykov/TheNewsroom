@@ -138,6 +138,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
         } else { // mobile between 400px and 980px width
           this.mainImage = this.post.imageMainPath;
         }
+
       });
 
     this.windowRef.scrollToTop(0); // consistency for user expirience

@@ -55,7 +55,7 @@ export class AuthService {
   private setAuthTimer(duration: number) {
     const source = timer(duration * 1000);
     source.subscribe((data) => {
-      console.log(data);
+      // console.log(data);
       this.logout();
       this.router.navigate(['auth', 'login']);
       this.notifier.showInfo('Please, login aggain!', 'Authentication time expired');

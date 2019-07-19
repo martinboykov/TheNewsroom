@@ -37,6 +37,11 @@ router.get('/:_id/comments', postController.getPostComments);
 
 router.get('/:_id/related/', postController.getRelatedPosts);
 
+router.get(
+  '/slack',
+  postController.getSlackWebHook
+);
+
 router.post('/',
   auth,
   authWriter,

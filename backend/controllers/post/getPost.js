@@ -183,8 +183,15 @@ const getRelatedPosts = async (req, res, next) => {
 };
 
 const getLatestPosts = async (req, res, next) => {
+  const dateNow = new Date();
+  const daysInPast = 30; // should be 1 day before
   const posts = await Post
-    .find({ isVisible: true })
+    .find({
+      dateCreated: {
+        $gte: new Date(dateNow.setDate(dateNow.getDate() - daysInPast)),
+      },
+      isVisible: true,
+    })
     .limit(6)
     .sort({ 'dateCreated': -1 })
     .select(
@@ -262,6 +269,14 @@ const getComentedPosts = async (req, res, next) => {
   });
 };
 
+/* eslint-disable no-process-env*/
+const getSlackWebHook = async (req, res, next) => {
+  return res.status(200).json({
+    message: 'Slack WebHook recieved',
+    data: process.env.SLACK_WEBHOOK,
+  });
+};
+
 module.exports = {
   getPosts,
   getPostsTotalCount,
@@ -273,4 +288,5 @@ module.exports = {
   getLatestPosts,
   getPopularPosts,
   getComentedPosts,
+  getSlackWebHook,
 };
