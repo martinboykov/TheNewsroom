@@ -233,6 +233,9 @@ const getComentedPosts = async (req, res, next) => {
         'dateCreated': {
           $gte: new Date(dateNow.setDate(dateNow.getDate() - daysInPast)),
         },
+        'comments': {
+          $exists: true, $not: { $size: 0 },
+        },
         isVisible: true,
       },
     },
@@ -247,6 +250,7 @@ const getComentedPosts = async (req, res, next) => {
     {
       $limit: 6,
     },
+
     {
       $project: {
         _id: 1,

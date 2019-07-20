@@ -28,14 +28,18 @@ twrkhanasparukh@cloudshell:~ (thenewsroom-mean-app)$  mkdir thenewsroom-angular-
 
 - Now you need to sync your data from your bucket into this directory. Use the following command for that:
 gsutil rsync -r gs://angular-app-bucket ./angular-app-gcp
+
+For my case:
+1.go to folder "thenewsroom-angular-app-gcp" -> cd thenewsroom-angular-app-gcp
+2. syncronise the data between the bucket and folder:
 twrkhanasparukh@cloudshell:~ (thenewsroom-mean-app)$ gsutil rsync -r gs://thenewsroom-angular-app-bucket ./thenewsroom-angular-app-gcp
 
-- You’re almost done. Now simply deploy your application using the following command:
+- Youï¿½re almost done. Now simply deploy your application using the following command:
 twrkhanasparukh@cloudshell:~/thenewsroom-angular-app-gcp (thenewsroom-mean-app)$ gcloud app deploy
 
-- You will be asked for the zone/region where you’d like the App Engine to host your application. Select any zone.
+- You will be asked for the zone/region where youï¿½d like the App Engine to host your application. Select any zone.
 
-- After that, it will take a couple of minutes to deploy your application and will give you link where you can access it. 
+- After that, it will take a couple of minutes to deploy your application and will give you link where you can access it.
 
 
 
