@@ -180,6 +180,7 @@
     &__items--mobile {
       background-color: rgba(0, 0, 0, 0.75);
       // display: none;
+      z-index: 999;
       overflow: hidden;
       position: relative;
       width: 100%;

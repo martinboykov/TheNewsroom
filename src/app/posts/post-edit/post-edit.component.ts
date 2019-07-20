@@ -28,6 +28,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   subcategories: any[] = [];
   categoryselected;
   contentTextOnly = '';
+  longWords = [];
   tagsArray: Observable<any[]>;
   loading: boolean;
   loadingPosts = false;
@@ -66,6 +67,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
         Validators.maxLength(200)]),
       content: new FormControl(null, [
         Validators.required,
+        this.contentValidatorWordLengthMax.bind(this),
         this.contentValidatorLengthMin.bind(this),
         this.contentValidatorLengthMax.bind(this)]),
       category: new FormControl(null, [
@@ -204,6 +206,15 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   get contentErrorRequired() {
     if (this.content.errors) {
       if (this.content.errors.required) {
+        return true;
+      }
+    } else {
+      return null;
+    }
+  }
+  get contentErrorWordLength() {
+    if (this.content.errors) {
+      if (this.content.errors.wordLengthError) {
         return true;
       }
     } else {
@@ -461,6 +472,21 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     if (letter.term.length > 1) {
       this.searchedTag = letter.term;
     }
+  }
+
+  // content word length must be less than 28 chars ()
+  public contentValidatorWordLengthMax(control: AbstractControl): { [key: string]: boolean } {
+    let wordLengthErrorIndicator = false;
+    let text = control.value || '';
+    const regex = /(<([^>]+)>)/ig;
+    text = text.replace(regex, ' ').split(' ');
+    if (text.some((word) => word.length > 28)) {
+      this.longWords = text.filter((word) => word.length > 28);
+      wordLengthErrorIndicator = true;
+    } else {
+      this.longWords = [];
+    }
+    return wordLengthErrorIndicator ? { wordLengthError: true } : null;
   }
 
   // content length must be between 200 and 100000
