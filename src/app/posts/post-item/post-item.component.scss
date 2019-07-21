@@ -162,12 +162,11 @@
             z-index: 1;
             height: 34px;
             display: block;
-            max-width: 95vw;
+            max-width: 85vw;
             white-space: nowrap;
             transform: skewX(-20deg);
             background-color: $black;
             margin-left: 6px;
-            margin-right: 6px;
             h2 {
               overflow: hidden;
               text-overflow: ellipsis;
