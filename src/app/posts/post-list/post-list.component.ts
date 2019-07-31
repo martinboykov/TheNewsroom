@@ -53,7 +53,6 @@ export class PostListComponent implements OnInit, OnDestroy {
   // windowReference;
   image;
   is_400w_Required: boolean;
-  private is_400w_RequiredSubscription: Subscription;
   isMobileResolution: boolean;
   private isMobileResolutionSubscription: Subscription;
 
@@ -100,22 +99,14 @@ export class PostListComponent implements OnInit, OnDestroy {
         this.isPaginationRequired = this.showIfPaginationRequired(this.paginator.itemsPerPage, totalCount);
       });
 
-
-    // detect if Moobile resolution - 979px width
-    this.isMobileResolution = this.windowRef.isMobile;
     // detect if resolution for desktop or tablet above 980px width and mobile below 400px width
-    // this.is_400w_Required = this.windowRef.is_400w;
+    this.isMobileResolution = this.windowRef.isMobile;
     this.windowRef.checkIfMobile();
-    // subscribe to detectection if Moobile resolution - 979px width
     this.isMobileResolutionSubscription = this.windowRef.checkIfMobileUpdateListener()
       .subscribe((isMobile) => {
         this.isMobileResolution = isMobile;
       });
-    // subscribe to detectection if desktop or tablet above 980px width and mobile below 400px width
-    // this.is_400w_RequiredSubscription = this.windowRef.checkIs_400w_RequiredUpdateListener()
-      // .subscribe((is_400w) => {
-        // this.is_400w_Required = is_400w;
-      // });
+
   }
 
   // SCROLLER
@@ -145,6 +136,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.windowRef.scrollToTop(1); // scrollToTop feels better
   }
 
+  // helper function
   getUrl(params) {
 
     let url = '/posts';
@@ -182,6 +174,5 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.postsSubscription.unsubscribe();
     this.totalPostsSubscription.unsubscribe();
     this.isMobileResolutionSubscription.unsubscribe();
-    // this.is_400w_RequiredSubscription.unsubscribe();
   }
 }

@@ -3,7 +3,7 @@
     <div class="top">
       <aside class="aside">
         <section class="image-section">
-          <div class="image"
+          <picture class="image"
                [defaultImage]="defaultimage"
                [lazyLoad]="mainImage"
                [offset]="offset"
@@ -12,7 +12,7 @@
                [ngStyle]="{'background-image': 'url(' + mainImage + ')'}"
                *ngIf="mainImage"> -->
             <!-- https://stackoverflow.com/questions/41372332/get-http-localhost4200-null-404-not-found-in-angular2-with-angular-cli -->
-          </div>
+          </picture>
           <div class="image-section__category text-center">
             <h2 class="image-section__category--name white">{{post?.category.name}}</h2>
           </div>

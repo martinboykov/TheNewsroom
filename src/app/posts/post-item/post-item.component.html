@@ -3,7 +3,7 @@
      class="link">
     <article class="item">
       <div class="item-top">
-        <div class="image"
+        <picture class="image"
              [defaultImage]="defaultimage"
              [lazyLoad]="image_400w"
              [offset]="offset"
@@ -11,8 +11,8 @@
           <!-- <div class="image"
              [ngStyle]="{'background-image': 'url(' + image + ')'}"
              *ngIf="image"> -->
-        </div>
-        <div class="image"
+        </picture>
+        <picture class="image"
              [defaultImage]="defaultimage"
              [lazyLoad]="image_980w"
              [offset]="offset"
@@ -20,7 +20,7 @@
           <!-- <div class="image"
         [ngStyle]="{'background-image': 'url(' + image + ')'}"
         *ngIf="image"> -->
-        </div>
+        </picture>
         <div class="item-top--title"
              *ngIf="isMobileResolution">
           <h2 class="title ">{{post?.title}}</h2>

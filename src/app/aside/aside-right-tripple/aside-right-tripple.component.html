@@ -25,10 +25,10 @@
          *ngFor="let latestPost of latestPosts">
       <a class="latest-post__link"
          (click)="onPostSelected(latestPost)">
-        <div class="latest-post__image"
+        <picture class="latest-post__image"
              [lazyLoad]="latestPost?.imageMainPath + '_100w'"
              [offset]="offset">
-        </div>
+        </picture>
         <!-- [lazyLoad]=`resized-51_${latestPost.imageMainPath}` -->
         <!-- [ngStyle]="{'background-image': 'url(' + latestPost.imageMainPath + ')'}" -->
         <div class="latest-post__additional-info">
@@ -51,10 +51,10 @@
          *ngFor="let popularPost of popularPosts">
       <a class="popular-post__link"
          (click)="onPostSelected(popularPost)">
-        <div class="popular-post__image"
+        <picture class="popular-post__image"
              [lazyLoad]="popularPost?.imageMainPath + '_100w'"
              [offset]="offset">
-        </div>
+        </picture>
         <!-- [ngStyle]="{'background-image': 'url(' + popularPost.imageMainPath + ')'}"> -->
         <div class="popular-post__additional-info">
           <div class="additional-info__title">
@@ -76,10 +76,10 @@
          *ngFor="let commentedPost of commentedPosts">
       <a class="commented-post__link"
          (click)="onPostSelected(commentedPost)">
-        <div class="commented-post__image"
+        <picture class="commented-post__image"
              [lazyLoad]="commentedPost?.imageMainPath + '_100w'"
              [offset]="offset">
-        </div>
+        </picture>
         <!-- [ngStyle]="{'background-image': 'url(' + commentedPost.imageMainPath + ')'}"> -->
         <div class="commented-post__additional-info">
           <div class="additional-info__title">
