@@ -9,6 +9,7 @@ import { Subcategory } from '../subcategory.model';
 import { PostService } from 'src/app/posts/post.service';
 import { timer } from 'rxjs';
 import { NotificationService } from 'src/app/shared/notification.service';
+import { isDevMode } from '@angular/core';
 
 @Component({
   selector: 'app-subcategory-edit',
@@ -17,6 +18,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 })
 export class SubcategoryEditComponent implements OnInit {
   mode: string;
+  devMode: boolean;
   subcategoryForm: FormGroup;
   subcategory: Subcategory;
   categoryName: string;
@@ -42,6 +44,7 @@ export class SubcategoryEditComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.devMode = isDevMode();
     this.subcategoryForm = new FormGroup({
       name: new FormControl('', [
         Validators.required,
@@ -54,17 +57,11 @@ export class SubcategoryEditComponent implements OnInit {
     });
     this.subcategoryName = this.route.snapshot.params.subcategoryName;
     this.categoryName = this.route.snapshot.params.categoryName;
-    // console.log(this.categoryName);
-
     if (this.subcategoryName) {
-      // console.log(this.subcategoryName);
       this.mode = 'update';
       this.subcategoryService.getSubcategory(this.subcategoryName)
         .subscribe((response) => {
-
           this.subcategory = response.data;
-          // console.log(this.subcategory);
-
           this.subcategoryForm.controls.name.setValue(this.subcategory.name);
           this.subcategoryForm.controls.order.setValue(this.subcategory.order);
           this.subcategoryForm.controls.isVisible.setValue(this.subcategory.isVisible);
@@ -72,8 +69,6 @@ export class SubcategoryEditComponent implements OnInit {
       this.subcategoryService.getSubcategoryPostsTotalCount(this.subcategoryName)
         .subscribe((response) => {
           this.subcategoryPostsTotalCount = response.data;
-          // console.log(this.subcategoryPostsTotalCount);
-
         });
     } else {
       this.mode = 'create';
@@ -85,7 +80,6 @@ export class SubcategoryEditComponent implements OnInit {
   get nameErrorRequired() {
     // const activated = this.username.errors.required;
     if (this.name.errors) {
-      // console.log(this.title.errors);
       if (this.name.errors.required) {
         return true;
       }
@@ -153,11 +147,9 @@ export class SubcategoryEditComponent implements OnInit {
       subcategory.categoryName = this.categoryName;
     }
     if (order) { subcategory.order = order; }
-    // console.log(subcategory);
     this.loading = true;
     this.subcategoryService.editSubcategory(subcategory, options)
       .subscribe((response) => {
-        // console.log(response);
         this.categoryService.getCategories();
         this.postService.getlatestPosts();
         this.postService.getPopularPosts();
@@ -175,7 +167,6 @@ export class SubcategoryEditComponent implements OnInit {
       .subscribe((response) => {
         this.subcategoryPosts = response.data.posts;
         this.loadedPosts = true;
-        // console.log(this.subcategoryPosts);
 
       });
   }

@@ -128,9 +128,5 @@
         display: block !important; }
       @else {
         display: block; } } }
-// @mixin global-reset {
-//     * {
-//         margin: 0;
-//         padding: 0;
-//     }
-// }
+
+@include global-reset();
