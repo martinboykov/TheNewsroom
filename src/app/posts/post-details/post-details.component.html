@@ -31,7 +31,8 @@
                 *ngFor="let tag of post?.tags">
               <a title={{tag?.name}}
                  class="tags-section__item--link"
-                 (click)="onTagClick(tag?.name)">
+                 (click)="onTagClick(tag?.name)"
+                 (click)="scrollToTop()">
                 {{tag?.name}}
               </a>
             </li>
@@ -100,7 +101,8 @@
             <li class="related-posts-section__item"
                 *ngFor="let relatedPost of relatedPosts">
               <a class="related-posts-section__item--link"
-                 (click)="onRelatedPostSelected(relatedPost)">
+                 (click)="onRelatedPostSelected(relatedPost)"
+                 (click)="scrollToTop()">
                 <span class="link-text">
                   {{ relatedPost?.title}}
                 </span>
@@ -128,7 +130,8 @@
             <li class="related-posts-section__item"
                 *ngFor="let relatedPost of relatedPosts">
               <a class="related-posts-section__item--link"
-                 (click)="onRelatedPostSelected(relatedPost)">
+                 (click)="onRelatedPostSelected(relatedPost)"
+                 (click)="scrollToTop()">
                 <span class="link-text">
                   {{ relatedPost?.title}}
                 </span>
