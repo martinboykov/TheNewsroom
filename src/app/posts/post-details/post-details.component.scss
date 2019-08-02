@@ -35,21 +35,32 @@
             grid-template-rows: 43px 48px;
             align-items: start;
             justify-items: end;
-            min-height: 180px;
+            height: 180px;
             min-width: 180px;
             margin-bottom: 25px;
-            box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 1) inset;
+            // box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 1) inset;
             border: 5px solid #efefef;
             .image {
-              z-index: 0;
               grid-column: 1/2;
               grid-row: 1/4;
-              width: 100%;
+              max-height: 45vw;
               height: 100%;
-              background-size: cover;
-              background-position: center top;
+              // width: 100%;
+              object-fit: cover;
+              object-position: center top;
+              z-index: 0;
               animation: fadein 0.4s;
             }
+            // .image {
+            //   z-index: 0;
+            //   grid-column: 1/2;
+            //   grid-row: 1/4;
+            //   width: 100%;
+            //   height: 100%;
+            //   background-size: cover;
+            //   background-position: center top;
+            //   animation: fadein 0.4s;
+            // }
             &__category {
               z-index: 1;
               grid-column: 1/2;
@@ -573,20 +584,32 @@
             grid-template-rows: 43px 48px;
             align-items: start;
             justify-items: end;
-            min-height: 45vw;
-            min-width: 180px;
+            // max-width: 100%;
+            // min-width: 180px;
+            min-height: 180px;
             margin-bottom: 0px;
-            box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 1) inset;
-            // border: 5px solid #efefef;
+            // box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 1) inset;
+            z-index: 1;
             .image {
               grid-column: 1/2;
               grid-row: 1/4;
+              max-height: 45vw;
               width: 100%;
-              height: 100%;
+              // for background image
+              // width: 100%;
+              // height: 100%;
+              // background-size: cover;
+              // background-position: center top;
+              object-fit: cover;
+              object-position: center top;
               z-index: 0;
-              background-size: cover;
-              background-position: center top;
               animation: fadein 0.4s;
+            }
+            @media (max-width: 400px) {
+              // change in the image resolution causes image high to skip in chrome
+              .image {
+                min-height: 100%;
+              }
             }
             &__category {
               z-index: 1;
@@ -755,6 +778,14 @@
               text-overflow: ellipsis;
               padding-left: 10px;
               border-left: 5px solid $red;
+            }
+            @supports (-ms-ime-align: auto) {
+              /* Edge 12+ CSS */
+              // TODO: cant figure what causes the difference in title between shrift sizes in Edge and rest => applied fix, so they look alike allround
+              .related-posts-section__title {
+                font-size: 12px;
+                font-family: $font-default;
+              }
             }
             .related-posts-section__list {
               margin: 10px;

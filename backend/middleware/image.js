@@ -71,6 +71,7 @@ function uploadAllSizes(size, originalName, timestamp, reqFile, next) {
     const stream = file.createWriteStream({
       metadata: {
         contentType: reqFile.mimetype,
+        cacheControl: 'public, max-age=864000', // 10 days
       },
       resumable: false,
     });

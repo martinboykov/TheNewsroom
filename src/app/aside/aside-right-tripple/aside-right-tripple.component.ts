@@ -30,7 +30,7 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
   public isAsideRequired: boolean;
 
   offset = 100;
-  // defaultimage = '/assets/images/main/posts/item/pixelation_51w.jpg';
+  defaultimage = '/assets/images/main/posts/item/pixelation.jpg';
   constructor(
     private postService: PostService,
     private helper: HelperService,
