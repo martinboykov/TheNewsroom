@@ -88,7 +88,8 @@
   </div>
 
   <div class="dev-check"
-       style="max-width: 500px;overflow-wrap: break-word;">
+       style="max-width: 500px;overflow-wrap: break-word;"
+       *ngIf="devMode">
     <p>Form Status: {{ subcategoryForm.status }}</p>
     <p>Form Values: {{ subcategoryForm.value | json}}</p>
     <p>Errors:</p>

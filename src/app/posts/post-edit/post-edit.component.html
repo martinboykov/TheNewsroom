@@ -167,10 +167,19 @@
         </div>
       </div>
     </button>
-  </form>
 
-  <!-- <div class="dev-check"
-       style="max-width: 500px;overflow-wrap: break-word;">
+  </form>
+  <button class="form__submit-button"
+          type="button"
+          *ngIf="devMode"
+          (click)="addMockPosts()"
+          style="margin-right:10px;">
+    Add Mock Posts ({{mockPostCount}})
+  </button>
+
+  <div class="dev-check"
+       style="max-width: 500px;overflow-wrap: break-word;"
+       *ngIf="devMode">
     <p>Form Status: {{ postForm.status }}</p>
     <p>Form Values: {{ postForm.value | json}}</p>
     <p>Errors:</p>
@@ -194,5 +203,5 @@
         <p>Tags Errors: {{ tags.errors | json}}</p>
       </li>
     </ul>
-  </div> -->
+  </div>
 </div>

@@ -72,8 +72,8 @@ $types: latest, popular, commented;
             // background-position: center top;
             object-fit: cover;
             object-position: center top;
-            animation: fadein 0.3s;
-            transition: background-image 0.3s ease-out;
+            // animation: fadein 0.5s;
+            // transition: background-image 0.5s ease-out;
           }
           .#{$type}-post__additional-info {
             font-size: 11px;
@@ -132,19 +132,21 @@ $types: latest, popular, commented;
     margin: 0 5px 20px 15px;
     @include gradient-border(false, true, 10px);
     .type-selector {
+      // background: white;
       @each $type in $types {
         .#{$type} {
+          // background: #e7e7e7;
           cursor: pointer;
           .#{$type}__heading {
           }
         }
         .#{$type}.active {
+          // background: white;
           .#{$type}__heading {
           }
         }
         .#{$type}:active {
-          // background: #e7e7e7;
-
+          // background: white;
           .#{$type}__heading {
             // color: lighten(saturate($red, 100%), 20%);
           }
@@ -160,6 +162,7 @@ $types: latest, popular, commented;
     @each $type in $types {
       .#{$type}-posts {
         display: none;
+        // background: white;
         .#{$type}-post {
           .#{$type}-post__link {
             // transition: all 0.3s, transform 0.3s;
