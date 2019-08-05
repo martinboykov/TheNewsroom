@@ -15,6 +15,5 @@ export class AppComponent implements OnInit {
     // if slack is used for logging errors from users => get slack webhook
     this.slackErrorLoggingService.getSlackWebHook();
   }
-
-
 }
+// v1.0
