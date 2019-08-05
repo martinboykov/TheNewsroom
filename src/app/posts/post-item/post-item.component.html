@@ -15,19 +15,6 @@
              [offset]="offset"
              [alt]="post?.title"
              *ngIf="image_980w && !is_400w_Required">
-        <!-- <picture class="image"
-             [defaultImage]="defaultimage"
-             [lazyLoad]="image_400w"
-             [offset]="offset"
-             [title]="post?.title"
-             *ngIf="image_400w && is_400w_Required">
-        </picture>
-        <picture class="image"
-             [defaultImage]="defaultimage"
-             [lazyLoad]="image_980w"
-             [offset]="offset"
-             *ngIf="image_980w && !is_400w_Required">
-        </picture> -->
         <div class="item-top--title"
              *ngIf="isMobileResolution">
           <h2 class="title ">{{post?.title}}</h2>
@@ -46,7 +33,7 @@
            *ngIf="!isMobileResolution">
         <div class="item-bottom__upper">
           <h1 class="item-bottom__upper--title red">{{post?.title}}</h1>
-          <h3 class="item-bottom__upper--author black">posted by {{post?.author?.name}}</h3>
+          <!-- <h3 class="item-bottom__upper--author black">posted by {{post?.author?.name}}</h3> -->
         </div>
         <div class="item-bottom__lower">
           <div class="item-bottom__lower--text"

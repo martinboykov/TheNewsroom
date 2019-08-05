@@ -21,7 +21,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   // Posts
   url: string;
-  posts: Post[]; // strict Post model !?!
+  posts: Post[];
   private postsSubscription: Subscription;
   private totalPostsSubscription: Subscription;
 
