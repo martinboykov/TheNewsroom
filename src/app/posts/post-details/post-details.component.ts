@@ -6,7 +6,7 @@ import { WindowRef } from './../../shared/winref.service';
 import { Post } from './../post.model';
 import { Comment } from './../comment.model';
 import { PostService } from './../post.service';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router  } from '@angular/router';
 import { HeaderService } from './../../header/header.service';
 import { Component, OnInit, OnDestroy, AfterViewChecked, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -197,7 +197,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     const user = this.authService.getUser();
     if (!user) {
       this.notifier.showInfo('Must login first', 'Unauthenticated attempt');
-      return this.router.navigateByUrl('/auth/login');
+      return this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
     }
     if (user.roles.isReader === false) {
       this.notifier.showInfo(

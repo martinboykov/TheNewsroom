@@ -31,7 +31,6 @@ export class AuthGuard implements CanActivate {
             if (currentUser.roles.isAdmin === true) { this.isAuthorized = true; }
             break;
           case Role.Writer:
-
             if (currentUser.roles.isWriter === true) { this.isAuthorized = true; }
             break;
           case Role.Reader:
