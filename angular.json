@@ -37,7 +37,7 @@
               ]
             },
             "scripts": [
-              "node_modules/jodit/build/jodit.min.js"
+
             ]
           },
           "configurations": {
