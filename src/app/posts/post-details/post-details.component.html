@@ -3,16 +3,19 @@
     <div class="top">
       <aside class="aside">
         <section class="image-section">
-          <div class="image"
+          <img class="image"
                [defaultImage]="defaultimage"
                [lazyLoad]="mainImage"
                [offset]="offset"
-               *ngIf="mainImage">
-            <!-- <div class="image"
-               [ngStyle]="{'background-image': 'url(' + mainImage + ')'}"
-               *ngIf="mainImage"> -->
-            <!-- https://stackoverflow.com/questions/41372332/get-http-localhost4200-null-404-not-found-in-angular2-with-angular-cli -->
-          </div>
+               *ngIf="mainImage"
+               [alt]="post?.title">
+          <!-- <picture class="image"
+               [defaultImage]="defaultimage"
+               [lazyLoad]="mainImage"
+               [offset]="offset"
+               *ngIf="mainImage"
+               [title]="post?.title">
+          </picture> -->
           <div class="image-section__category text-center">
             <h2 class="image-section__category--name white">{{post?.category.name}}</h2>
           </div>
@@ -31,7 +34,8 @@
                 *ngFor="let tag of post?.tags">
               <a title={{tag?.name}}
                  class="tags-section__item--link"
-                 (click)="onTagClick(tag?.name)">
+                 (click)="onTagClick(tag?.name)"
+                 (click)="scrollToTop()">
                 {{tag?.name}}
               </a>
             </li>
@@ -100,7 +104,8 @@
             <li class="related-posts-section__item"
                 *ngFor="let relatedPost of relatedPosts">
               <a class="related-posts-section__item--link"
-                 (click)="onRelatedPostSelected(relatedPost)">
+                 (click)="onRelatedPostSelected(relatedPost)"
+                 (click)="scrollToTop()">
                 <span class="link-text">
                   {{ relatedPost?.title}}
                 </span>
@@ -128,7 +133,8 @@
             <li class="related-posts-section__item"
                 *ngFor="let relatedPost of relatedPosts">
               <a class="related-posts-section__item--link"
-                 (click)="onRelatedPostSelected(relatedPost)">
+                 (click)="onRelatedPostSelected(relatedPost)"
+                 (click)="scrollToTop()">
                 <span class="link-text">
                   {{ relatedPost?.title}}
                 </span>

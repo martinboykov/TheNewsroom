@@ -9,28 +9,25 @@
         height: 100%;
         padding: 3px 3px 0 3px;
         background-color: white;
-        // border-bottom: 10px solid transparent;
-        // // border-image: url("/assets/images/main/posts/item/border.png") 0 0 33.333% 0 round;
-        // border-image: url("/assets/images/main/posts/item/border.png") round;
-        // border-image-slice: 30%;
         @include gradient-border(false, true, 10px);
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 180px 1fr;
+        grid-template-rows: 240px 1fr;
         &-top {
           display: grid;
           grid-template-columns: 1fr;
           grid-template-rows: 43px 48px;
           align-items: start;
           justify-items: end;
+
           .image {
             grid-column: 1/2;
             grid-row: 1/4;
             z-index: 0;
-            background-size: cover;
-            background-position: center top;
+            height: 240px;
             width: 100%;
-            height: 100%;
+            object-fit: cover;
+            object-position: center top;
             animation: fadein 0.4s;
             box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 1) inset;
             // transition: background-image 0.4s ease-out;
@@ -39,7 +36,7 @@
             grid-column: 1/2;
             grid-row: 1/2;
             z-index: 1;
-            max-width: calc(230px - 10px);
+            max-width: 220px;
             height: 34px;
             background-color: $red;
             h2 {
@@ -73,7 +70,7 @@
         &-bottom {
           display: grid;
           grid-template-columns: 1fr;
-          grid-template-rows: 75px 92px;
+          grid-template-rows: 35px 72px;
           &__upper {
             grid-column: 1/2;
             grid-row: 1/2;
@@ -86,6 +83,7 @@
             white-space: nowrap;
             &--title {
               overflow: hidden;
+              font-size: 20px;
               text-overflow: ellipsis;
               display: block;
               width: calc(100% - 30px);
@@ -100,7 +98,7 @@
             }
           }
           &__lower {
-            margin: 15px 0px;
+            margin: 6px 0px 6px 0;
             grid-column: 1/2;
             grid-row: 2/3;
             display: flex;
@@ -114,6 +112,7 @@
               text-overflow: ellipsis;
               width: calc(100% - 30px);
               align-self: center;
+              line-height: 1.2;
             }
           }
         }
@@ -142,17 +141,29 @@
           grid-template-rows: 43px 48px 42px;
           align-items: start;
           justify-items: end;
+          height: 100%;
           .image {
             grid-column: 1/2;
             grid-row: 1/5;
             z-index: 0;
-            background-size: cover;
-            background-position: center top;
+            max-height: 45vw;
             width: 100%;
-            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            // for background image
+            //   background-size: cover;
+            //   background-position: center top;
+            //   width: 100%;
+            //   height: 100%;
             animation: fadein 0.4s;
             box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 1) inset;
             // transition: background-image 0.3s ease-out;
+          }
+          @media (max-width: 400px) {
+            // change in the image resolution
+            .image {
+              min-height: 100%;
+            }
           }
           &--title {
             grid-column: 1/2;
@@ -162,12 +173,11 @@
             z-index: 1;
             height: 34px;
             display: block;
-            max-width: 95vw;
+            max-width: 85vw;
             white-space: nowrap;
             transform: skewX(-20deg);
             background-color: $black;
             margin-left: 6px;
-            margin-right: 6px;
             h2 {
               overflow: hidden;
               text-overflow: ellipsis;

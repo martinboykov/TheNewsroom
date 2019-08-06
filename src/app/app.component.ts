@@ -16,4 +16,4 @@ export class AppComponent implements OnInit {
     this.slackErrorLoggingService.getSlackWebHook();
   }
 }
-// v1.0
+// v1.1

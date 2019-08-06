@@ -180,10 +180,11 @@
     &__items--mobile {
       background-color: rgba(0, 0, 0, 0.75);
       // display: none;
+      z-index: 999;
       overflow: hidden;
       position: relative;
       width: 100%;
-      margin-top: 25px;
+      margin-top: 23px;
       opacity: 0;
       transition-property: all;
       transition-duration: 0.3s;

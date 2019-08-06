@@ -1,3 +1,4 @@
+import { HelperService } from './../../shared/helper.service';
 import { CategoryService } from './../../admin/category.service';
 // import { HeaderService } from './../../header/header.service';
 import { ActivatedRoute, } from '@angular/router';
@@ -10,6 +11,8 @@ import { Subscription, timer, Subject, Observable, concat, of, from } from 'rxjs
 import { tap, delay, concatMap, debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 import { WindowRef } from 'src/app/shared/winref.service';
+import { isDevMode } from '@angular/core';
+
 
 @Component({
   selector: 'app-post-edit',
@@ -19,6 +22,8 @@ import { WindowRef } from 'src/app/shared/winref.service';
 export class PostEditComponent implements OnInit, AfterViewInit, AfterContentInit, OnDestroy {
   @ViewChild('jodit') jodit;
   @ViewChild('selectTags') selectTags;
+  devMode: boolean;
+  mockPostCount = 20;
   mode;
   postId: string;
   postForm: FormGroup;
@@ -28,6 +33,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   subcategories: any[] = [];
   categoryselected;
   contentTextOnly = '';
+  longWords = [];
   tagsArray: Observable<any[]>;
   loading: boolean;
   loadingPosts = false;
@@ -45,7 +51,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
   constructor(
     private postService: PostService,
-    // private headerService: HeaderService,
     private categoryService: CategoryService,
     public route: ActivatedRoute,
     private renderer: Renderer2,
@@ -53,6 +58,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   ) { }
 
   ngOnInit() {
+    this.devMode = isDevMode();
     // throw new Error('My Pretty Error'); // for teting
     this.isIEOrEdge = /msie\s|trident\/|edge\//i.test(this.windowRef.nativeWindow.navigator.userAgent);
     this.postForm = new FormGroup({
@@ -66,6 +72,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
         Validators.maxLength(200)]),
       content: new FormControl(null, [
         Validators.required,
+        this.contentValidatorWordLengthMax.bind(this),
         this.contentValidatorLengthMin.bind(this),
         this.contentValidatorLengthMax.bind(this)]),
       category: new FormControl(null, [
@@ -139,25 +146,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
         });
 
 
-      // mongodb fake posts loading
-      // -------------------------
 
-      // this.addPosts({category: 'bulgaria', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553721504042_bulgaria.jpeg'});
-
-      // this.addPosts({ category: 'world', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553721664677_world.jpeg' });
-
-      // this.addPosts({ category: 'sport', subcategory: 'football', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553722305554_lionel-messi.jpeg' });
-      // this.addPosts({ category: 'sport', subcategory: 'basketball', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553720010256_nba1920x1080.jpeg' });
-      // this.addPosts({ category: 'sport', subcategory: 'tennis', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553721196375_tennis.jpeg' });
-
-      // this.addPosts({ category: 'entertainment', subcategory: 'movies', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553719797744_thematrix1999.jpeg' });
-      // this.addPosts({ category: 'entertainment', subcategory: 'music', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553722473731_u2.jpeg' });
-      // this.addPosts({ category: 'entertainment', subcategory: 'tv', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553722732688_truedetective.jpeg' });
-
-      // this.addPosts({ category: 'technology', subcategory: 'smartphones', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553723207397_smartphone.jpeg' });
-      // this.addPosts({ category: 'technology', subcategory: 'cars', imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1553722877470_tesla.jpeg' });
-
-      // -------------------------
     }
 
 
@@ -204,6 +193,15 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   get contentErrorRequired() {
     if (this.content.errors) {
       if (this.content.errors.required) {
+        return true;
+      }
+    } else {
+      return null;
+    }
+  }
+  get contentErrorWordLength() {
+    if (this.content.errors) {
+      if (this.content.errors.wordLengthError) {
         return true;
       }
     } else {
@@ -463,6 +461,21 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     }
   }
 
+  // content word length must be less than 28 chars ()
+  public contentValidatorWordLengthMax(control: AbstractControl): { [key: string]: boolean } {
+    let wordLengthErrorIndicator = false;
+    let text = control.value || '';
+    const regex = /(<([^>]+)>)/ig;
+    text = text.replace(regex, ' ').split(' ');
+    if (text.some((word) => word.length > 28)) {
+      this.longWords = text.filter((word) => word.length > 28);
+      wordLengthErrorIndicator = true;
+    } else {
+      this.longWords = [];
+    }
+    return wordLengthErrorIndicator ? { wordLengthError: true } : null;
+  }
+
   // content length must be between 200 and 100000
   public contentValidatorLengthMin(control: AbstractControl): { [key: string]: boolean } {
     let lengthErrorIndicator = false;
@@ -563,42 +576,9 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     };
   }
 
-  // fake suvice
-  // private addPosts(options) {
-  //   const fakePostsCount = 6;
-  //   let counter = 5;
-  //   let post;
-  //   const category = options.category;
-  //   const subcategory = options.subcategory;
-  //   const imageUrl = options.imageUrl;
-  //   if (subcategory) {
-  //     while (counter < fakePostsCount) {
-  //       post = {
-  //         title: `Fake ${subcategory} title ${counter} is above 10 characters`,
-  //         content: `Fake ${subcategory} content ${counter}  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
-  //         category: category,
-  //         subcategory: subcategory,
-  //         tags: [`${subcategory} ${counter}`],
-  //         image: imageUrl,
-  //       };
-  //       this.postService.editPost(post, this.mode);
-  //       counter += 1;
-  //     }
-  //   } else {
-  //     while (counter < fakePostsCount) {
-  //       post = {
-  //         title: `Fake ${category} title ${counter} is above 10 characters`,
-  //         content: `Fake ${category} content ${counter}  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content Fake content  Fake content   Fake content  Fake content  Fake content   Fake content   Fake content  Fake content   Fake content  Fake content  Fake content   Fake content`,
-  //         category: category,
-  //         tags: [`${category} ${counter}`],
-  //         image: imageUrl,
-  //       };
-  //       this.postService.editPost(post, this.mode);
-  //       counter += 1;
-  //     }
-  //   }
-
-  // }
+  addMockPosts() {
+    this.postService.addMockPosts(this.mockPostCount);
+  }
 
 
   ngOnDestroy() {

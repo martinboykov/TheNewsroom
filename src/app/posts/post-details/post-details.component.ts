@@ -234,6 +234,9 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   scrollToAnkor(element) {
     this.scrollService.scrollTo(element, 1, 0);
   }
+  scrollToTop() {
+    this.windowRef.scrollToTop(1); // scrollToTop feels better
+  }
 
   showIfPaginationRequired(postsPerPage, totalPostsCount) {
     if (postsPerPage >= totalPostsCount) {

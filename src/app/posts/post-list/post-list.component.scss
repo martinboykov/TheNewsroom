@@ -9,7 +9,7 @@
     grid-column: 1/2;
     grid-row: 1/2;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     grid-template-rows: repeat(auto-fill, 360px);
     grid-gap: 20px;
     app-post-item {
@@ -59,15 +59,17 @@
       div {
         min-width: 30px;
         height: 100%;
+        margin: 0 4px;
         display: flex;
         flex-flow: column nowrap;
         justify-content: center;
         align-content: center;
         .pagination-current--link,
         .pagination-current--span {
-          display: block;
-          justify-self: center;
-          align-self: center;
+          display: flex;
+          justify-content: center;
+          align-content: center;
+          min-width: 20px;
         }
         .pagination-current--span {
           color: $gold;
@@ -94,7 +96,7 @@
         }
         &:active {
           color: $gold;
-          transform: scale(0.8,0.8)
+          // transform: scale(0.8,0.8)
         }
       }
     }
@@ -105,7 +107,7 @@
           color: $gold;
         }
         &:active {
-          transform: scale(0.8,0.8)
+          // transform: scale(0.8,0.8)
         }
       }
       &--span {

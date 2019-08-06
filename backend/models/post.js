@@ -123,7 +123,7 @@ function validatePost(post) {
       .required(),
     subcategoryName: Joi
       .string()
-      .min(0)
+      .min(1)
       .max(200),
     tags: [Joi.array()
       .max(10)

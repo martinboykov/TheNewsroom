@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { timer } from 'rxjs';
 import { NotificationService } from 'src/app/shared/notification.service';
+import { isDevMode } from '@angular/core';
 
 @Component({
   selector: 'app-category-edit',
@@ -16,6 +17,7 @@ import { NotificationService } from 'src/app/shared/notification.service';
 })
 export class CategoryEditComponent implements OnInit {
   mode: string;
+  devMode: boolean;
   categoryForm: FormGroup;
   category: Category;
   categoryName: string;
@@ -39,6 +41,7 @@ export class CategoryEditComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.devMode = isDevMode();
     this.categoryForm = new FormGroup({
       name: new FormControl('', [
         Validators.required,
@@ -62,8 +65,6 @@ export class CategoryEditComponent implements OnInit {
       this.categoryService.getCategoryPostsTotalCount(this.categoryName)
         .subscribe((response) => {
           this.categoryPostsTotalCount = response.data;
-          console.log(this.categoryPostsTotalCount);
-
         });
     } else {
       this.mode = 'create';
@@ -75,7 +76,6 @@ export class CategoryEditComponent implements OnInit {
   get nameErrorRequired() {
     // const activated = this.username.errors.required;
     if (this.name.errors) {
-      // console.log(this.title.errors);
       if (this.name.errors.required) {
         return true;
       }
@@ -140,7 +140,6 @@ export class CategoryEditComponent implements OnInit {
     this.categoryService.editCategory(category, this.mode)
       .subscribe((response) => {
         this.loading = false;
-        console.log(response);
         this.categoryService.getCategories();
         this.postService.getlatestPosts();
         this.postService.getPopularPosts();
@@ -161,7 +160,6 @@ export class CategoryEditComponent implements OnInit {
       .subscribe((response) => {
         this.loadingPosts = false;
         this.categoryPosts = response.data.posts;
-        console.log(this.categoryPosts);
       });
   }
   goToPost(post) {

@@ -25,10 +25,11 @@
          *ngFor="let latestPost of latestPosts">
       <a class="latest-post__link"
          (click)="onPostSelected(latestPost)">
-        <div class="latest-post__image"
+        <img class="latest-post__image"
+             [defaultImage]="defaultimage"
              [lazyLoad]="latestPost?.imageMainPath + '_100w'"
-             [offset]="offset">
-        </div>
+             [offset]="offset"
+             [alt]="latestPost?.title">
         <!-- [lazyLoad]=`resized-51_${latestPost.imageMainPath}` -->
         <!-- [ngStyle]="{'background-image': 'url(' + latestPost.imageMainPath + ')'}" -->
         <div class="latest-post__additional-info">
@@ -51,10 +52,16 @@
          *ngFor="let popularPost of popularPosts">
       <a class="popular-post__link"
          (click)="onPostSelected(popularPost)">
-        <div class="popular-post__image"
+        <img class="popular-post__image"
+             [defaultImage]="defaultimage"
              [lazyLoad]="popularPost?.imageMainPath + '_100w'"
-             [offset]="offset">
-        </div>
+             [offset]="offset"
+             [alt]="popularPost?.title">
+        <!-- <picture class="popular-post__image"
+             [lazyLoad]="popularPost?.imageMainPath + '_100w'"
+             [offset]="offset"
+             [title]="popularPost?.title">
+        </picture> -->
         <!-- [ngStyle]="{'background-image': 'url(' + popularPost.imageMainPath + ')'}"> -->
         <div class="popular-post__additional-info">
           <div class="additional-info__title">
@@ -76,10 +83,11 @@
          *ngFor="let commentedPost of commentedPosts">
       <a class="commented-post__link"
          (click)="onPostSelected(commentedPost)">
-        <div class="commented-post__image"
+        <img class="commented-post__image"
+             [defaultImage]="defaultimage"
              [lazyLoad]="commentedPost?.imageMainPath + '_100w'"
-             [offset]="offset">
-        </div>
+             [offset]="offset"
+             [alt]="commentedPost?.title">
         <!-- [ngStyle]="{'background-image': 'url(' + commentedPost.imageMainPath + ')'}"> -->
         <div class="commented-post__additional-info">
           <div class="additional-info__title">

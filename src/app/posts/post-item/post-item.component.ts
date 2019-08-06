@@ -18,7 +18,6 @@ export class PostItemComponent implements OnInit, OnChanges, OnDestroy {
   postLink;
   postContent;
   defaultimage = '/assets/images/main/posts/item/pixelation.jpg';
-  // defaultimage = 'https://i.imgur.com/EYGsSvV.jpg';
 
   // windowReference;
   isMobileResolution: boolean;

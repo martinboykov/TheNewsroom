@@ -9,7 +9,7 @@ export interface Comment {
     avatar: string,
   };
 
-  dateCreated?: Date; // !? or string
+  dateCreated?: Date;
 
   postId: string;
 }
