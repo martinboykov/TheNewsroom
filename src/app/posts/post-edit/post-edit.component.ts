@@ -23,7 +23,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   @ViewChild('jodit') jodit;
   @ViewChild('selectTags') selectTags;
   devMode: boolean;
-  mockPostCount = 20;
   mode;
   postId: string;
   postForm: FormGroup;
@@ -576,9 +575,9 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     };
   }
 
-  addMockPosts() {
-    this.postService.addMockPosts(this.mockPostCount);
-  }
+  // private addMockPosts() {
+  //   this.postService.addMockPosts(this.mockPostCount);
+  // }
 
 
   ngOnDestroy() {

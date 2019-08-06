@@ -1,14 +1,15 @@
+import { SLACK_WEBHOOK, SENTRY_KEY } from './environment.staging';
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-
 export const environment = {
   production: false,
   appUrl: 'http://localhost:4200',
   apiUrl: 'http://localhost:3000/api',
-  // appUrl: 'https://the-newsroom-mean-app.herokuapp.com/',
-  // appUrl: 'https://thenewsroom-mean-app.appspot.com/',
-  // apiUrl: 'https://the-newsroom-mean-app.herokuapp.com/api',
+  // put your webhook url here ('https://hooks.slack.com/services/********************************************')
+  SLACK_WEBHOOK: SLACK_WEBHOOK,
+  // put your sentry url here ('https://************************** */@sentry.io/*******/')
+  SENTRY_KEY: SENTRY_KEY,
 };
 
 /*

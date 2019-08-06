@@ -12,6 +12,7 @@
 
 # envirenment variables/ secret keys
 nodemon.json
+/src/environments/environment.staging.ts
 
 # profiling files
 chrome-profiler-events.json

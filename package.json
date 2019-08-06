@@ -9,6 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:prod": "ng build --prod",
+    "build:staging": "ng build --configuration=staging",
     "build-report:prod": "ng build --prod --stats-json",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
     "server:dev": "set NODE_ENV=development&&SET DEBUG=http,debug&& nodemon --no-deprecation backend/server.js",
