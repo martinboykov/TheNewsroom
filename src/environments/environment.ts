@@ -6,9 +6,9 @@ export const environment = {
   production: false,
   appUrl: 'http://localhost:4200',
   apiUrl: 'http://localhost:3000/api',
-  // put your webhook url here ('https://hooks.slack.com/services/********************************************')
+  // put your webhook url here (SLACK_WEBHOOK:'https://hooks.slack.com/services/********************************************')
   SLACK_WEBHOOK: SLACK_WEBHOOK,
-  // put your sentry url here ('https://************************** */@sentry.io/*******/')
+  // put your sentry url here (SENTRY_KEY:'https://************************** */@sentry.io/*******/')
   SENTRY_KEY: SENTRY_KEY,
 };
 
