@@ -13,7 +13,6 @@ export class MainNavComponent implements OnInit, OnDestroy {
   private categoriesSubscription: Subscription;
   constructor(private categoryService: CategoryService) { }
 
-
   ngOnInit(): void {
     this.categoryService.getCategories();
     this.categoriesSubscription = this.categoryService.getCategoriesUpdateListener()

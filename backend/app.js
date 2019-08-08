@@ -28,6 +28,15 @@ require('./starter/logging')(app);
 
 require('./starter/routes')(app);
 
+app.use('/api/mockIO', function(req, res, next) {
+  console.log('pid', process.pid, 'handler start, blocking CPU');
+  for (let i = 0; i <= 10e9; i += 1) {
+    // I/O block
+  }
+  console.log('pid', process.pid, 'handler end, blocking CPU');
+  next();
+});
+
 // for one-app on heroku deployment
 // app.use('/', express.static(path.join(__dirname, '/angular')));
 

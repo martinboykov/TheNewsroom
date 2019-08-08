@@ -13,6 +13,7 @@
 # envirenment variables/ secret keys
 nodemon.json
 /src/environments/environment.staging.ts
+ecosystem.config.js
 
 # profiling files
 chrome-profiler-events.json
