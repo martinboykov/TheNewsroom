@@ -69,8 +69,8 @@ const getCategoryPosts = async (req, res, next) => {
   const categoryName = req.params.name;
   const category = await Category.findOne({ name: req.params.name });
   if (!category) return res.status(404).json({ message: 'No such Category!' });
-  const pageSize = parseInt(req.query.pageSize, 10);
-  const currentPage = parseInt(req.query.page, 10);
+  const pageSize = parseInt(req.query.pageSize, 10) || 30;
+  const currentPage = parseInt(req.query.page, 10) || 1;
 
   const postQuery = Post.find({
     'category.name': categoryName,
@@ -105,7 +105,6 @@ const getCategoryPostsPartial = async (req, res, next) => {
   const category = await Category.findOne({ name: name })
     .select('posts')
     .populate('posts', 'category.name subcategory.name title isVisible');
-  console.log(category);
   if (!category) {
     return res.status(400).json({ message: 'No such category.' });
   }
@@ -242,8 +241,8 @@ const deleteCategory = async (req, res, next) => {
   }
   const categoryRemoved = await category.remove();
 
-   // delete entire redis db
-   await client.flushdbAsync();
+  // delete entire redis db
+  await client.flushdbAsync();
 
   return res.status(201).json({
     message: 'Category deleted successfully',

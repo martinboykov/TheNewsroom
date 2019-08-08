@@ -402,7 +402,9 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
           .pipe(
             debounceTime(1000),
             distinctUntilChanged(),
-            tap(() => this.loading = true),
+            tap(() => {
+              this.loading = true;
+            }),
             switchMap((name) => this.postService.getTagNames(name)
               .pipe(
                 catchError(() => {

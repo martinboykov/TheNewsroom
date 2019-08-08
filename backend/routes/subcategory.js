@@ -16,8 +16,8 @@ router.get(
   subcategoryController.getSubcategory);
 
 router.get(
-  '/:name/postIds',
-  subcategoryController.getSubcategoryPostIds);
+  '/:name/posts/partial',
+  subcategoryController.getSubcategoryPostsPartial);
 
 router.get(
   '/:name/posts',

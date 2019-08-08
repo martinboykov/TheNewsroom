@@ -2,7 +2,7 @@ const { Post } = require('../../models/post');
 
 // GET
 const getPosts = async (req, res, next) => {
-  const pageSize = parseInt(req.query.pageSize, 10) || 10;
+  const pageSize = parseInt(req.query.pageSize, 10) || 30;
   const currentPage = parseInt(req.query.page, 10) || 1;
   const postQuery = Post.find({ isVisible: true });
   if (pageSize && currentPage) {
@@ -273,14 +273,6 @@ const getComentedPosts = async (req, res, next) => {
   });
 };
 
-/* eslint-disable no-process-env*/
-const getSlackWebHook = async (req, res, next) => {
-  return res.status(200).json({
-    message: 'Slack WebHook recieved',
-    data: process.env.SLACK_WEBHOOK,
-  });
-};
-
 module.exports = {
   getPosts,
   getPostsTotalCount,
@@ -292,5 +284,4 @@ module.exports = {
   getLatestPosts,
   getPopularPosts,
   getComentedPosts,
-  getSlackWebHook,
 };

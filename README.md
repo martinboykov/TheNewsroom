@@ -1,27 +1,49 @@
-# MeanApp
+# TheNewsRoom
+Website for the latest news: ✓ local, ✓ world, ✓ sports, ✓ movies, ✓ music, ✓ cars and ✓ technology.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.1.
+## Table of Contents
+* Introduction
+* Demo
+* Features
+* Technologies
+* Build Process
+* Team
 
-## Development server
+## Introduction
+## Demo - <https://thenewsroom-mean-app.appspot.com>
+## Features
+## Architecture
+![picture alt](http://www.brightlightpictures.com/assets/images/portfolio/thethaw_header.jpg "Title is optional")
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Build Process
+- install dependencies for frontend with `npm install`
+- go to folder `mean-app/backend` and install dependencies for backend with `npm install`
+- provide the required [API keys](##API-keys "Go to API keys")
+      For frontend either create new environment file - environment.staging.ts, where provide the API key for the Slack Webhook, other provide the API key for the Slack Webhook directly in the environment files: environment.prod.ts, environment.ts (dont forget to remove the import of SLACK_WEBHOOK)
 
-## Code scaffolding
+### Development:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+  - start dev-server with `npm run server:dev`
+  - start angular dev-server with `ng serve`
 
-## Build
+### Production:
+  - depends on how and where you choose to host the app: One-App-Deployment (Nodejs server and Angular app are hosted together) or Two-App-Deployment (Nodejs server and Angular app are hosted separetley)
+  - compile the Angular app with output directory - dist with either `ng build --prod`, other `ng build--configuration=staging`, depending on how is provided the Slack Webhook API key
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## API-keys
+* Backend
+  * Database - MongoDB: `MONGO_ATLAS_USER_NAME`, `MONGO_ATLAS_PASSWORD`
+  * Cache - Redis:
+    * Development - `REDIS_HOST_IP`, `REDIS_HOST_PORT`
+    * Production - depending on the provider (Redis Heroku - `REDIS_URL`, Redis Labs - `REDISCLOUD_URL`)
+  * JSON Web Token (JWT): `JWT_SECRET`
 
-## Running end-to-end tests
+  * Monitoring - New Relic: `NEW_RELIC_LICENSE_KEY`
+  * MongoDB: `MONGO_ATLAS_USER_NAME`, `MONGO_ATLAS_PASSWORD`
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+* Frontend
+  * Errors and Exceptions - Slack: `SLACK_WEBHOOK`
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Team

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from './../../environments/environment';
-const SENTRY_KEY = environment.SENTRY_KEY;
+// const SENTRY_KEY = environment.SENTRY_KEY;
 // import * as Sentry from '@sentry/browser'; // npm install --save @sentry/browser
 // Sentry.init({
 //   dsn: SENTRY_KEY

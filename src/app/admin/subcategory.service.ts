@@ -27,7 +27,7 @@ export class SubcategoryService {
   }
 
   getSubcategoryPosts(name) {
-    const route = `/subcategories/${name}/postIds`;
+    const route = `/subcategories/${name}/posts/partial`;
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + route);
   }

@@ -26,7 +26,7 @@ const getSubcategory = async (req, res, next) => {
     data: subcategory,
   });
 };
-const getSubcategoryPostIds = async (req, res, next) => {
+const getSubcategoryPostsPartial = async (req, res, next) => {
   const name = req.params.name;
   const subcategory = await Subcategory.findOne({ name: name })
     .select('posts')
@@ -54,8 +54,8 @@ const getSubcategoryPosts = async (req, res, next) => {
   if (!subcategory) {
     return res.status(404).json({ message: 'No such subcategory!' });
   }
-  const pageSize = parseInt(req.query.pageSize, 10);
-  const currentPage = parseInt(req.query.page, 10);
+  const pageSize = parseInt(req.query.pageSize, 10) || 30;
+  const currentPage = parseInt(req.query.page, 10) || 1;
   const postQuery = Post.find({ 'subcategory.name': subcategoryName });
   if (pageSize && currentPage) {
     postQuery
@@ -68,12 +68,6 @@ const getSubcategoryPosts = async (req, res, next) => {
     .sort({ 'dateCreated': -1 });
   posts.map((post) => {
     let content = post.content;
-    // for eventual HTML post document
-    // --------------------------------
-    // const el = document.createElement('html');
-    // el.innerHTML = content;
-    // el.querySelector('.first-paragraph'); // Live NodeList of your anchor elements
-
     content = content.substring(0, 1000); // for now...
     post.content = content;
     // console.log(post);
@@ -255,7 +249,7 @@ const deleteSubcategory = async (req, res, next) => {
 
 module.exports = {
   getSubcategory,
-  getSubcategoryPostIds,
+  getSubcategoryPostsPartial,
   getSubcategories,
   getSubcategoryPosts,
   getSubcategoryPostsTotalCount,

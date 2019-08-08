@@ -1,4 +1,4 @@
-import { SLACK_WEBHOOK, SENTRY_KEY } from './environment.staging';
+import { SLACK_WEBHOOK } from './environment.staging';
 
 export const environment = {
   production: true,
@@ -8,6 +8,4 @@ export const environment = {
   apiUrl: 'https://the-newsroom-mean-app.herokuapp.com/api',
   // put your webhook url here (SLACK_WEBHOOK:'https://hooks.slack.com/services/********************************************')
   SLACK_WEBHOOK: SLACK_WEBHOOK,
-  // put your sentry url here (SENTRY_KEY:'https://************************** */@sentry.io/*******/')
-  SENTRY_KEY: SENTRY_KEY,
 };
