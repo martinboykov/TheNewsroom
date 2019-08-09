@@ -197,15 +197,10 @@ export class SubcategoryEditComponent implements OnInit {
     const len = this.subcategoryPostsBuffer.length;
     const more = this.subcategoryPosts.slice(len, this.bufferSize + len);
     this.loading = true;
-    // using timeout here to simulate backend API delay
     const tiemout = timer(200);
     tiemout.subscribe(() => {
       this.loading = false;
       this.subcategoryPostsBuffer = this.subcategoryPostsBuffer.concat(more);
     });
-    // setTimeout(() => {
-    //   this.loading = false;
-    //   this.subcategoryPostsBuffer = this.subcategoryPostsBuffer.concat(more);
-    // }, 200);
   }
 }

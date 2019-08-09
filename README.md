@@ -31,6 +31,8 @@ Website for the latest news: ✓ local, ✓ world, ✓ sports, ✓ movies, ✓ m
   - compile the Angular app with output directory - dist with either `ng build --prod`, other `ng build--configuration=staging`, depending on how is provided the Slack Webhook API key
 
 
+## Technologies
+ API Testing (Postman)
 
 ## API-keys
 * Backend

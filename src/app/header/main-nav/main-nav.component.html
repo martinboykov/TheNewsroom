@@ -90,7 +90,7 @@
         <div class="main-nav__subitem"
              *ngFor="let subcategory of category.subcategories">
           <a class="subitem__link"
-             routerLink="/{{category.name}}/{{subcategory.name}}"
+             routerLink="/{{category.name}}/{{subcategory}}"
              routerLinkActive="router-link-active-subitem">
 
             <span class="link__arrows">
@@ -126,7 +126,7 @@
             </span>
 
             <span class="link__text">
-              {{subcategory.name}}
+              {{subcategory}}
             </span>
           </a>
         </div>
@@ -157,7 +157,7 @@
               *ngFor="let subcategory of category.subcategories">
 
             <a class="main-nav__subitem--grid"
-               routerLink="/{{category.name}}/{{subcategory.name}}"
+               routerLink="/{{category.name}}/{{subcategory}}"
                routerLinkActive="router-link-active-subitem">
 
               <div class="main-nav__subitem--grid-arrows">
@@ -182,7 +182,7 @@
               </div>
 
               <span class="main-nav__subitem--grid-link">
-                {{subcategory.name}}
+                {{subcategory}}
               </span>
             </a>
           </li>

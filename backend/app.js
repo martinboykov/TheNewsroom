@@ -28,11 +28,24 @@ require('./starter/logging')(app);
 
 require('./starter/routes')(app);
 
-app.use('/api/mockIO', function(req, res, next) {
+app.use('/api/mockIO', async function(req, res, next) {
   console.log('pid', process.pid, 'handler start, blocking CPU');
-  for (let i = 0; i <= 10e9; i += 1) {
-    // I/O block
-  }
+  const loop = () => setTimeout(() => {
+    console.log('HTTP request finished');
+  }, 10000);
+  await loop();
+  console.log('pid', process.pid, 'handler end, blocking CPU');
+  next();
+});
+app.use('/api/mockCPU', async function(req, res, next) {
+  console.log('pid', process.pid, 'handler start, blocking CPU');
+  const loop = () => new Promise((resolve, reject) => {
+    for (let i = 0; i <= 10e9; i += 1) {
+      // CPU
+    }
+    resolve(console.log('CPU finished the task'));
+  });
+  await loop();
   console.log('pid', process.pid, 'handler end, blocking CPU');
   next();
 });

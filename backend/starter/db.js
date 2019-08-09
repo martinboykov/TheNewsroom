@@ -21,6 +21,7 @@ module.exports = ((app) => {
       winston.info('Redis client connected');
     });
     // we already are catching the errors with winston.uncoughterror.....
+    app.use(redis);
   }
   if (process.env.NODE_ENV === 'development') {
     mongooseConnection.then(() => {
@@ -33,6 +34,6 @@ module.exports = ((app) => {
     client.on('error', function(err) {
       debug('Something went wrong ' + err);
     });
+    app.use(redis);
   }
-  app.use(redis);
 });

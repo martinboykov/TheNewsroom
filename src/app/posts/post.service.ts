@@ -45,16 +45,16 @@ export class PostService {
 
 
   getPosts(url: String, commentsPerPage: number, currentPage: number) {
-    //  this.http.get(`${BACKEND_URL}` + '/urlhere').subscribe(); // testing error handling
-
     const pageSize = commentsPerPage;
     const page = currentPage;
     const queryParams = `?pageSize=${pageSize}&page=${page}`;
     return this.http
-      .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams)
+      .get<{ message: string, data: { posts: Post[], totalPostsCount: number } }>(BACKEND_URL + url + queryParams)
       .subscribe((postData) => {
-        this.posts = postData.data;
+        this.posts = postData.data.posts;
         this.postsUpdated.next([...this.posts]);
+        this.totalPostsCount = postData.data.totalPostsCount;
+        this.totalPostsUpdated.next(this.totalPostsCount);
       });
   }
   getTotalPostsCount(subRoute: string) {
