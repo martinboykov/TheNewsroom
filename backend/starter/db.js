@@ -28,12 +28,12 @@ module.exports = ((app) => {
       debug('Connected to MongoDB database...');
       // mongoose.set('debug', true);
     });
-    client.on('connect', function() {
-      debug('Redis client connected');
-    });
-    client.on('error', function(err) {
-      debug('Something went wrong ' + err);
-    });
-    app.use(redis);
+    // client.on('connect', function() {
+    //   debug('Redis client connected');
+    // });
+    // client.on('error', function(err) {
+    //   debug('Something went wrong ' + err);
+    // });
+    // app.use(redis);
   }
 });

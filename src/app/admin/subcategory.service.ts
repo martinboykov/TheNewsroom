@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 import { Subcategory } from './subcategory.model';
-import { NotificationService } from '../shared/notification.service';
+import { NotificationService } from '../logging/notification.service';
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({

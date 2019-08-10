@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
-import { NotificationService } from '../shared/notification.service';
+import { NotificationService } from '../logging/notification.service';
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({

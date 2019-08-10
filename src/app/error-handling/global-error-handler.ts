@@ -1,4 +1,4 @@
-import { NotificationService } from './../shared/notification.service';
+import { NotificationService } from '../logging/notification.service';
 import { Router } from '@angular/router';
 import { ErrorHandler, Injectable, Injector, NgZone, Inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -64,6 +64,10 @@ export class GlobalErrorHandler implements ErrorHandler {
           case HttpError.INTERNAL_SERVER_ERROR: // 500
             this.loggerSlack.logError(message, stackTrace);
             this.notifier.showError('Invalid route or server crash', this.DEFAULT_ERROR_TITLE);
+            break;
+          case HttpError.SERVER_REQUEST_LIMIT_REACHED: // 429
+            this.loggerSlack.logError(message, stackTrace);
+            this.notifier.showError('wait for a while', 'wait for a while');
             break;
 
           default:

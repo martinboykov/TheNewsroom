@@ -7,7 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { timer } from 'rxjs';
-import { NotificationService } from 'src/app/shared/notification.service';
+import { NotificationService } from '../../logging/notification.service';
 import { isDevMode } from '@angular/core';
 
 @Component({

@@ -24,18 +24,14 @@ const getPosts = async (req, res, next) => {
       },
     },
   ]);
+  let postsArr = posts[0].paginatedResults;
+  let totalPostsCount = posts[0].totalCount[0].count;
   if (!posts[0].totalCount[0]) {
-    return res.status(404).json({
-      message: `No posts yet!`,
-    });
+    totalPostsCount = 0;
   }
   if (posts[0].paginatedResults.length === 0) {
-    return res.status(404).json({
-      message: `Posts are less than the requested`,
-    });
+    postsArr = [];
   }
-  const postsArr = posts[0].paginatedResults;
-  const totalPostsCount = posts[0].totalCount[0].count;
   return res.status(200).json({
     message: 'Posts and total posts count fetched successfully',
     data: {
@@ -114,7 +110,7 @@ const getPostComments = async (req, res, next) => {
 
 const getSearchedPosts = async (req, res, next) => {
   const searchString = req.params.searchQuery;
-  const pageSize = parseInt(req.query.pageSize, 10) || 10;
+  const pageSize = parseInt(req.query.pageSize, 10) || 30;
   const currentPage = parseInt(req.query.page, 10) || 1;
   const posts = await Post.aggregate([
     {
@@ -143,23 +139,20 @@ const getSearchedPosts = async (req, res, next) => {
       },
     },
   ]);
+  let postsArr = posts[0].paginatedResults;
+  let totalPostsCount = posts[0].totalCount[0].count;
   if (!posts[0].totalCount[0]) {
-    return res.status(404).json({
-      message: `No posts for ${searchString}!`,
-    });
+    totalPostsCount = 0;
   }
   if (posts[0].paginatedResults.length === 0) {
-    return res.status(404).json({
-      message: `Posts are less than the requested`,
-    });
+    postsArr = [];
   }
-  const postsArr = posts[0].paginatedResults;
-  const totalPostsCount = posts[0].totalCount[0].count;
+
   return res.status(200).json({
     message: 'Posts fetched successfully',
     data: {
       posts: postsArr,
-      totalCommentsCount: totalPostsCount,
+      totalPostsCount: totalPostsCount,
     },
   });
 };

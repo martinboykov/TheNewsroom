@@ -17,7 +17,7 @@ import { concatMap } from 'rxjs/operators';
 import { PaginationInstance } from 'ngx-pagination';
 import { ScrollToService } from './../../shared/scrollTo.service';
 import { Subscription } from 'rxjs';
-import { NotificationService } from 'src/app/shared/notification.service';
+import { NotificationService } from '../../logging/notification.service';
 
 const APP_URL = environment.appUrl;
 @Component({

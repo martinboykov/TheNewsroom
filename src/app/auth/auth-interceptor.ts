@@ -1,4 +1,5 @@
-import { HttpInterceptor, HttpRequest, HttpHandler } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 
@@ -22,6 +23,9 @@ export class AuthInterceptor implements HttpInterceptor {
       // Bearer + authtoken (according a convention) / can be skipped (only authToken)
       headers: req.headers.set('Authorization', 'Bearer ' + authToken)
     });
+    // shorthand : https://angular.io/guide/http#intercepting-requests-and-responses
+    // const authRequest = req.clone({ setHeaders: { Authorization: authToken } });
+
     return next.handle(authRequest);
   }
 }

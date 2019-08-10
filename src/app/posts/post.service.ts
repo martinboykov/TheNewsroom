@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from '../../environments/environment';
-import { NotificationService } from '../shared/notification.service';
+import { NotificationService } from '../logging/notification.service';
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({

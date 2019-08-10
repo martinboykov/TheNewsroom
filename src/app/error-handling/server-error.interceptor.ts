@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
   HttpEvent, HttpRequest, HttpHandler,
-  HttpInterceptor, HttpErrorResponse
+  HttpInterceptor, HttpErrorResponse, HttpResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { retry, catchError, tap } from 'rxjs/operators';
+import { retry, catchError, tap, map } from 'rxjs/operators';
 
 @Injectable()
 export class ServerErrorInterceptor implements HttpInterceptor {
@@ -13,6 +13,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       retry(1),
       catchError((error: HttpErrorResponse) => {
+        console.log(HttpErrorResponse);
         return throwError(error);
       })
     );

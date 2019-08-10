@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
-import { NotificationService } from '../shared/notification.service';
+import { NotificationService } from '../logging/notification.service';
 const BACKEND_URL = environment.apiUrl;
 @Injectable({
   providedIn: 'root',

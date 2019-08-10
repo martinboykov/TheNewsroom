@@ -4,7 +4,7 @@ import { Subject, throwError, of, timer, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthData } from './auth-data.model';
-import { NotificationService } from '../shared/notification.service';
+import { NotificationService } from '../logging/notification.service';
 import { environment } from '../../environments/environment';
 const BACKEND_URL = environment.apiUrl;
 @Injectable({

@@ -192,18 +192,14 @@ const getCategoryPosts = async (req, res, next) => {
       },
     },
   ]);
+  let postsArr = posts[0].paginatedResults;
+  let totalPostsCount = posts[0].totalCount[0].count;
   if (!posts[0].totalCount[0]) {
-    return res.status(404).json({
-      message: `No posts found for Category: ${categoryName} yet!`,
-    });
+    totalPostsCount = 0;
   }
   if (posts[0].paginatedResults.length === 0) {
-    return res.status(404).json({
-      message: `Posts are less than the requested`,
-    });
+    postsArr = [];
   }
-  const postsArr = posts[0].paginatedResults;
-  const totalPostsCount = posts[0].totalCount[0].count;
   return res.status(200).json({
     message: `Posts for Category with name: ${categoryName} fetched successfully`, // eslint-disable-line max-len
     data: {
