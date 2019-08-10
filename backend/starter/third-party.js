@@ -8,7 +8,7 @@ const limiterHandler = require('../middleware/limiter');
 const slowDown = require('express-slow-down');
 const limiter = slowDown({
   windowMs: 10 * 60 * 1000, // 10 minutes
-  delayAfter: 20, // allow 1000 requests per 10 minutes, then...
+  delayAfter: 1000, // allow 1000 requests per 10 minutes, then...
   delayMs: 100, // begin adding 100ms of delay per request above 1000:
   // request # 1001 is delayed by 100ms
   // request # 1002 is delayed by 200ms
