@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
-import { NotificationService } from '../shared/notification.service';
+import { NotificationService } from '../logging/notification.service';
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({
@@ -41,10 +41,6 @@ export class CategoryService {
   }
 
   getCategories() {
-    // if (this.categorySubscribtionExists) {
-    //   return console.log('exist');
-    // }
-    // this.categorySubscribtionExists = true;
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + '/categories')
       .subscribe((response) => {
@@ -60,8 +56,6 @@ export class CategoryService {
       );
   }
   editCategory(category, mode) {
-    console.log(category);
-
     if (mode === 'create') {
       const route = `/categories`;
       return this.http

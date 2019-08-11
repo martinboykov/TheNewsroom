@@ -45,7 +45,8 @@ if (process.env.NODE_ENV === 'development') {
   // });
 }
 
-
+// JSON parse/stringify =>
+// CPU >>>>>>>>>>>>>
 const redisMiddleware = async (req, res, next) => {
   if (!client.connected) return next();
   if (req.method !== 'GET') return next();

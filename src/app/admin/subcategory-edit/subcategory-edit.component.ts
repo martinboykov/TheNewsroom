@@ -1,3 +1,4 @@
+import { NotificationService } from '../../logging/notification.service';
 import { CategoryService } from './../category.service';
 import { HelperService } from './../../shared/helper.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -8,7 +9,6 @@ import { SubcategoryService } from '../subcategory.service';
 import { Subcategory } from '../subcategory.model';
 import { PostService } from 'src/app/posts/post.service';
 import { timer } from 'rxjs';
-import { NotificationService } from 'src/app/shared/notification.service';
 import { isDevMode } from '@angular/core';
 
 @Component({
@@ -197,15 +197,10 @@ export class SubcategoryEditComponent implements OnInit {
     const len = this.subcategoryPostsBuffer.length;
     const more = this.subcategoryPosts.slice(len, this.bufferSize + len);
     this.loading = true;
-    // using timeout here to simulate backend API delay
     const tiemout = timer(200);
     tiemout.subscribe(() => {
       this.loading = false;
       this.subcategoryPostsBuffer = this.subcategoryPostsBuffer.concat(more);
     });
-    // setTimeout(() => {
-    //   this.loading = false;
-    //   this.subcategoryPostsBuffer = this.subcategoryPostsBuffer.concat(more);
-    // }, 200);
   }
 }

@@ -21,18 +21,19 @@ module.exports = ((app) => {
       winston.info('Redis client connected');
     });
     // we already are catching the errors with winston.uncoughterror.....
+    app.use(redis);
   }
   if (process.env.NODE_ENV === 'development') {
     mongooseConnection.then(() => {
       debug('Connected to MongoDB database...');
       // mongoose.set('debug', true);
     });
-    client.on('connect', function() {
-      debug('Redis client connected');
-    });
-    client.on('error', function(err) {
-      debug('Something went wrong ' + err);
-    });
+    // client.on('connect', function() {
+    //   debug('Redis client connected');
+    // });
+    // client.on('error', function(err) {
+    //   debug('Something went wrong ' + err);
+    // });
+    // app.use(redis);
   }
-  app.use(redis);
 });

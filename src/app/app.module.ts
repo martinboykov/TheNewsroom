@@ -35,6 +35,7 @@ import { SelectorsAsideDirective } from './aside/aside-right-tripple/selectorsAs
 
 
 import { GlobalErrorHandler } from './error-handling/global-error-handler';
+import { LoggingInterceptor } from './logging/logging-interceptor';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,7 @@ import { GlobalErrorHandler } from './error-handling/global-error-handler';
     // multi : true -> dont overwrite existing interceptors
     { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: LoggingInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

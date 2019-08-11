@@ -2,28 +2,42 @@ const { Post } = require('../../models/post');
 
 // GET
 const getPosts = async (req, res, next) => {
-  const pageSize = parseInt(req.query.pageSize, 10) || 10;
+  const pageSize = parseInt(req.query.pageSize, 10) || 30;
   const currentPage = parseInt(req.query.page, 10) || 1;
-  const postQuery = Post.find({ isVisible: true });
-  if (pageSize && currentPage) {
-    postQuery
-      .skip(pageSize * (currentPage - 1))
-      .limit(pageSize);
+  const posts = await Post.aggregate([
+    { $match: { isVisible: true } },
+    {
+      $facet: {
+        paginatedResults: [
+          {
+            $project: {
+              _id: 1, title: 1, 'content': { $substr: ['$content', 0, 1000] },
+              category: 1, subcategory: 1, dateCreated: 1,
+              author: 1, imageMainPath: 1,
+            },
+          },
+          { $sort: { dateCreated: -1 } },
+          { $limit: pageSize * (currentPage - 1) + pageSize },
+          { $skip: pageSize * (currentPage - 1) }],
+        totalCount: [
+          { $count: 'count' }],
+      },
+    },
+  ]);
+  let postsArr = posts[0].paginatedResults;
+  let totalPostsCount = posts[0].totalCount[0].count;
+  if (!posts[0].totalCount[0]) {
+    totalPostsCount = 0;
   }
-  const posts = await postQuery
-    .select(
-      '_id title content category subcategory dateCreated author imageMainPath')
-    .sort({ 'dateCreated': -1 });
-
-  posts.map((post) => {
-    let content = post.content;
-    content = content.substring(0, 1000);
-    post.content = content;
-    return post;
-  });
-  res.status(200).json({
-    message: 'Posts fetched successfully',
-    data: posts,
+  if (posts[0].paginatedResults.length === 0) {
+    postsArr = [];
+  }
+  return res.status(200).json({
+    message: 'Posts and total posts count fetched successfully',
+    data: {
+      posts: postsArr,
+      totalPostsCount: totalPostsCount,
+    },
   });
 };
 
@@ -96,38 +110,50 @@ const getPostComments = async (req, res, next) => {
 
 const getSearchedPosts = async (req, res, next) => {
   const searchString = req.params.searchQuery;
-  const pageSize = parseInt(req.query.pageSize, 10) || 10;
+  const pageSize = parseInt(req.query.pageSize, 10) || 30;
   const currentPage = parseInt(req.query.page, 10) || 1;
-  const postQuery = Post.find({
-    $text: {
-      $search: searchString,
+  const posts = await Post.aggregate([
+    {
+      $match: {
+        $text: {
+          $search: searchString,
+        },
+        isVisible: true,
+      },
     },
-    isVisible: true,
-  });
-  if (pageSize && currentPage) {
-    postQuery
-      .skip(pageSize * (currentPage - 1))
-      .limit(pageSize);
+    {
+      $facet: {
+        paginatedResults: [
+          {
+            $project: {
+              _id: 1, title: 1, 'content': { $substr: ['$content', 0, 1000] },
+              category: 1, subcategory: 1, dateCreated: 1,
+              author: 1, imageMainPath: 1,
+            },
+          },
+          { $sort: { dateCreated: -1 } },
+          { $limit: pageSize * (currentPage - 1) + pageSize },
+          { $skip: pageSize * (currentPage - 1) }],
+        totalCount: [
+          { $count: 'count' }],
+      },
+    },
+  ]);
+  let postsArr = posts[0].paginatedResults;
+  let totalPostsCount = posts[0].totalCount[0].count;
+  if (!posts[0].totalCount[0]) {
+    totalPostsCount = 0;
   }
-  const posts = await postQuery
-    .select(
-      '_id title content category subcategory dateCreated author imageMainPath')
-    .sort({ 'dateCreated': -1 });
-  posts.map((post) => {
-    let content = post.content;
-    // for eventual HTML post document
-    // --------------------------------
-    // const el = document.createElement('html');
-    // el.innerHTML = content;
-    // el.querySelector('.first-paragraph'); // Live NodeList of your anchor elements
+  if (posts[0].paginatedResults.length === 0) {
+    postsArr = [];
+  }
 
-    content = content.substring(0, 1000); // for now...
-    post.content = content;
-    return post;
-  });
-  res.status(200).json({
+  return res.status(200).json({
     message: 'Posts fetched successfully',
-    data: posts,
+    data: {
+      posts: postsArr,
+      totalPostsCount: totalPostsCount,
+    },
   });
 };
 
@@ -165,6 +191,7 @@ const getRelatedPosts = async (req, res, next) => {
   const post = await Post.findOne({
     _id: _id,
   });
+  // CPU >>>>>>>>>>>>>>>>>>>>>>
   const tags = post.tags.reduce((accumulator, current) => {
     accumulator.push(current._id);
     return accumulator;
@@ -273,14 +300,6 @@ const getComentedPosts = async (req, res, next) => {
   });
 };
 
-/* eslint-disable no-process-env*/
-const getSlackWebHook = async (req, res, next) => {
-  return res.status(200).json({
-    message: 'Slack WebHook recieved',
-    data: process.env.SLACK_WEBHOOK,
-  });
-};
-
 module.exports = {
   getPosts,
   getPostsTotalCount,
@@ -292,5 +311,4 @@ module.exports = {
   getLatestPosts,
   getPopularPosts,
   getComentedPosts,
-  getSlackWebHook,
 };

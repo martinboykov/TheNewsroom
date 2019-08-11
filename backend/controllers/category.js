@@ -33,17 +33,111 @@ const getCategory = async (req, res, next) => {
 };
 
 const getCategories = async (req, res, next) => {
-  const categories = await Category.find({ isVisible: true })
-    .select('name subcategories order isVisible')
-    .sort({ 'order': 1, 'name': 1 })
-    .populate('subcategories', 'name order isVisible');
-  categories.forEach((category) => {
-    const sortedSubcategories = category.subcategories
-      .filter((x) => x.isVisible === true);
-    sortedSubcategories.sort(compare);
-    category.subcategories = sortedSubcategories;
-  });
-  res.status(200).json({
+  const categories = await Category.aggregate([
+    { $match: { isVisible: true } },
+    {
+      $project: {
+        _id: '$_id',
+        subcategories: {
+          $cond: {
+            if: { $eq: ['$subcategories', null] },
+            then: null,
+            else: '$subcategories',
+          },
+        },
+        order: '$order',
+        name: '$name',
+      },
+    },
+    {
+      $unwind: {
+        path: '$subcategories',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: 'subcategories',
+        localField: 'subcategories',
+        foreignField: '_id',
+        as: 'subcategory',
+      },
+    },
+    {
+      $project: {
+        _id: '$_id',
+        order: '$order',
+        name: '$name',
+        subcategoryId: {
+          $cond: {
+            if: { $eq: [{ $arrayElemAt: ['$subcategory._id', 0] }, null] },
+            then: '$$REMOVE',
+            else: { $arrayElemAt: ['$subcategory._id', 0] },
+          },
+        },
+        subCategoryName: {
+          $cond: {
+            if: { $eq: [{ $arrayElemAt: ['$subcategory.name', 0] }, null] },
+            then: '$$REMOVE',
+            else: { $arrayElemAt: ['$subcategory.name', 0] },
+          },
+        },
+        subCategoryOrder: {
+          $cond: {
+            if: {
+              $eq: [{
+                $convert:
+                {
+                  input: {
+                    $arrayElemAt: ['$subcategory.order', 0],
+                  }, to: 'int',
+                },
+              }, null],
+            },
+            then: '$$REMOVE',
+            else: {
+              $convert: {
+                input:
+                  { $arrayElemAt: ['$subcategory.order', 0] }, to: 'int',
+              },
+            },
+          },
+        },
+        subcategoryIsVisible: {
+          $cond: {
+            if: {
+              $eq: [{
+                $arrayElemAt:
+                  ['$subcategory.isVisible', 0],
+              }, null],
+            },
+            then: '$$REMOVE',
+            else: { $arrayElemAt: ['$subcategory.isVisible', 0] },
+          },
+        },
+      },
+    },
+    { $sort: { 'subCategoryOrder': 1 } },
+    {
+      $group: {
+        _id: { _id: '$_id', name: '$name', order: '$order' },
+        subcategories: {
+          $push: '$subCategoryName',
+        },
+      },
+    },
+    {
+      $project: {
+        _id: '$_id._id',
+        name: '$_id.name',
+        order: '$_id.order',
+        subcategories: '$subcategories',
+      },
+    },
+    { $sort: { 'order': 1 } },
+
+  ]);
+  return res.status(200).json({
     message: 'Categories fetched successfully',
     data: categories,
   });
@@ -53,13 +147,22 @@ const getCategoriesFull = async (req, res, next) => {
   const categories = await Category.find()
     .select('name subcategories order isVisible')
     .sort({ 'order': 1, 'name': 1 })
-    .populate('subcategories', 'name order isVisible');
+    .populate({
+      path: 'subcategories',
+      // match: { isVisible: true },
+      select: { name: 1, order: 1, isVisible: 1 },
+    });
+  if (categories.length === 0) {
+    return res.status(404).json({
+      message: `No categories yet!`,
+    });
+  }
   categories.forEach((category) => {
     const sortedSubcategories = category.subcategories;
     sortedSubcategories.sort(compare);
     category.subcategories = sortedSubcategories;
   });
-  res.status(200).json({
+  return res.status(200).json({
     message: 'Categories fetched successfully',
     data: categories,
   });
@@ -67,35 +170,42 @@ const getCategoriesFull = async (req, res, next) => {
 
 const getCategoryPosts = async (req, res, next) => {
   const categoryName = req.params.name;
-  const category = await Category.findOne({ name: req.params.name });
-  if (!category) return res.status(404).json({ message: 'No such Category!' });
-  const pageSize = parseInt(req.query.pageSize, 10);
-  const currentPage = parseInt(req.query.page, 10);
-
-  const postQuery = Post.find({
-    'category.name': categoryName,
-    isVisible: true,
-  });
-  if (pageSize && currentPage) {
-    postQuery
-      .skip(pageSize * (currentPage - 1))
-      .limit(pageSize);
+  const pageSize = parseInt(req.query.pageSize, 10) || 30;
+  const currentPage = parseInt(req.query.page, 10) || 1;
+  const posts = await Post.aggregate([
+    { $match: { isVisible: true, 'category.name': categoryName } },
+    {
+      $facet: {
+        paginatedResults: [
+          {
+            $project: {
+              _id: 1, title: 1, 'content': { $substr: ['$content', 0, 1000] },
+              category: 1, subcategory: 1, dateCreated: 1,
+              author: 1, imageMainPath: 1,
+            },
+          },
+          { $sort: { dateCreated: -1 } },
+          { $limit: pageSize * (currentPage - 1) + pageSize },
+          { $skip: pageSize * (currentPage - 1) }],
+        totalCount: [
+          { $count: 'count' }],
+      },
+    },
+  ]);
+  let postsArr = posts[0].paginatedResults;
+  let totalPostsCount = posts[0].totalCount[0].count;
+  if (!posts[0].totalCount[0]) {
+    totalPostsCount = 0;
   }
-  const posts = await postQuery
-    .select(
-      '_id title content category subcategory dateCreated author imageMainPath')
-    .sort({ 'dateCreated': -1 });
-
-  posts.map((post) => {
-    let content = post.content;
-    content = content.substring(0, 1000);
-    post.content = content;
-    return post;
-  });
-
+  if (posts[0].paginatedResults.length === 0) {
+    postsArr = [];
+  }
   return res.status(200).json({
-    message: `Posts of Category with name: ${req.params.name} fetched successfully`, // eslint-disable-line max-len
-    data: posts,
+    message: `Posts for Category with name: ${categoryName} fetched successfully`, // eslint-disable-line max-len
+    data: {
+      posts: postsArr,
+      totalPostsCount: totalPostsCount,
+    },
   });
 };
 
@@ -105,7 +215,6 @@ const getCategoryPostsPartial = async (req, res, next) => {
   const category = await Category.findOne({ name: name })
     .select('posts')
     .populate('posts', 'category.name subcategory.name title isVisible');
-  console.log(category);
   if (!category) {
     return res.status(400).json({ message: 'No such category.' });
   }
@@ -196,9 +305,6 @@ const updateCategory = async (req, res, next) => {
       },
     });
 
-  // category.name = updatedCategory.name;
-
-  // if (category.name !== updatedCategory.name) {
   task.update('posts', {
     'category._id': category._id,
   }, {
@@ -242,8 +348,8 @@ const deleteCategory = async (req, res, next) => {
   }
   const categoryRemoved = await category.remove();
 
-   // delete entire redis db
-   await client.flushdbAsync();
+  // delete entire redis db
+  await client.flushdbAsync();
 
   return res.status(201).json({
     message: 'Category deleted successfully',

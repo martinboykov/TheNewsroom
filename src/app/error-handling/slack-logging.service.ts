@@ -4,33 +4,15 @@ import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { environment } from './../../environments/environment';
-let SLACK_WEBHOOK = null;
-const BACKEND_URL = environment.apiUrl;
+const SLACK_WEBHOOK = environment.SLACK_WEBHOOK;
 
 @Injectable({
   providedIn: 'root'
 })
 export class SlackErrorLoggingService {
   public logHistory = new Set();
-  private slackWebHookListener = new BehaviorSubject<string>('');
 
   constructor(private http: HttpClient, private injector: Injector) { }
-
-  getSlackWebHook() {
-    const url = `/posts/slack`;
-    this.http
-      .get<{ message: string, data: string }>(BACKEND_URL + url)
-      .subscribe((response) => {
-        SLACK_WEBHOOK = response.data;
-        this.slackWebHookListener.next(response.data);
-      });
-  }
-  getSlackWebHookString() {
-    return SLACK_WEBHOOK;
-  }
-  getSlackWebHookListener() {
-    return this.slackWebHookListener.asObservable();
-  }
 
   logError(message, stackTrace) {
     if (this.logHistory.has(message)) { return; }
@@ -56,7 +38,6 @@ export class SlackErrorLoggingService {
       ]
     };
     const headers = new HttpHeaders().set('Content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
-    if (!SLACK_WEBHOOK) { return this.getSlackWebHook(); }
     this.http.request(
       'POST',
       SLACK_WEBHOOK,

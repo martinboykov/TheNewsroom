@@ -91,3 +91,9 @@
     top: 1px;
   }
 }
+
+@media (max-width: $mobile) {
+  .wrapper {
+    max-width: 100%;
+  }
+}

@@ -7,7 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { timer } from 'rxjs';
-import { NotificationService } from 'src/app/shared/notification.service';
+import { NotificationService } from '../../logging/notification.service';
 import { isDevMode } from '@angular/core';
 
 @Component({
@@ -190,16 +190,11 @@ export class CategoryEditComponent implements OnInit {
     const len = this.categoryPostsBuffer.length;
     const more = this.categoryPosts.slice(len, this.bufferSize + len);
     this.loadingPosts = true;
-    // using timeout here to simulate backend API delay
     const tiemout = timer(200);
     tiemout.subscribe(() => {
       this.loadingPosts = false;
       this.categoryPostsBuffer = this.categoryPostsBuffer.concat(more);
     });
-    // setTimeout(() => {
-    //   this.loadingPosts = false;
-    //   this.categoryPostsBuffer = this.categoryPostsBuffer.concat(more);
-    // }, 200);
   }
 
 }

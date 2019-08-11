@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { NotificationService } from '../shared/notification.service';
+import { NotificationService } from '../logging/notification.service';
 import { Role } from '../admin/user-roles';
 
 @Injectable({
@@ -31,7 +31,6 @@ export class AuthGuard implements CanActivate {
             if (currentUser.roles.isAdmin === true) { this.isAuthorized = true; }
             break;
           case Role.Writer:
-
             if (currentUser.roles.isWriter === true) { this.isAuthorized = true; }
             break;
           case Role.Reader:

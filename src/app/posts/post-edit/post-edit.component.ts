@@ -23,7 +23,10 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   @ViewChild('jodit') jodit;
   @ViewChild('selectTags') selectTags;
   devMode: boolean;
+<<<<<<< HEAD
   mockPostCount = 20;
+=======
+>>>>>>> feature/small-fixes
   mode;
   postId: string;
   postForm: FormGroup;
@@ -403,7 +406,9 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
           .pipe(
             debounceTime(1000),
             distinctUntilChanged(),
-            tap(() => this.loading = true),
+            tap(() => {
+              this.loading = true;
+            }),
             switchMap((name) => this.postService.getTagNames(name)
               .pipe(
                 catchError(() => {
@@ -576,9 +581,9 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     };
   }
 
-  addMockPosts() {
-    this.postService.addMockPosts(this.mockPostCount);
-  }
+  // private addMockPosts() {
+  //   this.postService.addMockPosts(this.mockPostCount);
+  // }
 
 
   ngOnDestroy() {

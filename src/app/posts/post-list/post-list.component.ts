@@ -78,7 +78,7 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.headerService.setRouterParameters(params);
       this.url = this.getUrl(params);
 
-      this.postService.getTotalPostsCount(this.url);
+      // this.postService.getTotalPostsCount(this.url);
       this.postService.getPosts(this.url, this.itemsPerScroll, this.currentPageScroller);
     });
 
@@ -149,18 +149,14 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.isAsideRequired = false;
     }
     if (params.has('tag')) {
-      // console.log(tag);
-
       url = `/tags/${tag}/posts`; // Remove ASIDE if switch to tags
       this.isAsideRequired = false;
     }
     if (params.has('category')) {
       url = `/categories/${category}/posts`; // Remove ASIDE if switch to category
-
       this.isAsideRequired = false;
       if (params.has('subcategory')) {
         url = `/subcategories/${subcategory}/posts`; // Remove ASIDE if switch to subcategory
-
         this.isAsideRequired = false;
       }
     } else {

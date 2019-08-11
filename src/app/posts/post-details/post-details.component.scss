@@ -50,6 +50,9 @@
               object-position: center top;
               z-index: 0;
               animation: fadein 0.4s;
+              @supports (-ms-ime-align: auto) {
+                animation: none;
+              }
             }
             // .image {
             //   z-index: 0;
@@ -584,8 +587,6 @@
             grid-template-rows: 43px 48px;
             align-items: start;
             justify-items: end;
-            // max-width: 100%;
-            // min-width: 180px;
             min-height: 180px;
             margin-bottom: 0px;
             // box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 1) inset;
@@ -595,15 +596,19 @@
               grid-row: 1/4;
               max-height: 45vw;
               width: 100%;
-              // for background image
-              // width: 100%;
-              // height: 100%;
-              // background-size: cover;
-              // background-position: center top;
               object-fit: cover;
               object-position: center top;
               z-index: 0;
               animation: fadein 0.4s;
+              @supports (-ms-ime-align: auto) {
+                animation: none;
+              }
+            }
+            @media (max-width: 400px) {
+              // change in the image resolution causes image high to skip in chrome
+              .image {
+                min-height: 100%;
+              }
             }
             @media (max-width: 400px) {
               // change in the image resolution causes image high to skip in chrome

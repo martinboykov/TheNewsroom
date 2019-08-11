@@ -3,13 +3,13 @@ import { HelperService } from './../shared/helper.service';
 import { Router } from '@angular/router';
 import { Post } from './post.model';
 import { Comment } from './comment.model';
-import { Subject, of } from 'rxjs';
+import { Subject, of, concat } from 'rxjs';
 import { map, concatMap, delay, repeat } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from '../../environments/environment';
-import { NotificationService } from '../shared/notification.service';
+import { NotificationService } from '../logging/notification.service';
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({
@@ -45,16 +45,16 @@ export class PostService {
 
 
   getPosts(url: String, commentsPerPage: number, currentPage: number) {
-    //  this.http.get(`${BACKEND_URL}` + '/urlhere').subscribe(); // testing error handling
-
     const pageSize = commentsPerPage;
     const page = currentPage;
     const queryParams = `?pageSize=${pageSize}&page=${page}`;
     return this.http
-      .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams)
+      .get<{ message: string, data: { posts: Post[], totalPostsCount: number } }>(BACKEND_URL + url + queryParams)
       .subscribe((postData) => {
-        this.posts = postData.data;
+        this.posts = postData.data.posts;
         this.postsUpdated.next([...this.posts]);
+        this.totalPostsCount = postData.data.totalPostsCount;
+        this.totalPostsUpdated.next(this.totalPostsCount);
       });
   }
   getTotalPostsCount(subRoute: string) {
@@ -254,246 +254,226 @@ export class PostService {
   // Mock survice
   // mongodb Mock posts loading
   // -------------------------
-  addMockPost(options) {
-    let post;
-    const category = options.category;
-    const subcategory = options.subcategory;
-    const imageUrl = options.imageUrl;
-    this.categoryService.getCategoryPostsTotalCount(category).toPromise()
-      .then((response) => {
-        const counter = response.data + 1;
-        post = {
-          content: ` <div>Mock ${subcategory} content ${counter}.
-          Moutain bike is awesome&nbsp;Cras sit amet lorem sit amet sem finibus convallis. Aliquam sed ante volutpat, vehicula mi ut,
-    luctus velit.Sed erat sem, accumsan in quam nec, iaculis posuere nisi. Aliquam varius mattis ante eget sodales.Donec rhoncus, quam
-    eu aliquet varius, dolor orci ullamcorper nisi, id aliquam purus augue id arcu.Donec blandit pharetra dictum. Duis arcu est,
-    auctor eget lacinia et, interdum et metus.Nullam ullamcorper lorem odio, sed ultrices odio maximus a. Curabitur molestie,
-    urna sed pellentesque pulvinar,dui tortor dictum orci, eu semper lacus erat sit amet tortor.</div>
-<div><br></div>
-<div>Integer vitae mauris egestas est gravida mollis. Nulla vel convallis ex.
-Vestibulum id lacus quis nisi pellentesque ultricies sed id nisl.Sed elit mauris,
-blandit nec nunc cursus, sollicitudin tristique tellus. Morbi pellentesque nunc ac tincidunt fermentum.Ut
-    aliquam lacus ut lobortis auctor. Sed condimentum, urna vitae sagittis interdum, nulla lacus laoreet massa,
-    non dignissim purus elit eu lectus. Etiam nulla est, consectetur et pharetra non, ultricies nec massa.
-    Duis consectetur risus a interdum venenatis. Nullam ut magna nec elit convallis tempus tristique quis nunc.
-    Vivamus et molestie velit. Aliquam eleifend,arcu ac condimentum mattis, nisi lectus vestibulum eros,
-     sit amet sagittis tortor ipsum sed lorem.Fusce sit amet malesuada metus. Sed sit amet sapien
-    condimentum, scelerisque libero a, sodales lorem.Integer malesuada volutpat justo,
-     sit amet vulputate lorem condimentum at. In suscipit mauris non mauris laoreet luctus.</div>
-<div><br></div>
-<div>Phasellus lectus ligula, ullamcorper a est eu, imperdiet euismod sapien. Sed maximus,
-diam vitae blandit tincidunt,justo ligula fringilla turpis, eget faucibus erat nibh non elit.
-Proin nec malesuada ipsum. Maecenas pretium felis vulputate,sollicitudin
-    metus eu, semper sem. Sed a sem posuere, rhoncus dui nec, vulputate arcu. Cras eget porta nisl.
-    Sed luctus dui sed ligula fermentum, ut mattis nisl pharetra.\n\nUt pellentesque odio ac vulputate ornare. Etiam vel suscipit velit.
-    Cras in euismod nunc. Fusce accumsan nunc enim,eu dapibus lacus malesuada sed. Maecenas ullamcorper condimentum ligula,
-    vitae molestie diam rhoncus faucibus.Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
-    Donec eget arcu mi.Ut lacinia tortor in eros bibendum, tempor ultricies odio dignissim.
-    Aenean venenatis lorem gravida vestibulum ullamcorper. Aliquam semper varius rutrum. Nam vel metus nec lorem gravida blandit in a justo.
-     Nam et consectetur est.In hac habitasse platea dictumst. Phasellus volutpat felis congue cursus aliquet.
-     Pellentesque ex nibh,venenatis non sapien nec, rhoncus interdum ipsum.</div>`,
-          category: category,
-          image: imageUrl,
-        };
-        if (subcategory) {
-          post.title = `Mock ${category} title ${counter} about ${subcategory}`;
-          post.subcategory = subcategory;
-          post.tags = [`${subcategory} ${counter}`, `${subcategory}`];
-        } else {
-          post.title = `Mock ${category} title ${counter}`;
-          post.tags = [`${category} ${counter}`, `${category}`];
-        }
-        console.log(post);
-        this.editPost(post, 'create');
-      });
-  }
+  //   addMockPost(counter, options) {
+  //     let post;
+  //     const category = options.category;
+  //     const subcategory = options.subcategory;
+  //     const imageUrl = options.imageUrl;
+  //     post = {
+  //       content: `<div>Mock content ${counter}.
+  //           Moutain bike is awesome&nbsp;Cras sit amet lorem sit amet sem finibus convallis. Aliquam sed ante volutpat, vehicula mi ut,
+  //     luctus velit.Sed erat sem, accumsan in quam nec, iaculis posuere nisi. Aliquam varius mattis ante eget sodales.Donec rhoncus, quam
+  //     eu aliquet varius, dolor orci ullamcorper nisi, id aliquam purus augue id arcu.Donec blandit pharetra dictum. Duis arcu est,
+  //     auctor eget lacinia et, interdum et metus.Nullam ullamcorper lorem odio, sed ultrices odio maximus a. Curabitur molestie,
+  //     urna sed pellentesque pulvinar,dui tortor dictum orci, eu semper lacus erat sit amet tortor.</div>
+  // <div><br></div>
+  // <div>Integer vitae mauris egestas est gravida mollis. Nulla vel convallis ex.
+  // Vestibulum id lacus quis nisi pellentesque ultricies sed id nisl.Sed elit mauris,
+  // blandit nec nunc cursus, sollicitudin tristique tellus. Morbi pellentesque nunc ac tincidunt fermentum.Ut
+  //     aliquam lacus ut lobortis auctor. Sed condimentum, urna vitae sagittis interdum, nulla lacus laoreet massa,
+  //     non dignissim purus elit eu lectus. Etiam nulla est, consectetur et pharetra non, ultricies nec massa.
+  //     Duis consectetur risus a interdum venenatis. Nullam ut magna nec elit convallis tempus tristique quis nunc.
+  //     Vivamus et molestie velit. Aliquam eleifend,arcu ac condimentum mattis, nisi lectus vestibulum eros,
+  //      sit amet sagittis tortor ipsum sed lorem.Fusce sit amet malesuada metus. Sed sit amet sapien
+  //     condimentum, scelerisque libero a, sodales lorem.Integer malesuada volutpat justo,
+  //      sit amet vulputate lorem condimentum at. In suscipit mauris non mauris laoreet luctus.</div>
+  // <div><br></div>
+  // <div>Phasellus lectus ligula, ullamcorper a est eu, imperdiet euismod sapien. Sed maximus,
+  // diam vitae blandit tincidunt,justo ligula fringilla turpis, eget faucibus erat nibh non elit.
+  // Proin nec malesuada ipsum. Maecenas pretium felis vulputate,sollicitudin
+  //     metus eu, semper sem. Sed a sem posuere, rhoncus dui nec, vulputate arcu. Cras eget porta nisl.
+  //     Sed luctus dui sed ligula fermentum, ut mattis nisl pharetra.Ut pellentesque odio ac vulputate ornare. Etiam vel suscipit velit.
+  //     Cras in euismod nunc. Fusce accumsan nunc enim,eu dapibus lacus malesuada sed. Maecenas ullamcorper condimentum ligula,
+  //     vitae molestie diam rhoncus faucibus.Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+  //     Donec eget arcu mi.Ut lacinia tortor in eros bibendum, tempor ultricies odio dignissim.
+  //     Aenean venenatis lorem gravida vestibulum ullamcorper. Nam vel metus nec lorem gravida blandit in a justo.
+  //      Nam et consectetur est.In hac habitasse platea dictumst. Phasellus volutpat felis congue cursus aliquet.
+  //      Pellentesque ex nibh,venenatis non sapien nec, rhoncus interdum ipsum.</div>`,
+  //       category: category,
+  //       image: imageUrl,
+  //     };
+  //     if (subcategory) {
+  //       post.title = `Mock ${category} title ${counter} about ${subcategory}`;
+  //       post.subcategory = subcategory;
+  //       post.tags = [`${subcategory} ${counter}`, `${subcategory}`];
+  //     } else {
+  //       post.title = `Mock ${category} title ${counter}`;
+  //       post.tags = [`${category} ${counter}`, `${category}`];
+  //     }
+  //     console.log(post);
+  //     this.editPost(post, 'create');
+  //   }
 
-  addMockPosts(count) {
-    const task = of(null)
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'bulgaria',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564819156418_rila-lakes.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'world',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564823551794_donald-trump-putin-meeting-gq.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'sport', subcategory: 'football',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554814323954_lionel-messi.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'sport', subcategory: 'basketball',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1563541767492_20190530-kawhi-leonard.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'sport', subcategory: 'tennis',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554814358520_tennis.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'entertainment', subcategory: 'movies',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554811450864_thematrix1999.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'entertainment', subcategory: 'music',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554818986842_u2.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'entertainment', subcategory: 'tv',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554818901323_truedetective.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'technology', subcategory: 'smartphones',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554811430909_smartphone.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'technology', subcategory: 'cars',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554811395034_teslamodel3.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'bulgaria',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564820059919_sofia-bulgaria-sveta-sofia.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'world',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564823898378_china-us-container-war.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'sport', subcategory: 'football',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564821858266_ronaldo.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'sport', subcategory: 'basketball',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564821069459_kawhi-leonard-gp-clippers.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'sport', subcategory: 'tennis',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564822971994_rogerfederer.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'entertainment', subcategory: 'movies',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564849588587_pulp-fiction.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'entertainment', subcategory: 'music',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564824737557_queen.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'entertainment', subcategory: 'tv',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564824329978_breaking-bad.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'technology', subcategory: 'smartphones',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564825602473_huawei-usa-ban.jpeg'
-          }));
-        })
-      )
-      .pipe(
-        delay(3000),
-        concatMap(() => {
-          return of(this.addMockPost({
-            category: 'technology', subcategory: 'cars',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564825966221_roadster-social.jpeg'
-          }));
-        })
-      );
-    let remain = count;
-    task.pipe(repeat(count)).subscribe(() => {
-      console.log('DONE: ', remain);
-      remain -= 1;
-    });
-  }
+  // addMockPosts() {
+  //   let nextPostCount = null;
+  //   const route = `/posts/totalCount`;
+  //   const task = this.http.get<{ message: string, data: number }>(`${BACKEND_URL}` + route)
+  //     .pipe(delay(100),
+  //       concatMap((postsCount) => {
+  //         nextPostCount = postsCount.data + 1;
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'bulgaria',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564819156418_rila-lakes.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'world',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564823551794_donald-trump-putin-meeting-gq.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'sport', subcategory: 'football',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554814323954_lionel-messi.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'sport', subcategory: 'basketball',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1563541767492_20190530-kawhi-leonard.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'sport', subcategory: 'tennis',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554814358520_tennis.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'entertainment', subcategory: 'movies',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554811450864_thematrix1999.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'entertainment', subcategory: 'music',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554818986842_u2.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'entertainment', subcategory: 'tv',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554818901323_truedetective.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'technology', subcategory: 'smartphones',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554811430909_smartphone.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'technology', subcategory: 'cars',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1554811395034_teslamodel3.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'bulgaria',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564820059919_sofia-bulgaria-sveta-sofia.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'world',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564823898378_china-us-container-war.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'sport', subcategory: 'football',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564821858266_ronaldo.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'sport', subcategory: 'basketball',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564821069459_kawhi-leonard-gp-clippers.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'sport', subcategory: 'tennis',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564822971994_rogerfederer.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'entertainment', subcategory: 'movies',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564849588587_pulp-fiction.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'entertainment', subcategory: 'music',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564824737557_queen.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'entertainment', subcategory: 'tv',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564824329978_breaking-bad.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'technology', subcategory: 'smartphones',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564825602473_huawei-usa-ban.jpeg'
+  //         }));
+  //       })
+  //     )
+  //     .pipe(delay(100),
+  //       concatMap(() => {
+  //         return of(this.addMockPost(nextPostCount++, {
+  //           category: 'technology', subcategory: 'cars',
+  //           imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1564825966221_roadster-social.jpeg'
+  //         }));
+  //       })
+  //     );
+  //   const count = 20;
+  //   let remain = count;
+  //   task.pipe(repeat(count), delay(2000)).subscribe(() => {
+  //     console.log('Done with task - ' + remain);
+  //     remain -= 1;
+  //   });
+  // }
 }

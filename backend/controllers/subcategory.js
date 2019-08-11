@@ -26,11 +26,11 @@ const getSubcategory = async (req, res, next) => {
     data: subcategory,
   });
 };
-const getSubcategoryPostIds = async (req, res, next) => {
+const getSubcategoryPostsPartial = async (req, res, next) => {
   const name = req.params.name;
   const subcategory = await Subcategory.findOne({ name: name })
     .select('posts')
-    .populate('posts', ' category.name subcategory.name title');
+    .populate('posts', 'category.name subcategory.name title');
   if (!subcategory) {
     return res.status(400).json({ message: 'No such subcategory.' });
   }
@@ -41,7 +41,7 @@ const getSubcategoryPostIds = async (req, res, next) => {
 };
 
 const getSubcategories = async (req, res, next) => {
-  const subcategories = await Subcategory.find({ isVisible: true });
+  const subcategories = await Subcategory.find({ isVisible: true }).limit(30);
   res.status(200).json({
     message: 'Subcategories fetched successfully',
     data: subcategories,
@@ -49,40 +49,43 @@ const getSubcategories = async (req, res, next) => {
 };
 
 const getSubcategoryPosts = async (req, res, next) => {
+  const pageSize = parseInt(req.query.pageSize, 10) || 30;
+  const currentPage = parseInt(req.query.page, 10) || 1;
   const subcategoryName = req.params.name;
-  const subcategory = await Subcategory.findOne({ name: subcategoryName });
-  if (!subcategory) {
-    return res.status(404).json({ message: 'No such subcategory!' });
+  const posts = await Post.aggregate([
+    { $match: { isVisible: true, 'subcategory.name': subcategoryName } },
+    {
+      $facet: {
+        paginatedResults: [
+          {
+            $project: {
+              _id: 1, title: 1, 'content': { $substr: ['$content', 0, 1000] },
+              category: 1, subcategory: 1, dateCreated: 1,
+              author: 1, imageMainPath: 1,
+            },
+          },
+          { $sort: { dateCreated: -1 } },
+          { $limit: pageSize * (currentPage - 1) + pageSize },
+          { $skip: pageSize * (currentPage - 1) }],
+        totalCount: [
+          { $count: 'count' }],
+      },
+    },
+  ]);
+  let postsArr = posts[0].paginatedResults;
+  let totalPostsCount = posts[0].totalCount[0].count;
+  if (!posts[0].totalCount[0]) {
+    totalPostsCount = 0;
   }
-  const pageSize = parseInt(req.query.pageSize, 10);
-  const currentPage = parseInt(req.query.page, 10);
-  const postQuery = Post.find({ 'subcategory.name': subcategoryName });
-  if (pageSize && currentPage) {
-    postQuery
-      .skip(pageSize * (currentPage - 1))
-      .limit(pageSize);
+  if (posts[0].paginatedResults.length === 0) {
+    postsArr = [];
   }
-  const posts = await postQuery
-    .select(
-      '_id title content category subcategory dateCreated author imageMainPath')
-    .sort({ 'dateCreated': -1 });
-  posts.map((post) => {
-    let content = post.content;
-    // for eventual HTML post document
-    // --------------------------------
-    // const el = document.createElement('html');
-    // el.innerHTML = content;
-    // el.querySelector('.first-paragraph'); // Live NodeList of your anchor elements
-
-    content = content.substring(0, 1000); // for now...
-    post.content = content;
-    // console.log(post);
-    return post;
-  });
-
   return res.status(200).json({
-    message: `Posts of Subcategory with name: ${req.params.name} fetched successfully`, // eslint-disable-line max-len
-    data: posts,
+    message: `Posts for Subcategory with name: ${subcategoryName} fetched successfully`, // eslint-disable-line max-len
+    data: {
+      posts: postsArr,
+      totalPostsCount: totalPostsCount,
+    },
   });
 };
 
@@ -94,9 +97,6 @@ const getSubcategoryPostsTotalCount = async (req, res, next) => {
   let totalCount;
   if (posts[0]) totalCount = posts[0].count || 0;
   if (!posts[0]) totalCount = 0;
-  // const subcategoryPosts = await Subcategory
-  //   .findOne({ name: req.params.name });
-  // const totalCount = subcategoryPosts.posts.length;
   res.status(200).json({
     message: 'Total posts count fetched successfully',
     data: totalCount,
@@ -255,7 +255,7 @@ const deleteSubcategory = async (req, res, next) => {
 
 module.exports = {
   getSubcategory,
-  getSubcategoryPostIds,
+  getSubcategoryPostsPartial,
   getSubcategories,
   getSubcategoryPosts,
   getSubcategoryPostsTotalCount,

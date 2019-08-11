@@ -5,8 +5,6 @@ const { Post } = require('../models/post');
 const getTags = async (req, res, next) => {
   const queryNamesOnly = req.query.namesOnly;
   const queryName = req.query.name;
-  console.log(queryNamesOnly);
-  console.log(queryName);
   let tagQuery;
   if (queryNamesOnly === 'true' && queryName) {
     tagQuery = Tag.find({
@@ -15,7 +13,6 @@ const getTags = async (req, res, next) => {
   }
   if (queryNamesOnly !== 'true') tagQuery = Tag.find();
   const tags = await tagQuery;
-  console.log(tags);
   res.status(200).json({
     message: 'Tags fetched successfully',
     data: tags,
@@ -24,36 +21,42 @@ const getTags = async (req, res, next) => {
 
 const getTagPosts = async (req, res, next) => {
   const tagName = req.params.name;
-  const tag = await Tag.findOne({ name: tagName });
-  if (!tag) return res.status(404).json({ message: 'No such tag!' });
-  const pageSize = parseInt(req.query.pageSize, 10);
-  const currentPage = parseInt(req.query.page, 10);
-
-  const postsQuery = Post.find({
-    tags: { $elemMatch: { name: tagName } },
-  });
-
-  if (pageSize && currentPage) {
-    postsQuery
-      .skip(pageSize * (currentPage - 1))
-      .limit(pageSize);
+  const pageSize = parseInt(req.query.pageSize, 10) || 30;
+  const currentPage = parseInt(req.query.page, 10) || 1;
+  const posts = await Post.aggregate([
+    { $match: { isVisible: true, tags: { $elemMatch: { name: tagName } } } },
+    {
+      $facet: {
+        paginatedResults: [
+          {
+            $project: {
+              _id: 1, title: 1, 'content': { $substr: ['$content', 0, 1000] },
+              category: 1, subcategory: 1, dateCreated: 1,
+              author: 1, imageMainPath: 1,
+            },
+          },
+          { $sort: { dateCreated: -1 } },
+          { $limit: pageSize * (currentPage - 1) + pageSize },
+          { $skip: pageSize * (currentPage - 1) }],
+        totalCount: [
+          { $count: 'count' }],
+      },
+    },
+  ]);
+  let postsArr = posts[0].paginatedResults;
+  let totalPostsCount = posts[0].totalCount[0].count;
+  if (!posts[0].totalCount[0]) {
+    totalPostsCount = 0;
   }
-  const posts = await postsQuery
-    .select(
-      '_id title content category subcategory dateCreated author imageMainPath')
-    .sort({ 'dateCreated': -1 });
-
-  posts.map((post) => {
-    let content = post.content;
-    content = content.substring(0, 300); // for now...
-    post.content = content;
-    // console.log(post);
-    return post;
-  });
+  if (posts[0].paginatedResults.length === 0) {
+    postsArr = [];
+  }
   return res.status(200).json({
-    message: `Posts of Category with name: ${req.params.name} fetched successfully`, // eslint-disable-line max-len
-    // data: postAllComments[0].posts,
-    data: posts,
+    message: `Posts for Tag with name: ${tagName} fetched successfully`, // eslint-disable-line max-len
+    data: {
+      posts: postsArr,
+      totalPostsCount: totalPostsCount,
+    },
   });
 };
 
@@ -65,10 +68,6 @@ const getTagPostsTotalCount = async (req, res, next) => {
   let totalCount;
   if (posts[0]) totalCount = posts[0].count || 0;
   if (!posts[0]) totalCount = 0;
-  // const tagPosts = await Tag
-  //   .findOne({ name: req.params.name });
-  // if (!tagPosts) return res.status(404).json({ message: 'No such Page!' });
-  // const totalCount = tagPosts.posts.length;
   return res.status(200).json({
     message: 'Total posts count fetched successfully',
     data: totalCount,
