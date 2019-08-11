@@ -23,10 +23,6 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   @ViewChild('jodit') jodit;
   @ViewChild('selectTags') selectTags;
   devMode: boolean;
-<<<<<<< HEAD
-  mockPostCount = 20;
-=======
->>>>>>> feature/small-fixes
   mode;
   postId: string;
   postForm: FormGroup;
