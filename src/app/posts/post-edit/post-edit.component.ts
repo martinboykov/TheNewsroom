@@ -105,8 +105,8 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
             }, []);
             this.postForm.controls.tags.setValue([...tagsArray]);
 
-
             this.loadTags();
+
             // 2. (async) get Categories -> to fill the ng-select categories options
             // and set the post category
             this.categoryService.getCategories();
@@ -123,12 +123,14 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
           })[0];
 
           // 2.1. (sync) get Subcategories -> to fill the ng-select subcategories options (if such exists)
-          if (currentCategory.subcategories) {
-            this.subcategories = currentCategory.subcategories.reduce((accumulator, currentValue) => {
-              accumulator.push(currentValue.name);
-              return accumulator;
-            }, []);
+          if (currentCategory.subcategories.length > 0) {
+            // this.subcategories = currentCategory.subcategories.reduce((accumulator, currentValue) => {
+            //   accumulator.push(currentValue.name);
+            //   return accumulator;
+            // }, []);
+            this.subcategories = currentCategory.subcategories;
           }
+
           // 2.2. (sync) set ng-select subcategory input field (if such exists)
           if (this.post.subcategory) {
             this.postForm.controls.subcategory.setValue(this.post.subcategory.name);
@@ -425,8 +427,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     this.tags.setValue([...this.tags.value, tag]);
   }
   customSearchFn = () => {
-    console.log('custom search');
-
+    // console.log('custom search');
   }
 
 

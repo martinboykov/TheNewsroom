@@ -6,5 +6,5 @@ export class HttpError {
   static NOT_FOUND = 404;
   static TIMEOUT = 408;
   static INTERNAL_SERVER_ERROR = 500;
-  static SERVER_REQUEST_LIMIT_REACHED = 429;
+  // static SERVER_REQUEST_LIMIT_REACHED = 429;
 }

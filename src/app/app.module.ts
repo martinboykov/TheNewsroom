@@ -1,5 +1,4 @@
-import { AuthInterceptor } from './auth/auth-interceptor';
-import { ServerErrorInterceptor } from './error-handling/server-error.interceptor';
+
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -12,7 +11,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 
 import { AppRoutingModule } from './app-routing.module';
-
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -32,9 +30,9 @@ import { InsideAsideDirective } from './aside/aside-right-tripple/insideAside.di
 import { OutsideAsideDirective } from './aside/aside-right-tripple/outsideAside.directive';
 import { SelectorsAsideDirective } from './aside/aside-right-tripple/selectorsAside.directive';
 
-
-
 import { GlobalErrorHandler } from './error-handling/global-error-handler';
+import { AuthInterceptor } from './auth/auth-interceptor';
+import { ServerErrorInterceptor } from './error-handling/server-error.interceptor';
 import { LoggingInterceptor } from './logging/logging-interceptor';
 
 @NgModule({
@@ -81,8 +79,8 @@ import { LoggingInterceptor } from './logging/logging-interceptor';
   providers: [
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     // multi : true -> dont overwrite existing interceptors
-    { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: LoggingInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]

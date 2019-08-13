@@ -24,14 +24,14 @@ const getPosts = async (req, res, next) => {
       },
     },
   ]);
-  let postsArr = posts[0].paginatedResults;
-  let totalPostsCount = posts[0].totalCount[0].count;
-  if (!posts[0].totalCount[0]) {
-    totalPostsCount = 0;
-  }
-  if (posts[0].paginatedResults.length === 0) {
-    postsArr = [];
-  }
+
+  let postsArr;
+  let totalPostsCount;
+  if (!posts[0].totalCount[0]) totalPostsCount = 0;
+  else totalPostsCount = posts[0].totalCount[0].count;
+  if (posts[0].paginatedResults.length === 0) postsArr = [];
+  else postsArr = posts[0].paginatedResults;
+
   return res.status(200).json({
     message: 'Posts and total posts count fetched successfully',
     data: {
@@ -139,14 +139,13 @@ const getSearchedPosts = async (req, res, next) => {
       },
     },
   ]);
-  let postsArr = posts[0].paginatedResults;
-  let totalPostsCount = posts[0].totalCount[0].count;
-  if (!posts[0].totalCount[0]) {
-    totalPostsCount = 0;
-  }
-  if (posts[0].paginatedResults.length === 0) {
-    postsArr = [];
-  }
+
+  let postsArr;
+  let totalPostsCount;
+  if (!posts[0].totalCount[0]) totalPostsCount = 0;
+  else totalPostsCount = posts[0].totalCount[0].count;
+  if (posts[0].paginatedResults.length === 0) postsArr = [];
+  else postsArr = posts[0].paginatedResults;
 
   return res.status(200).json({
     message: 'Posts fetched successfully',

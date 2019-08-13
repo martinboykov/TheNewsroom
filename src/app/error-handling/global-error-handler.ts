@@ -30,17 +30,15 @@ export class GlobalErrorHandler implements ErrorHandler {
       let httpErrorCode;
       if (error instanceof HttpErrorResponse) {
         // Server Error
-        console.log('SERVER ERROR');
         message = this.errorService.getServerMessage(error);
         stackTrace = this.errorService.getServerStack(error);
         httpErrorCode = error.status;
         // console.log(httpErrorCode);
-        // console.log(error);
-
         switch (httpErrorCode) {
           case HttpError.ERR_CONNECTION_REFUSED: // 0
             this.notifier.showError('There is no connection to the server', 'Server down');
-            this.loggerSlack.logError(message, stackTrace);
+            this.loggerSlack.logError(`>>>>>>>>>SERVER ERROR
+            ${message}`, stackTrace);
             break;
           case HttpError.BAD_REQUEST: // 400
             this.notifier.showError(message, this.DEFAULT_ERROR_TITLE);
@@ -62,13 +60,15 @@ export class GlobalErrorHandler implements ErrorHandler {
             this.notifier.showError('Too much time has elapsed', 'Not fount in time!');
             break;
           case HttpError.INTERNAL_SERVER_ERROR: // 500
-            this.loggerSlack.logError(message, stackTrace);
+            this.loggerSlack.logError(`>>>>>>>>>SERVER ERROR
+          ${message}`, stackTrace);
             this.notifier.showError('Invalid route or server crash', this.DEFAULT_ERROR_TITLE);
             break;
-          case HttpError.SERVER_REQUEST_LIMIT_REACHED: // 429
-            this.loggerSlack.logError(message, stackTrace);
-            this.notifier.showError('wait for a while', 'wait for a while');
-            break;
+          // case HttpError.SERVER_REQUEST_LIMIT_REACHED: // 429
+          //   this.loggerSlack.logError(`>>>>>>>>>SERVER ERROR
+          // ${message}`, stackTrace);
+          //   this.notifier.showError('wait for a while', 'wait for a while');
+          //   break;
 
           default:
             this.loggerSlack.logError(message, stackTrace);
@@ -76,11 +76,10 @@ export class GlobalErrorHandler implements ErrorHandler {
         }
       } else {
         // Client Error
-        console.log('CLIENT ERROR');
-        // console.log(error);
         message = this.errorService.getClientMessage(error);
         stackTrace = this.errorService.getClientStack(error);
-        this.loggerSlack.logError(message, stackTrace);
+        this.loggerSlack.logError(`>>>>>>>>>CLIENT ERROR
+        ${message}`, stackTrace);
         // this.loggerSentry.logError(error);
         this.notifier.showError(this.DEFAULT_ERROR_TITLE, 'Ooops!');
       }
