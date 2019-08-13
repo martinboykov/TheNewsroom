@@ -65,6 +65,7 @@
       </div>
     </div>
     <div class="edit"
+         title="add new post"
          *ngIf="currentUser?.roles?.isWriter === true">
       <a class="edit__link"
          routerLink="/edit">
@@ -78,6 +79,7 @@
       </a>
     </div>
     <div class="admin"
+         title="control panel"
          *ngIf="currentUser?.roles?.isAdmin === true">
       <a class="admin__link"
          routerLink="/admin">
@@ -90,7 +92,8 @@
         </svg>
       </a>
     </div>
-    <div class="auth">
+    <div class="auth"
+         title="authenticate">
       <a class="auth__link"
          routerLink="/auth/user"
          *ngIf="currentUser">

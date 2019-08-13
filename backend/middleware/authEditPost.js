@@ -6,7 +6,8 @@ async function authEditPost(req, res, next) {
     const userId = req.user._id;
     const post = await Post.findOne({ _id: postId });
     if (!post) return res.status(400).json({ message: 'No such post.' });
-    if (post.author._id.toString() !== userId.toString()) {
+    if (post.author._id.toString() !== userId.toString()
+      && !req.user.roles.isAdmin) {
       return res.status(401).json({
         message: 'Access denied. Unouthorized actions!',
       });

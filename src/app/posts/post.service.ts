@@ -1,3 +1,4 @@
+import { WindowRef } from './../shared/winref.service';
 import { CategoryService } from './../admin/category.service';
 import { HelperService } from './../shared/helper.service';
 import { Router } from '@angular/router';
@@ -40,6 +41,7 @@ export class PostService {
     private helper: HelperService,
     private notifier: NotificationService,
     private categoryService: CategoryService,
+    private windowRef: WindowRef,
   ) { }
 
 
@@ -177,6 +179,7 @@ export class PostService {
           // this.postsUpdated.next([...this.posts]);
           this.getlatestPosts();
           this.notifier.showSuccess('Post was created successfully');
+          this.windowRef.scrollToTop(0);
           this.router.navigate(['/']);
         });
     }
@@ -192,6 +195,7 @@ export class PostService {
           // this.postsUpdated.next([...this.posts]);
           this.notifier.showSuccess('Post was updated successfully');
           const postLink = this.helper.createRoute(newPost);
+          this.windowRef.scrollToTop(0);
           this.router.navigateByUrl(postLink);
         });
     }
@@ -206,6 +210,7 @@ export class PostService {
         this.getPopularPosts();
         this.getCommentedPosts();
         this.notifier.showSuccess('Post was deleted successfully');
+        this.windowRef.scrollToTop(0);
         this.router.navigateByUrl('/');
       });
   }

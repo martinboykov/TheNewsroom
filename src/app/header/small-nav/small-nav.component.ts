@@ -89,10 +89,6 @@ export class SmallNavComponent implements OnInit, OnDestroy {
             this.subcategory = this.location.path().substring(indexSubcategory).replace('subcategory-new/', '');
             this.category = this.location.path().substring(indexAdmin, indexSubcategory);
             this.routes.push({
-              name: `${this.category}`,
-              link: `admin/category/${this.category}`
-            });
-            this.routes.push({
               name: `subcategory-new`,
               link: `admin/${this.category}/subcategory-new`
             });
