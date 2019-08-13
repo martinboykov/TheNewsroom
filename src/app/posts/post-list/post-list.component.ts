@@ -44,9 +44,9 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   // Scroller
   postsScroller: Post[];
-  currentPageScroller = 3;
-  itemsPerScroll = 15;
-  throttle = 150;
+  currentPageScroller = 1;
+  itemsPerScroll = 30;
+  throttle = 750;
   scrollDistance = 3;
   // scrollUpDistance = 2;
 
@@ -86,10 +86,10 @@ export class PostListComponent implements OnInit, OnDestroy {
       .subscribe((posts: Post[]) => {
         this.posts = posts;
         if (this.postsPagination.length === 0 || !this.isMobileResolution) {
-          this.postsPagination = posts;
+          this.postsPagination = posts.slice(0, this.paginator.itemsPerPage);
         }
         if (this.postsScroller.length === 0 || this.isMobileResolution) {
-          this.postsScroller = posts;
+          this.postsScroller = [...this.postsScroller, ...posts];
         }
       });
 
