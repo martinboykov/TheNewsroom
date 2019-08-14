@@ -89,7 +89,8 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     if (this.postId) {
       this.mode = 'update';
       // 1. (async) get post
-      this.postService.getPost(this.postId)
+      this.postService.getPost(this.postId);
+      this.postService.getCurrentPostUpdateListener()
         .pipe(
           // delay(5000),
           concatMap((postData) => {

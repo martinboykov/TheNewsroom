@@ -80,6 +80,8 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
   }
   onPostSelected(post) {
     const postRoute = this.helper.createRoute(post);
+    this.postService.getRelatedPosts(post._id);
+    this.postService.getPost(post._id);
     this.router.navigateByUrl(postRoute);
   }
 

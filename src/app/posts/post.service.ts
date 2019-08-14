@@ -23,8 +23,13 @@ export class PostService {
   // for post-list
   private totalPostsCount: number;
   private postsUpdated = new Subject<any[]>();
-  // private postUpdated = new Subject<Post>();
   private totalPostsUpdated = new Subject<number>();
+
+  // for details
+  private currentPost: any;
+  private currentPostUpdated = new Subject<any>();
+  private relatedPosts: any[] = []; // only part of the data for each Post
+  private relatedPostsUpdated = new Subject<any>();
 
   // for aside-tripple
   private latestPosts: any[] = []; // only part of the data for each Post
@@ -34,7 +39,6 @@ export class PostService {
   private commentedPosts: any[] = []; // only part of the data for each Post
   private commentedPostsUpdated = new Subject<any>();
 
-
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -43,8 +47,6 @@ export class PostService {
     private categoryService: CategoryService,
     private windowRef: WindowRef,
   ) { }
-
-
 
   getPosts(url: String, commentsPerPage: number, currentPage: number) {
     const pageSize = commentsPerPage;
@@ -80,11 +82,11 @@ export class PostService {
         map((response) => {
           return response.data;
         })
-      );
-    // .subscribe((response: any) => {
-    //   const post = response.data;
-    //   this.postUpdated.next(post);
-    // });
+      )
+      .subscribe((data: any) => {
+        this.currentPost = data;
+        this.currentPostUpdated.next(this.currentPost);
+      });
   }
 
   getPostComments(url: String, commentsPerPage: number, currentPage: number) {
@@ -95,8 +97,7 @@ export class PostService {
       .get<{ message: string, data: any }>(BACKEND_URL + url + queryParams);
   }
 
-  getRelatedPosts(post: Post) {
-    const _id = post._id;
+  getRelatedPosts(_id: string) {
     const route = `/posts/${_id}/related`;
     return this.http
       .get<{ message: string, data: any }>(BACKEND_URL + route)
@@ -104,7 +105,10 @@ export class PostService {
         map((response) => {
           return response.data;
         })
-      );
+      ).subscribe((data) => {
+        this.relatedPosts = data;
+        this.relatedPostsUpdated.next(this.relatedPosts);
+      });
   }
 
   // for Aside-Tripple
@@ -238,6 +242,9 @@ export class PostService {
       );
   }
 
+  getCurrentPostUpdateListener() { // as we set postUpdate as private
+    return this.currentPostUpdated.asObservable(); // returns object to which we can listen, but we cant emit
+  }
   getPostsUpdateListener() { // as we set postUpdate as private
     return this.postsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }
@@ -254,6 +261,9 @@ export class PostService {
   }
   getCommentedPostsUpdateListener() { // as we set postUpdate as private
     return this.commentedPostsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
+  }
+  getRelatedPostsUpdateListener() { // as we set postUpdate as private
+    return this.relatedPostsUpdated.asObservable(); // returns object to which we can listen, but we cant emit
   }
 
   // Mock survice
