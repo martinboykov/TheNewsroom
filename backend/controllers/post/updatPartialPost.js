@@ -13,19 +13,12 @@ const { client } = require('./../../middleware/redis');
 // -----------------------------------------------------
 const popularityIncrease = async (req, res, next) => {
   const _id = req.params._id;
-  const post = await Post.findOne(
-    { _id: _id },
-  );
   // console.log(post);
+  const post = await Post.findByIdAndUpdate(
+    { _id: _id },
+    { $inc: { popularity: 1 } },
+    { new: true });
   if (!post) return res.status(404).json({ message: 'No such post!' });
-  post.popularity += 1;
-  await post.save();
-
-  // const post = await Post.findOneAndUpdate(
-  //   { _id: _id },
-  //   { $inc: { popularity: 1 } },
-  //   // { new: true },
-  // );
 
   return res.status(201).json({
     message: 'Post popularity updated successfully',
