@@ -10,6 +10,7 @@ import { Subcategory } from '../subcategory.model';
 import { PostService } from 'src/app/posts/post.service';
 import { timer } from 'rxjs';
 import { isDevMode } from '@angular/core';
+import { Post } from 'src/app/posts/post.model';
 
 @Component({
   selector: 'app-subcategory-edit',
@@ -24,9 +25,9 @@ export class SubcategoryEditComponent implements OnInit {
   categoryName: string;
   subcategoryName: string;
   subcategoryPostsTotalCount: number;
-  subcategoryPosts: [];
+  subcategoryPosts: Post[];
   subcategoryPostsBuffer = [];
-  selectedPost;
+  selectedPost: Post;
   loading = false;
   loadingPosts = false;
   loadedPosts = false;

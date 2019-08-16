@@ -1,3 +1,4 @@
+import { Post } from 'src/app/posts/post.model';
 import { WindowRef } from 'src/app/shared/winref.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -11,7 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./post-item.component.scss']
 })
 export class PostItemComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() post: any;
+  @Input() post: Post;
   // @Input() isMobileResolution: any;
   // @Input() is_400w_Required: any;
 

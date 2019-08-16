@@ -7,7 +7,7 @@ handlers:
   - url: /(.*\.(ico|gif|png|jpeg|jpg|css|js|svg))$
     static_files: angular/\1
     upload: angular/(.*)
-    expiration: "2d"
+    expiration: "10d"
   # Images in assets folder
   - url: /assets/images/(.*\.(png|jpeg|jpg|svg))$
     static_files: angular/assets/images/\1

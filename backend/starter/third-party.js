@@ -1,4 +1,5 @@
 /* eslint-disable no-process-env*/
+const debug = require('debug')('debug');
 const helmet = require('helmet');
 const compression = require('compression');
 const bodyParser = require('body-parser');
@@ -24,6 +25,29 @@ module.exports = ((app) => {
   Fawn.init(mongoose, 'fawn_transaction');
   app.use(bodyParser.json());
   app.use(cors());
+
+  app.use('/api/mockIO', async function(req, res, next) {
+    debug('pid', process.pid, 'handler start, blocking CPU');
+    const loop = () => setTimeout(() => {
+      debug('HTTP request finished');
+    }, 10000);
+    await loop();
+    debug('pid', process.pid, 'handler end, blocking CPU');
+    next();
+  });
+  app.use('/api/mockCPU', async function(req, res, next) {
+    debug('pid', process.pid, 'handler start, blocking CPU');
+    const loop = () => new Promise((resolve, reject) => {
+      for (let i = 0; i <= 10e9; i += 1) {
+        // CPU
+      }
+      resolve(debug('CPU finished the task'));
+    });
+    await loop();
+    debug('pid', process.pid, 'handler end, blocking CPU');
+    next();
+  });
+
   if (process.env.NODE_ENV === 'production') {
     app.use(helmet());
 

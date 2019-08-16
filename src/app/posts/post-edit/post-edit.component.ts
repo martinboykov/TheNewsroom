@@ -1,3 +1,4 @@
+import { Category } from './../../admin/category.model';
 import { HelperService } from './../../shared/helper.service';
 import { CategoryService } from './../../admin/category.service';
 // import { HeaderService } from './../../header/header.service';
@@ -12,6 +13,7 @@ import { tap, delay, concatMap, debounceTime, distinctUntilChanged, switchMap, c
 import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 import { WindowRef } from 'src/app/shared/winref.service';
 import { isDevMode } from '@angular/core';
+import { Subcategory } from 'src/app/admin/subcategory.model';
 
 
 @Component({
@@ -23,13 +25,13 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   @ViewChild('jodit') jodit;
   @ViewChild('selectTags') selectTags;
   devMode: boolean;
-  mode;
+  mode: string;
   postId: string;
   postForm: FormGroup;
   imagePreview: any;
   post: Post;
-  categories: any[] = [];
-  subcategories: any[] = [];
+  categories: Category[] = [];
+  subcategories: Subcategory[] = [];
   categoryselected;
   contentTextOnly = '';
   longWords = [];
@@ -39,7 +41,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   searchedTag = '';
   tagsInput = new Subject<string>();
   isIEOrEdge;
-  private categoriesSubscription: Subscription;
+  categoriesSubscription: Subscription;
   jodiConfig = this.getJoditConfig();
 
   @ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent;
@@ -585,6 +587,9 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
 
 
   ngOnDestroy() {
+    if (this.categoriesSubscription) {
+      this.categoriesSubscription.unsubscribe();
+    }
   }
 
 }

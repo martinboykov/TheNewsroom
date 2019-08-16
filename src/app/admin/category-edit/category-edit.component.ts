@@ -9,6 +9,7 @@ import { Location } from '@angular/common';
 import { timer } from 'rxjs';
 import { NotificationService } from '../../logging/notification.service';
 import { isDevMode } from '@angular/core';
+import { Post } from 'src/app/posts/post.model';
 
 @Component({
   selector: 'app-category-edit',
@@ -21,10 +22,10 @@ export class CategoryEditComponent implements OnInit {
   categoryForm: FormGroup;
   category: Category;
   categoryName: string;
-  categoryPosts: [];
+  categoryPosts: Post[];
   categoryPostsBuffer = [];
   categoryPostsTotalCount: number;
-  selectedPost;
+  selectedPost: Post;
   loading = false;
   loadingPosts = false;
   loadedPosts = false;
