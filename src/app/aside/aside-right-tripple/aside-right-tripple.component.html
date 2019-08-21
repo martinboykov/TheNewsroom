@@ -26,9 +26,7 @@
       <a class="latest-post__link"
          (click)="onPostSelected(latestPost)">
         <img class="latest-post__image"
-             [defaultImage]="defaultimage"
-             [lazyLoad]="latestPost?.imageMainPath + '_100w'"
-             [offset]="offset"
+             [src]="latestPost?.imageMainPath + '_100w'"
              [alt]="latestPost?.title">
         <!-- [lazyLoad]=`resized-51_${latestPost.imageMainPath}` -->
         <!-- [ngStyle]="{'background-image': 'url(' + latestPost.imageMainPath + ')'}" -->
@@ -57,11 +55,6 @@
              [lazyLoad]="popularPost?.imageMainPath + '_100w'"
              [offset]="offset"
              [alt]="popularPost?.title">
-        <!-- <picture class="popular-post__image"
-             [lazyLoad]="popularPost?.imageMainPath + '_100w'"
-             [offset]="offset"
-             [title]="popularPost?.title">
-        </picture> -->
         <!-- [ngStyle]="{'background-image': 'url(' + popularPost.imageMainPath + ')'}"> -->
         <div class="popular-post__additional-info">
           <div class="additional-info__title">

@@ -55,7 +55,6 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
       }
     });
 
-
     this.postService.getlatestPosts();
     this.latestPostsSubscription = this.postService.getLatestPostsUpdateListener()
       .subscribe((posts: any[]) => {
@@ -72,7 +71,6 @@ export class AsideRightTrippleComponent implements OnInit, OnDestroy {
       .subscribe((posts: any[]) => {
         this.commentedPosts = posts;
       });
-
   }
   fakeScroll() {
     this.windowRef.simulateScroll();

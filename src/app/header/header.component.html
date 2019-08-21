@@ -15,6 +15,7 @@
             (ngSubmit)="onSearchCreated()">
         <input class="form__input"
                formControlName="content"
+               [value]="content.value"
                type="text"
                placeholder="Search by tag, title, author, content..."
                aria-label="Search"
@@ -126,6 +127,7 @@
         (ngSubmit)="onSearchCreated()">
     <input class="form__input"
            formControlName="content"
+           [value]="content.value"
            type="text"
            placeholder="Search by tag, title, author, content..."
            aria-label="Search"

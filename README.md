@@ -166,7 +166,7 @@ As Database server is used MongoDB Atlas global cloud database service, managed 
 Of the data bearing nodes, one is deemed as primary node, while the other nodes are deemed secondary nodes.
 The primary node receives all write operations. The secondaries replicate the primary and apply the operations to their data sets such that the secondaries’ data sets reflect the primary’s data set. If the primary is unavailable, an eligible secondary will hold an election to elect itself the new primary.
 
-<img src="./assets/images/architecture/MongoDB_Replication.jpg?raw=true" alt="Replica sets" title="Replica sets" width=300/>
+<img src="./assets/images/architecture/MongoDB_Replication.jpg?raw=true" alt="Replica set" title="Replica set" width=300/>
 
 Sharding was not used, as it is unavailable for free tear and therefore won’t be discussed further.
 

@@ -28,18 +28,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
     this.windRef.checkIfMobile();
     this.isMobileResolutionSubscription = this.windRef.checkIfMobileUpdateListener()
-      .subscribe(() => {
-        this.searchForm.reset();
-      });
+      .subscribe();
     this.authService.getUserListener().subscribe((userData) => {
       this.currentUser = userData;
     });
 
   }
+  get content() { return this.searchForm.get('content'); }
   onSearchCreated() {
-    // if (this.searchForm.invalid) { return; }
-    // const userId = this.authService.getUserId();
-    // console.log(this.searchForm.value.content);
     const searchQuery = this.searchForm.value.content;
     this.router.navigate([`/search/${searchQuery}`]);
     // this.searchForm.reset();
