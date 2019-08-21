@@ -2,14 +2,14 @@
 TheNewsroom is MEAN Stack Web Application for creation and delivery the latest news in different areas of life: local, worldwide, sports, movies, music, cars, technology and more. It offers functionalities such as: edditing categories, subcategories, posts, managing the roles of the users, etc.
 #### Demo: <a href="https://thenewsroom-mean-app.appspot.com" target="_blank">https://thenewsroom-mean-app.appspot.com</a>
 
-#### Video Preview - Desktop: <a href="https://www.youtube.com/watch?v=q-o8NgFBtDA" target="_blank">https://www.youtube.com/watch?v=q-o8NgFBtDA</a>
+#### Video Preview - Desktop: <a href="https://www.youtube.com/watch?v=0zFTRU7UpSM" target="_blank">https://www.youtube.com/watch?v=0zFTRU7UpSM</a>
 
 
-[![https://www.youtube.com/watch?v=q-o8NgFBtDA](https://media.giphy.com/media/lRq8UnrTgeymdfuyWb/giphy.gif)](https://www.youtube.com/watch?v=q-o8NgFBtDA)
+[![https://www.youtube.com/watch?v=q-o8NgFBtDA](https://media.giphy.com/media/l57qdZsFax6lbEHQJ3/giphy.gif)](https://www.youtube.com/watch?v=q-o8NgFBtDA)
 
-#### Video Preview - Mobile: <a href="https://www.youtube.com/watch?v=333t9ANeLNQ" target="_blank">https://www.youtube.com/watch?v=333t9ANeLNQ</a>
+#### Video Preview - Mobile: <a href="https://www.youtube.com/watch?v=l40k-GeFjl8" target="_blank">https://www.youtube.com/watch?v=l40k-GeFjl8</a>
 
-[![https://www.youtube.com/watch?v=333t9ANeLNQ](https://media.giphy.com/media/J4IhR569aXDqScnN4R/giphy.gif)](https://www.youtube.com/watch?v=333t9ANeLNQ)
+[![https://www.youtube.com/watch?v=333t9ANeLNQ](https://media.giphy.com/media/QVmoPvkXIXMFzromvD/giphy.gif)](https://www.youtube.com/watch?v=333t9ANeLNQ)
 
 ## **Table of contents**
  - [**Features**](#features)
