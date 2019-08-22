@@ -113,7 +113,15 @@
               max-width: 188px;
               margin: 0px 5px 5px 0px;
               background-color: #efefef;
+              transition: background-color 0.25s ease-in-out;
+              &:hover {
+                background-color: #dbdbdb;
+                transition: background-color 0.25s ease-in-out;
+              }
               &--link {
+                height: 100%;
+                width: 100%;
+                padding: 8px;
                 color: #6e6e6e;
                 font-size: 11px;
                 font-family: $font-mp;
@@ -669,18 +677,26 @@
             }
             &__item {
               height: 30px;
-              padding: 8px;
               max-width: 188px;
               margin: 5px 5px 5px 0px;
               background-color: #efefef;
+              transition: background-color 0.25s ease-in-out;
+              &:hover {
+                background-color: #dbdbdb;
+                transition: background-color 0.25s ease-in-out;
+              }
               &--link {
-                color: #6e6e6e;
+                height: 100%;
+                width: 100%;
+                padding: 8px;
                 font-size: 11px;
                 font-family: $font-mp;
                 text-transform: uppercase;
                 text-shadow: 1px 1px 0px rgba(255, 255, 255, 1);
                 overflow: hidden;
                 text-overflow: ellipsis;
+                display: inline-block;
+                color: #6e6e6e;
               }
             }
           }

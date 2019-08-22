@@ -31,7 +31,6 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
   post: Post;
 
   postContent;
-  mainImage;
   relatedPosts: any[];
 
   commentForm: FormGroup;
@@ -59,6 +58,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
 
   offset = 100;
   defaultimage = '/assets/images/main/posts/item/pixelation.jpg';
+  mainImage = this.defaultimage;
 
   loading: boolean;
   // windowReference;
@@ -113,9 +113,9 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
       });
 
     this.currentUserSubscribtion = this.authService.getUserListener()
-    .subscribe((userData) => {
-      this.currentUser = userData;
-    });
+      .subscribe((userData) => {
+        this.currentUser = userData;
+      });
 
     this.currentPostSubscribtion = this.postService.getCurrentPostUpdateListener()
       .subscribe((data) => {
