@@ -92,17 +92,15 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
     });
     // first request
     this.route.paramMap
-      .pipe(
-        concatMap((paramMap: ParamMap) => {
-          this.headerService.setRouterParameters(paramMap);
-          const _id = paramMap.get('_id');
-          this.postService.updatePopularity(_id);
-          // second request
-          this.postService.getPost(_id);
-          this.postService.getRelatedPosts(_id);
-          return this.windowRef.checkIs_400w_RequiredUpdateListener();
-        })
-      )
+      .subscribe((paramMap: ParamMap) => {
+        this.headerService.setRouterParameters(paramMap);
+        const _id = paramMap.get('_id');
+        this.postService.updatePopularity(_id);
+        // second request
+        this.postService.getPost(_id);
+        this.postService.getRelatedPosts(_id);
+      });
+    this.windowRef.checkIs_400w_RequiredUpdateListener()
       .subscribe((is_400w) => {
         this.is400wRequired = is_400w;
         if (this.is400wRequired) { // desktop or tablet above 980px width and mobile below 400px width
@@ -124,7 +122,7 @@ export class PostDetailsComponent implements OnInit, AfterViewChecked, OnDestroy
         this.postContent = this.sanitizer.bypassSecurityTrustHtml(this.post.content);
         this.paginator.totalItems = data.totalCommentsCount;
         this.isPaginationRequired = this.showIfPaginationRequired(this.paginator.itemsPerPage, this.paginator.totalItems);
-        this.is400wRequired = this.windowRef.is_400w;
+        // this.is400wRequired = this.windowRef.is_400w;
         if (this.is400wRequired) { // desktop or tablet above 980px width and mobile below 400px width
           this.mainImage = this.post.imageMainPath + '_400w';
         } else { // mobile between 400px and 980px width

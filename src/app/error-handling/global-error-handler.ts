@@ -64,11 +64,10 @@ export class GlobalErrorHandler implements ErrorHandler {
           ${message}`, stackTrace);
             this.notifier.showError('Invalid route or server crash', this.DEFAULT_ERROR_TITLE);
             break;
-          // case HttpError.SERVER_REQUEST_LIMIT_REACHED: // 429
-          //   this.loggerSlack.logError(`>>>>>>>>>SERVER ERROR
-          // ${message}`, stackTrace);
-          //   this.notifier.showError('wait for a while', 'wait for a while');
-          //   break;
+          case HttpError.SERVER_REQUEST_LIMIT_REACHED: // 429
+            this.loggerSlack.logError(`>>>>>>>>>SERVER ERROR
+          ${message}`, stackTrace);
+            break;
 
           default:
             this.loggerSlack.logError(message, stackTrace);

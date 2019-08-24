@@ -6,7 +6,8 @@
   <title>TheNewsroom</title>
 
   <base href="/">
-  <meta name="Description" content="The latest news from ✓ Bulgaria ✓ world, ✓ sports , ✓ movies, ✓ music, ✓ cars, ✓ technology. Get the latest news!">
+  <meta name="Description"
+        content="The latest news from ✓ Bulgaria ✓ world, ✓ sports , ✓ movies, ✓ music, ✓ cars, ✓ technology. Get the latest news!">
   <meta name="viewport"
         content="width=device-width, initial-scale=1">
   <link rel="icon"
@@ -22,15 +23,15 @@
         const yanonekaffeesatz = new FontFace("Yanone Kaffeesatz", "url('/assets/fonts/Yanone_Kaffeesatz/Yanone_Kaffeesatz_Regular.woff') format('woff')", {
           weight: "400",
           style: "normal"
-			});
+        });
         const leagueGothic = new FontFace("League Gothic", "url('/assets/fonts/League_Gothic/League_Gothic_Regular.woff') format('woff')", {
           weight: "400",
           style: "normal"
-			});
+        });
         const myriadPro = new FontFace("Myriad Pro", "url('/assets/fonts/MyriadPro/MyriadPro_Regular.woff') format('woff')", {
           weight: "400",
           style: "normal"
-			});
+        });
         Promise.all([
           yanonekaffeesatz.load(),
           leagueGothic.load(),
@@ -54,6 +55,19 @@
 <body>
   <app-root>
   </app-root>
+  <!-- Google Analytics -->
+  <script>
+    (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date(); a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-146413026-1', 'auto');
+  // ga('send', 'pageview'); // cant apply to SPA => manual handling (AppComponent)
+  </script>
+  <!-- End Google Analytics -->
 </body>
 
 </html>

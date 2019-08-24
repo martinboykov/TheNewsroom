@@ -25,26 +25,18 @@ export class LoggingInterceptor implements HttpInterceptor {
                 responseLimiter = error;
               }
             }
-            console.log(error);
             ok = 'failed';
           }
         ),
         // Log when response observable either completes or errors
         finalize(() => {
-          // const elapsed = Date.now() - started;
-          // const msg = `${req.method} "${req.urlWithParams}"
-          //    ${ok} in ${elapsed} ms.`;
           if (ok === 'failed') {
             if (responseLimiter) {
-
-              const start: any = new Date();
-              const end: any = new Date(responseLimiter.error.data.resetTime);
-              // const end: string = ;
-              const endOfSlowDownPeriod = end - start; // milliseconds
+              const endTime: any = new Date(responseLimiter.error.data.resetTime);
               const title = 'Reached your Rate Limit!';
               const message = `Too many request were made in short period of time.
               Website will become responsivene aggain on
-              ${end.toLocaleString()}.`;
+              ${endTime.toLocaleString()}.`;
               const options = {
                 disableTimeOut: true,
                 closeButton: true,

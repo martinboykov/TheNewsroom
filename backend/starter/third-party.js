@@ -11,10 +11,6 @@ const limiter = slowDown({
   windowMs: 10 * 60 * 1000, // 10 minutes
   delayAfter: 1000, // allow 1000 requests per 10 minutes, then...
   delayMs: 100, // begin adding 100ms of delay per request above 1000:
-  // request # 1001 is delayed by 100ms
-  // request # 1002 is delayed by 200ms
-  // request # 1003 is delayed by 300ms
-  // etc.
 });
 
 //  apply to all requests
@@ -53,13 +49,13 @@ module.exports = ((app) => {
 
     app.use(compression());
 
+    app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
     app.use(limiter, limiterHandler);
   }
 
   if (process.env.NODE_ENV === 'development') {
     app.use(compression());
 
-    // app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
     app.use(limiter, limiterHandler);
   }
 });
