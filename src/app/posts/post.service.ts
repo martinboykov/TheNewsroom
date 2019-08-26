@@ -269,13 +269,13 @@ export class PostService {
   // Mock survice
   // mongodb Mock posts loading
   // -------------------------
-  //   addMockPost(counter, options) {
-  //     let post;
-  //     const category = options.category;
-  //     const subcategory = options.subcategory;
-  //     const imageUrl = options.imageUrl;
-  //     post = {
-  //       content: `<div>Mock content ${counter}.
+  // addMockPost(counter, options) {
+  //   let post;
+  //   const category = options.category;
+  //   const subcategory = options.subcategory;
+  //   const imageUrl = options.imageUrl;
+  //   post = {
+  //     content: `<div>Mock content ${counter}.
   //           Moutain bike is awesome&nbsp;Cras sit amet lorem sit amet sem finibus convallis. Aliquam sed ante volutpat, vehicula mi ut,
   //     luctus velit.Sed erat sem, accumsan in quam nec, iaculis posuere nisi. Aliquam varius mattis ante eget sodales.Donec rhoncus, quam
   //     eu aliquet varius, dolor orci ullamcorper nisi, id aliquam purus augue id arcu.Donec blandit pharetra dictum. Duis arcu est,
@@ -304,20 +304,20 @@ export class PostService {
   //     Aenean venenatis lorem gravida vestibulum ullamcorper. Nam vel metus nec lorem gravida blandit in a justo.
   //      Nam et consectetur est.In hac habitasse platea dictumst. Phasellus volutpat felis congue cursus aliquet.
   //      Pellentesque ex nibh,venenatis non sapien nec, rhoncus interdum ipsum.</div>`,
-  //       category: category,
-  //       image: imageUrl,
-  //     };
-  //     if (subcategory) {
-  //       post.title = `Mock ${category} title ${counter} about ${subcategory}`;
-  //       post.subcategory = subcategory;
-  //       post.tags = [`${subcategory} ${counter}`, `${subcategory}`];
-  //     } else {
-  //       post.title = `Mock ${category} title ${counter}`;
-  //       post.tags = [`${category} ${counter}`, `${category}`];
-  //     }
-  //     console.log(post);
-  //     this.editPost(post, 'create');
+  //     category: category,
+  //     image: imageUrl,
+  //   };
+  //   if (subcategory) {
+  //     post.title = `Mock ${category} title ${counter} about ${subcategory}`;
+  //     post.subcategory = subcategory;
+  //     post.tags = [`${subcategory} ${counter}`, `${subcategory}`];
+  //   } else {
+  //     post.title = `Mock ${category} title ${counter}`;
+  //     post.tags = [`${category} ${counter}`, `${category}`];
   //   }
+  //   console.log(post);
+  //   this.editPost(post, 'create');
+  // }
 
   // addMockPosts() {
   //   let nextPostCount = null;
@@ -484,7 +484,7 @@ export class PostService {
   //         }));
   //       })
   //     );
-  //   const count = 20;
+  //   const count = 2;
   //   let remain = count;
   //   task.pipe(repeat(count), delay(2000)).subscribe(() => {
   //     console.log('Done with task - ' + remain);

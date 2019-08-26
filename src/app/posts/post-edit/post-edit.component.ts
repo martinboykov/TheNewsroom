@@ -582,7 +582,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   }
 
   // private addMockPosts() {
-  //   this.postService.addMockPosts(this.mockPostCount);
+  //   this.postService.addMockPosts();
   // }
 
 
