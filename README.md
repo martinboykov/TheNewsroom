@@ -260,7 +260,7 @@ RESTful API is tested with Postman.
 
 ## _**Team**_
 Name: Martin Martinov <br/>
-Email: martinboykov@mail.bg <br/>
+Email: m.boykov.martinov@gmail.com <br/>
 Github: https://github.com/martinboykov
 
 
