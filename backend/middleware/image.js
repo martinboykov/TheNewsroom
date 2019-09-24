@@ -5,7 +5,7 @@ const sharp = require('sharp');
 const { Storage } = require('@google-cloud/storage');
 const storage = new Storage({
   projectId: 'thenewsroom-mean-app',
-  keyFilename: path.join(__dirname, '..', 'TheNewsroom-dc506f317f19.json'),
+  keyFilename: path.join(__dirname, '..', 'TheNewsroom-14ed3b911a59.json'),
 });
 const Multer = require('multer');
 const multer = Multer({

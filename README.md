@@ -1,4 +1,4 @@
-# **TheNewsrom**
+# **TheNewsroom**
 TheNewsroom is MEAN Stack Web Application for creation and delivery the latest news in different areas of life: local, worldwide, sports, movies, music, cars, technology and more. It offers functionalities such as: edditing categories, subcategories, posts, managing the roles of the users, etc.
 #### Demo: <a href="https://thenewsroom-mean-app.appspot.com" target="_blank">https://thenewsroom-mean-app.appspot.com</a>
 
