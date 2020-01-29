@@ -4,6 +4,8 @@
 const { User, validateUser } = require('../models/user');
 
 const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt-nodejs');
+
 
 const { client } = require('./../middleware/redis');
 
@@ -114,6 +116,8 @@ const signup = async (req, res, next) => {
   // Encrypting the password bofore saving to db
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(req.body.password, salt);
+  // const salt = await bcrypt.genSalt(10);
+  // user.password = await bcrypt.hash(req.body.password, salt);
   await user.save();
   return res.status(201).json({
     message: 'Signup successfuly',
@@ -129,6 +133,8 @@ const login = async (req, res, next) => {
     });
   }
   const validPassword = await bcrypt.compare(
+  // const validPassword = await bcrypt.compareSync(
+
     req.body.password,
     user.password);
   if (!validPassword) {

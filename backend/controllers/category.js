@@ -153,7 +153,7 @@ const getCategoriesFull = async (req, res, next) => {
       select: { name: 1, order: 1, isVisible: 1 },
     });
   if (categories.length === 0) {
-    return res.status(404).json({
+    return res.json({
       message: `No categories yet!`,
     });
   }

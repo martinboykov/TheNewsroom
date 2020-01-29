@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "pm2-runtime start ecosystem_prod.config.js --env production"
+    "start": "pm2-runtime start ecosystem_prod.config.js --env production",
+    "dev": "pm2-runtime start ecosystem.config.js --env development"
   },
   "dependencies": {
     "@google-cloud/storage": "^2.4.3",
@@ -27,10 +28,10 @@
     "mongoose-unique-validator": "^2.0.2",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
-    "newrelic": "^5.6.3",
+    "newrelic": "^5.13.1",
     "pm2": "^3.5.1",
     "redis": "^2.8.0",
-    "sharp": "^0.22.0",
+    "sharp": "^0.23.1",
     "winston": "2.4.4"
   }
 }

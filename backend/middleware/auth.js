@@ -31,7 +31,6 @@ function auth(req, res, next) {
   // secret must be aded predeployment with config or process.env.CUSTOM_VARIABLE
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   req.user = decoded;
-  console.log(req.user);
   return next();
 }
 

@@ -581,9 +581,9 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     };
   }
 
-  // private addMockPosts() {
-  //   this.postService.addMockPosts();
-  // }
+  private addMockPosts() {
+    this.postService.addMockPosts();
+  }
 
 
   ngOnDestroy() {
