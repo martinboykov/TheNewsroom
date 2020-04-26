@@ -210,7 +210,7 @@ const getRelatedPosts = async (req, res, next) => {
 
 const getLatestPosts = async (req, res, next) => {
   const dateNow = new Date();
-  const daysInPast = 30; // should be 1 day before
+  const daysInPast = 3000; // should be 1 day before
   const posts = await Post
     .find({
       dateCreated: {
@@ -231,7 +231,7 @@ const getLatestPosts = async (req, res, next) => {
 
 const getPopularPosts = async (req, res, next) => {
   const dateNow = new Date();
-  const daysInPast = 30; // should be 1 day before
+  const daysInPast = 3000; // should be 1 day before
   const posts = await Post
     .find({
       dateCreated: {
@@ -252,7 +252,7 @@ const getPopularPosts = async (req, res, next) => {
 
 const getComentedPosts = async (req, res, next) => {
   const dateNow = new Date();
-  const daysInPast = 30; // should be 1 day before
+  const daysInPast = 3000; // should be 1 day before
   const posts = await Post.aggregate([
     {
       $match: {

@@ -27,7 +27,7 @@ module.exports = ((app) => {
   if (process.env.NODE_ENV === 'development') {
     mongooseConnection.then(() => {
       debug('Connected to MongoDB database...');
-      // mongoose.set('debug', true);
+      // mongoose.set('debugs', true);
     });
     client.on('connect', function() {
       debug('Redis client connected');
