@@ -310,6 +310,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     if (subcategory) { post.subcategory = subcategory; }
     if (_id) { post._id = _id; }
     this.loadingPosts = true;
+    console.log('component', post);
     this.postService.editPost(post, this.mode);
     // this.postForm.reset();
   }
@@ -581,9 +582,9 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
     };
   }
 
-  // private addMockPosts() {
-  //   this.postService.addMockPosts();
-  // }
+  private addMockPosts() {
+    this.postService.addMockPosts();
+  }
 
 
   ngOnDestroy() {

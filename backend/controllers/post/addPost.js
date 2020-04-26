@@ -31,7 +31,6 @@ const addPost = async (req, res, next) => {
   }
 
   const data = req.body;
-
   const parsedTags = JSON.parse(data.tags);
   data.tags = parsedTags;
   const { error } = validatePost(data);
@@ -54,7 +53,6 @@ const addPost = async (req, res, next) => {
     imageMainPath: req.body.imageMainPath, // req.file.cloudStoragePublicUrl
     // imageMainPath: req.file.cloudStoragePublicUrl, // req.file.cloudStoragePublicUrl
   });
-
   const task = new Fawn.Task(); // eslint-disable-line new-cap
 
   // category update/ add to post
@@ -111,6 +109,7 @@ const addPost = async (req, res, next) => {
   }
 
   const allPromises = [categoryPromise, subcategoryPromise, ...tagsPromises];
+  console.log(data);
 
   return Promise.all(allPromises)
     .then(() => {
