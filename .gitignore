@@ -51,12 +51,14 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+dump.rdb
 
 # logging
 /backend/logfile.log
 /backend/uncaughtException.log
 newrelic_agent.log
 # development files
+
 /development files
 
 # Google Cloud Service Account

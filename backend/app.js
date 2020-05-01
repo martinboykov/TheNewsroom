@@ -1,4 +1,4 @@
-require('newrelic'); // https://rpm.newrelic.com/accounts/2300349/applications/setup#nodejs
+// require('newrelic'); // https://rpm.newrelic.com/accounts/2300349/applications/setup#nodejs
 const express = require('express');
 
 const app = express();
