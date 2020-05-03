@@ -10,17 +10,17 @@ const routes: Routes = [
   { path: '', component: PostListComponent },
   { path: 'tags/:tag', component: PostListComponent },
   { path: 'search/:searchQuery', component: PostListComponent },
-  { path: 'auth', loadChildren: './auth/auth.module#AuthModule' },
+  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
   {
     path: 'edit',
-    loadChildren: './posts/post-edit/post-edit.module#PostEditModule',
+    loadChildren: () => import('./posts/post-edit/post-edit.module').then(m => m.PostEditModule),
     canActivate: [AuthGuard],
     data: { role: Role.Writer }
   },
   {
     path: 'admin',
     loadChildren:
-      './admin/admin.module#AdminModule',
+      () => import('./admin/admin.module').then(m => m.AdminModule),
     canActivate: [AuthGuard],
     data: { role: Role.Admin }
   },
@@ -28,13 +28,13 @@ const routes: Routes = [
   { path: ':category', component: PostListComponent },
   {
     path: ':category/post',
-    loadChildren: './posts/post-details/post-details.module#PostDetailsModule',
+    loadChildren: () => import('./posts/post-details/post-details.module').then(m => m.PostDetailsModule),
     data: {preload: true}
   },
   { path: ':category/:subcategory', component: PostListComponent },
   {
     path: ':category/:subcategory/post',
-    loadChildren: './posts/post-details/post-details.module#PostDetailsModule',
+    loadChildren: () => import('./posts/post-details/post-details.module').then(m => m.PostDetailsModule),
     data: {preload: true}
   },
   { path: '**', redirectTo: '/not-found' }

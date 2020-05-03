@@ -4,7 +4,7 @@ import { CategoryService } from './../../admin/category.service';
 // import { HeaderService } from './../../header/header.service';
 import { ActivatedRoute, } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormArray, AbstractControl } from '@angular/forms';
-import { Component, OnInit, OnDestroy, Renderer2, ViewChild, AfterViewInit, AfterContentInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, ViewChild, AfterViewInit, AfterContentInit, ElementRef } from '@angular/core';
 import { Post } from './../post.model';
 import { PostService } from '../post.service';
 import { mimeType } from './mime-type.validator';
@@ -22,8 +22,8 @@ import { Subcategory } from 'src/app/admin/subcategory.model';
   styleUrls: ['./post-edit.component.scss']
 })
 export class PostEditComponent implements OnInit, AfterViewInit, AfterContentInit, OnDestroy {
-  @ViewChild('jodit') jodit;
-  @ViewChild('selectTags') selectTags;
+  @ViewChild('jodit', { static: true }) jodit: ElementRef;
+  @ViewChild('selectTags', { static: true }) selectTags;
   devMode: boolean;
   mode: string;
   postId: string;
@@ -44,7 +44,7 @@ export class PostEditComponent implements OnInit, AfterViewInit, AfterContentIni
   categoriesSubscription: Subscription;
   jodiConfig = this.getJoditConfig();
 
-  @ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent;
+  @ViewChild(ImageCropperComponent, { static: true }) imageCropper: ImageCropperComponent;
   imageChangedEvent: any = '';
   croppedImage: any = '';
   showCropper = false;
