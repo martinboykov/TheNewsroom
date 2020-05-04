@@ -15,43 +15,6 @@
   <link rel="icon"
         type="image/x-icon"
         href="favicon.ico">
-  <script>
-    // https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/webfont-optimization
-    (function() {
-      function loadFonts() {
-        if (!("fonts" in document)) {
-          return;
-        }
-        const yanonekaffeesatz = new FontFace("Yanone Kaffeesatz", "url('/assets/fonts/Yanone_Kaffeesatz/Yanone_Kaffeesatz_Regular.woff') format('woff')", {
-          weight: "400",
-          style: "normal"
-        });
-        const leagueGothic = new FontFace("League Gothic", "url('/assets/fonts/League_Gothic/League_Gothic_Regular.woff') format('woff')", {
-          weight: "400",
-          style: "normal"
-        });
-        const myriadPro = new FontFace("Myriad Pro", "url('/assets/fonts/MyriadPro/MyriadPro_Regular.woff') format('woff')", {
-          weight: "400",
-          style: "normal"
-        });
-        Promise.all([
-          yanonekaffeesatz.load(),
-          leagueGothic.load(),
-          myriadPro.load(),
-        ]).then(function(loadedFonts) {
-          // Render them at the same time
-          loadedFonts.forEach(function(font) {
-            document.fonts.add(font);
-          });
-        });
-      }
-      if ("matchMedia" in window && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        // do nothing
-      } else {
-        loadFonts();
-      }
-    })();
-  </script>
 </head>
 
 <body>

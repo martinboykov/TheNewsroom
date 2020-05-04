@@ -1,13 +1,70 @@
 /* Fonts */
+// League Gothic - Regular
+@font-face {
+  font-family: "League Gothic";
+  font-style: normal;
+  font-weight: 400;
+  src: local('League Gothic'),
+    url('/assets/fonts/League_Gothic/League_Gothic_Regular.woff2') format("woff2"),
+    url('/assets/fonts/League_Gothic/League_Gothic_Regular.woff') format('woff'),
+    url('/assets/fonts/League_Gothic/League_Gothic_Regular.ttf') format('truetype'),
+    url('/assets/fonts/League_Gothic/League_Gothic_Regular.eot') format('embedded-opentype');
+}
+
+// MyriadPro - Regular
+@font-face {
+  font-family: "Myriad Pro";
+  font-style: normal;
+  font-weight: 400;
+  src: local('Myriad Pro'),
+    url('/assets/fonts/MyriadPro/MyriadPro_Regular.woff') format('woff'),
+    url('/assets/fonts/MyriadPro/MyriadPro_Regular.ttf') format('truetype'),
+    url('/assets/fonts/MyriadPro/MyriadPro_Regular.eot') format('embedded-opentype');
+}
+
+// Yanone Kaffeesatz
+@font-face {
+  font-family: "Yanone Kaffeesatz";
+  font-style: normal;
+  font-weight: 400;
+  src: local('Yanone Kaffeesatz'),
+    url("/assets/fonts/Yanone_Kaffeesatz/Yanone_Kaffeesatz_Regular.woff2") format("woff2"),
+    url('/assets/fonts/Yanone_Kaffeesatz/Yanone_Kaffeesatz_Regular.woff') format('woff'),
+    url('/assets/fonts/Yanone_Kaffeesatz/Yanone_Kaffeesatz_Regular.ttf') format('truetype'),
+    url('/assets/fonts/Yanone_Kaffeesatz/Yanone_Kaffeesatz_Regular.eot') format('embedded-opentype');
+}
 
 // Droid Sans - Regular
-@import url("https://fonts.googleapis.com/css?family=Droid+Sans:400,700");
+@font-face {
+  font-family: 'Droid Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Droid Sans'),
+    url("/assets/fonts/Droid_Sans/DroidSans.woff2") format("woff2"),
+    url('/assets/fonts/Droid_Sans/DroidSans.woff') format('woff'),
+    url('/assets/fonts/Droid_Sans/DroidSans.ttf') format('truetype'),
+    url('/assets/fonts/Droid_Sans/DroidSans.eot') format('embedded-opentype');
+}
 
-$font-default: "Droid Sans", Arial, sans-serif;
-$font-yk: "Yanone Kaffeesatz", Arial, sans-serif;
-$font-lg: "League Gothic", Arial, sans-serif;
-$font-mp: "Myriad Pro", Helvetica, Arial, sans-serif;
-$font-georgia: "Georgia", "Times New Roman", "Times", serif;
+// @import url("https://fonts.googleapis.com/css?family=Droid+Sans:400,700");
+
+$font-default: "Droid Sans",
+Arial,
+sans-serif;
+$font-yk: "Yanone Kaffeesatz",
+Arial,
+sans-serif;
+$font-lg: "League Gothic",
+Arial,
+sans-serif;
+$font-mp: "Myriad Pro",
+Helvetica,
+Arial,
+sans-serif;
+$font-georgia: "Georgia",
+"Times New Roman",
+"Times",
+serif;
 
 // @import url("https://fonts.googleapis.com/css?family=PT+Sans"); // instead Myriad Pro
 // $font-mp: "PT Sans", sans-serif; //alternative to Myriad Pro

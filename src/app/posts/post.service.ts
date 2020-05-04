@@ -353,7 +353,7 @@ export class PostService {
         concatMap(() => {
           return of(this.addMockPost(nextPostCount++, {
             category: 'sport', subcategory: 'basketball',
-            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1563541767492_20190530-kawhi-leonard.jpeg'
+            imageUrl: 'https://storage.googleapis.com/thenewsroom-images-storage-bucket/1588571339000_kawhi-title.jpeg'
           }));
         })
       )

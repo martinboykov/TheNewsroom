@@ -5,7 +5,9 @@ const mongoose = require('mongoose');
 let MongoURI = '';
 if (process.env.NODE_ENV === 'production'){
   MONGO_URI = `mongodb+srv://${process.env.MONGO_ATLAS_USER_NAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-ekat5.mongodb.net/test?retryWrites=true`;
-} else {
+} else if (process.env.NODE_ENV === 'staging'){
+  MONGO_URI = `mongodb+srv://${process.env.MONGO_ATLAS_USER_NAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-ekat5.mongodb.net/test?retryWrites=true`;
+} else if (process.env.NODE_ENV === 'development'){
   MONGO_URI = `mongodb://localhost:27017/TheNewsroom`;
 }
 const redis = require('./../middleware/redis.js').redisMiddleware;

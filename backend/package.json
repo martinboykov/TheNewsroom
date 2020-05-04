@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "pm2-runtime start ecosystem_prod.config.js --env production",
+    "staging": "pm2-runtime start ecosystem_prod.config.js --env staging",
     "dev": "pm2-runtime start ecosystem.config.js --env development"
   },
   "dependencies": {
