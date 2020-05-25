@@ -5,7 +5,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { HttpError } from './httpError.model';
 import { ErrorService } from './error.service';
 import { SlackErrorLoggingService } from './slack-logging.service';
-// import { SentryErrorLoggingService } from './sentry-error.service';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -21,7 +20,6 @@ export class GlobalErrorHandler implements ErrorHandler {
   private get errorService(): ErrorService { return this.injector.get(ErrorService); }
   private get notifier(): NotificationService { return this.injector.get(NotificationService); }
   private get loggerSlack(): SlackErrorLoggingService { return this.injector.get(SlackErrorLoggingService); }
-  // private get loggerSentry(): SentryErrorLoggingService { return this.injector.get(SentryErrorLoggingService); }
 
   public handleError(error: Error | HttpErrorResponse) {
     this.ngZone.run(() => {

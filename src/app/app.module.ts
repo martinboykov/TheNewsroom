@@ -74,6 +74,7 @@ import { LoggingInterceptor } from './logging/logging-interceptor';
       countDuplicates: true,
       preventDuplicates: true,
     }),
+
     DeviceDetectorModule.forRoot()
   ],
   providers: [

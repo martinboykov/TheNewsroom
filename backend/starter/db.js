@@ -2,18 +2,18 @@
 const winston = require('winston');
 const debug = require('debug')('debug');
 const mongoose = require('mongoose');
-let MongoURI = '';
-if (process.env.NODE_ENV === 'production'){
-  MONGO_URI = `mongodb+srv://${process.env.MONGO_ATLAS_USER_NAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-ekat5.mongodb.net/test?retryWrites=true`;
-} else if (process.env.NODE_ENV === 'staging'){
-  MONGO_URI = `mongodb+srv://${process.env.MONGO_ATLAS_USER_NAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-ekat5.mongodb.net/test?retryWrites=true`;
-} else if (process.env.NODE_ENV === 'development'){
-  MONGO_URI = `mongodb://localhost:27017/TheNewsroom`;
+let mongoURI = '';
+if (process.env.NODE_ENV === 'production') {
+  mongoURI = `mongodb+srv://${process.env.MONGO_ATLAS_USER_NAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-ekat5.mongodb.net/test?retryWrites=true`;
+} else if (process.env.NODE_ENV === 'staging') {
+  mongoURI = `mongodb+srv://${process.env.MONGO_ATLAS_USER_NAME}:${process.env.MONGO_ATLAS_PASSWORD}@cluster0-ekat5.mongodb.net/test?retryWrites=true`;
+} else if (process.env.NODE_ENV === 'development') {
+  mongoURI = `mongodb://localhost:27017/TheNewsroom`;
 }
 const redis = require('./../middleware/redis.js').redisMiddleware;
 const client = require('./../middleware/redis.js').client;
 module.exports = ((app) => {
-  const mongooseConnection = mongoose.connect(MONGO_URI, {
+  const mongooseConnection = mongoose.connect(mongoURI, {
     // options are set uppon: https://mongoosejs.com/docs/deprecations.html
     useCreateIndex: true,
     useFindAndModify: false,

@@ -141,8 +141,8 @@ const addSubcategory = async (req, res, next) => {
   task.update('categories', {
     _id: category._id,
   }, {
-      $push: { subcategories: newSubcategory._id },
-    });
+    $push: { subcategories: newSubcategory._id },
+  });
   return task.run({ useMongoose: true })
     .then(async (result) => {
       // delete entire redis db
@@ -188,21 +188,21 @@ const updateSubcategory = async (req, res, next) => {
   task.update('subcategories', {
     _id: subcategory._id,
   }, {
-      $set: {
-        name: DOMPurify.sanitize(updatedSubcategory.name),
-        order: DOMPurify.sanitize(updatedSubcategory.order),
-        isVisible: updatedSubcategory.isVisible,
-      },
-    });
+    $set: {
+      name: DOMPurify.sanitize(updatedSubcategory.name),
+      order: DOMPurify.sanitize(updatedSubcategory.order),
+      isVisible: updatedSubcategory.isVisible,
+    },
+  });
   // if (subcategory.name !== updatedSubcategory.name) {
   task.update('posts', {
     'subcategory._id': subcategory._id,
   }, {
-      $set: {
-        'subcategory.name': DOMPurify.sanitize(updatedSubcategory.name),
-        isVisible: updatedSubcategory.isVisible,
-      },
-    }).options({ multi: true });
+    $set: {
+      'subcategory.name': DOMPurify.sanitize(updatedSubcategory.name),
+      isVisible: updatedSubcategory.isVisible,
+    },
+  }).options({ multi: true });
   // }
 
   return task.run({ useMongoose: true })
@@ -234,8 +234,8 @@ const deleteSubcategory = async (req, res, next) => {
   task.update('categories', {
     _id: subcategory.categoryId,
   }, {
-      $pull: { subcategories: subcategory._id },
-    });
+    $pull: { subcategories: subcategory._id },
+  });
   task.remove(subcategory);
   return task.run({ useMongoose: true })
     .then(async (result) => {

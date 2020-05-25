@@ -298,30 +298,30 @@ const updateCategory = async (req, res, next) => {
   task.update('categories', {
     _id: category._id,
   }, {
-      $set: {
-        name: DOMPurify.sanitize(updatedCategory.name),
-        order: parseInt(DOMPurify.sanitize(updatedCategory.order), 10),
-        isVisible: updatedCategory.isVisible,
-      },
-    });
+    $set: {
+      name: DOMPurify.sanitize(updatedCategory.name),
+      order: parseInt(DOMPurify.sanitize(updatedCategory.order), 10),
+      isVisible: updatedCategory.isVisible,
+    },
+  });
 
   task.update('posts', {
     'category._id': category._id,
   }, {
-      $set: {
-        'category.name': DOMPurify.sanitize(updatedCategory.name),
-        isVisible: updatedCategory.isVisible,
-      },
-    }).options({ multi: true });
+    $set: {
+      'category.name': DOMPurify.sanitize(updatedCategory.name),
+      isVisible: updatedCategory.isVisible,
+    },
+  }).options({ multi: true });
   // }
 
   task.update('subcategories', {
     categoryId: category._id,
   }, {
-      $set: {
-        isVisible: updatedCategory.isVisible,
-      },
-    }).options({ multi: true });
+    $set: {
+      isVisible: updatedCategory.isVisible,
+    },
+  }).options({ multi: true });
   return task.run({ useMongoose: true })
     .then(async () => {
       // delete all db

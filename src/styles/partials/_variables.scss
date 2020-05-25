@@ -17,6 +17,7 @@
   font-style: normal;
   font-weight: 400;
   src: local('Myriad Pro'),
+    url('/assets/fonts/MyriadPro/MyriadPro_Regular.woff2') format('woff2'),
     url('/assets/fonts/MyriadPro/MyriadPro_Regular.woff') format('woff'),
     url('/assets/fonts/MyriadPro/MyriadPro_Regular.ttf') format('truetype'),
     url('/assets/fonts/MyriadPro/MyriadPro_Regular.eot') format('embedded-opentype');
